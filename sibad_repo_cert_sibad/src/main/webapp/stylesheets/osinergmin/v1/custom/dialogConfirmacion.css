@@ -1,0 +1,18 @@
+.dialogConfirmacion .ui-dialog-title{
+	font: normal 16px 'Calibri';
+}
+
+.dialogConfirmacion .ui-icon-alert {
+	float: left;
+	margin: 0 7px 20px 0;
+}
+
+.dialogConfirmacion .botones {
+	clear: both;
+	display: block;
+	text-align: center;
+}
+
+.dialogConfirmacion .btnSimple{
+	padding: 3px 20px;
+}

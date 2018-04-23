@@ -1,0 +1,20 @@
+# parametros de configuracion de jpa
+jpaVendorAdapter.showSql=${jpa_showSql}
+jpaVendorAdapter.generateDdl=false
+jpaVendorAdapter.databasePlatform=org.hibernate.dialect.Oracle9iDialect
+
+# parametros para consumir los servicios web del SIGED
+siged.ws.url=${siged_ws_url}
+siged.ws.relativeUrl.listarDocumentosExpediente=/expediente/documentos
+siged.ws.relativeUrl.descargarArchivo=/archivo/descarga
+
+# parametros para consumir los servicios web del MDI
+mdi.ws.url=${mdi_ws_url}
+mdi.ws.wsdl.pvoSupervision=/pvoSupervisionWS?wsdl
+mdi.ws.wsdl.maestroColumna=/maestroColumnaWS?wsdl
+
+# Manejo de archivos zip del INPS
+ruta_archivos_temporales=${sibad_ruta_archivos_temporales}
+
+# expresion cron para de ejecucion de jobs
+archivo_intervalo_limpieza=0 0 17 * * ?

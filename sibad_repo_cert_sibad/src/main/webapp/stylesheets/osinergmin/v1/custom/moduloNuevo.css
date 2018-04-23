@@ -1,0 +1,37 @@
+.moduloNuevo .panelUnidadSupervisada{
+	width: 80%;
+	margin: auto;
+	display: none;
+}
+
+.moduloNuevo .panelUnidadSupervisada:first-child{
+	display: block;
+}
+
+.moduloNuevo .panelUnidadSupervisada .pui-panel-titlebar .ui-panel-title{
+	font: normal 16px 'Calibri';
+}
+
+.moduloNuevo .panelUnidadSupervisada fieldset{
+	padding: 15px;
+}
+
+.moduloNuevo .panelUnidadSupervisada fieldset .tblFormulario tbody tr td{
+	padding: 1px 10px 1px 0px;
+}
+
+.moduloNuevo .panelUnidadSupervisada fieldset .ui-jqgrid{
+	margin-top: 5px;
+	margin-bottom: 20px;
+}
+.moduloNuevo .panelUnidadSupervisada .fotoPrincipal{
+	display: none;
+}
+
+.moduloNuevo .botones{
+	width: 80%;
+	margin: auto;
+	margin-top: 5px;
+	margin-bottom: 20px;
+	text-align: center;
+}

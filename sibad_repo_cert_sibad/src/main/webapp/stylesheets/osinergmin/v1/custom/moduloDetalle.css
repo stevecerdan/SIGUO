@@ -1,0 +1,45 @@
+.moduloDetalle .panelUnidadSupervisada{
+	width: 80%;
+	margin: auto;
+	display: none;
+/* 	padding: 10px; */
+}
+
+.moduloDetalle .panelUnidadSupervisada:first-child{
+	display: block;
+}
+
+.moduloDetalle .panelUnidadSupervisada .pui-panel-titlebar .ui-panel-title{
+	font: normal 16px 'Calibri';
+}
+
+.moduloDetalle .panelUnidadSupervisada fieldset{
+	padding: 15px;
+}
+
+.moduloDetalle .panelUnidadSupervisada fieldset .tblFormulario tbody tr td{
+	padding: 1px 10px 1px 0px;
+}
+
+.moduloDetalle .panelUnidadSupervisada fieldset .ui-jqgrid{
+	margin-top: 5px;
+	margin-bottom: 20px;
+}
+
+.moduloDetalle .botones{
+	width: 80%;
+	margin: auto;
+	margin-top: 5px;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+.moduloDetalle .btnGuardar, 
+.moduloDetalle .btnNuevo,
+.moduloDetalle .tblFormulario.tblBusqueda,
+.moduloDetalle .fsetNuevo,
+.moduloDetalle .fsetBusqueda,
+.pui-menu .menuItemEditar,
+.pui-menu .menuItemEliminar{
+	display: none;
+}

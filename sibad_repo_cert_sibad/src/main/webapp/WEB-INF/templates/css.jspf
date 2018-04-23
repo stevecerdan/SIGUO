@@ -1,0 +1,42 @@
+<!-- /// Nuevos Estilos/// -->
+<link rel="stylesheet" type="text/css" href='/sibad/stylesheets/osinergmin/v1/jquery-ui-1.10.4.custom.css'  />
+<link rel="stylesheet" type="text/css" href='/sibad/stylesheets/osinergmin/v1/theme.css' />
+<link rel="stylesheet" type="text/css" href='/sibad/stylesheets/osinergmin/v1/primeui-1.0-min.css' />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/dialog.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/panel.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/tabs.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/context.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/ui.jqgrid.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/notify.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/autocomplete.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/accordion.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/datepicker.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/picklist.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/paginator.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/progress.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/slider.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/slidemenu.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/galleria.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/spinner.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/styles.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/fancytree/ui.fancytree.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/colorbox.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/template.css"  />
+<!-- Giancarlo Comienzo -->
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/jquery.timepicker.css"  />
+<!-- End -->
+<!-- validacion tomas -->
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/validate/validationEngine.jquery.css"  />
+<!--<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" />-->
+<!--[if IE 7]>
+<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome-ie7.min.css" />
+<![endif]-->
+<!--<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.css" />-->
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/custom/dialogBusqueda.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/custom/dialogNuevo.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/custom/dialogEditar.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/custom/dialogDetalle.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/custom/dialogConfirmacion.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/osinergmin/v1/validateFramework/validateFramework.css"  />
+<link rel="stylesheet" type="text/css" href="/sibad/stylesheets/general.css" type="text/css" />

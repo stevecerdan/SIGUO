@@ -1,0 +1,10 @@
+div.errorMensaje {
+	border: 1px solid;
+	margin: 10px 60px;
+	padding: 10px 10px 10px 50px;
+	background-repeat: no-repeat;
+	background-position: 10px center;
+	color: #D8000C;
+	background-color: #FFBABA;
+	background-image: url('../../../images/list-remove.png');
+}

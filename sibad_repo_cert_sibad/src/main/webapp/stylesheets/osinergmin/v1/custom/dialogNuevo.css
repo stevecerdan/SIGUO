@@ -1,0 +1,50 @@
+.dialogNuevo .ui-dialog-title{
+	font: normal 16px 'Calibri';
+}
+
+.dialogNuevo.ui-dialog,
+.dialogNuevo .ui-dialog-content{
+	overflow: visible;
+}
+
+.dialogNuevo table tbody tr td{
+	padding: 1px 1px;
+}
+
+.dialogNuevo .activo{
+	display: none;
+}
+
+.dialogNuevo label{
+	color: #3B4959;
+	font-weight: bold;
+}
+
+.dialogNuevo input[type="text"]:not(.ui-pg-input){
+	width: 150px;
+	padding: 3px 6px;	
+}
+
+.dialogNuevo textarea{
+	padding: 3px 6px;
+}
+
+.dialogNuevo select{
+	width: 167px;
+	padding: 3px 6px;	
+}
+
+.dialogNuevo .botones {
+	text-align: center;
+}
+
+.dialogNuevo .btnGuardar, .dialogNuevo .btnCancelar{
+	padding: 3px 20px;
+}
+
+.dialogNuevo .obligatorio {
+	margin: 5px;
+	color: #409FFF;
+	font-weight: bold;
+	display: none;
+}

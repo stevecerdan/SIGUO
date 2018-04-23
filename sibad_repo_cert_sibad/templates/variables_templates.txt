@@ -1,0 +1,11 @@
+# Variables para los archivos templates (su valor cambia segun el ambiente de despliegue)
+
+logger_root_level=Nivel del log, puede especificarse múltiples niveles separados por comas, por ejemplo "ERROR, INFO, WARN".
+logDir_path=Ruta completa del directorio contenedor del archivo log, por ejemplo "/tmp/log/".
+logFile_name=Nombre del archivo log sin extensión, por ejemplo "sibadweb.log".
+logFile_maxFileSize=Tamaño máximo del archivo log, por ejemplo "1MB".
+
+jpa_showSql=Indica si se muestra o no en el log respectivo las sentencias SQL generadas por el JPA, sus valores posibles son "true" (se muestra las sentencias SQL) o "false" (no se muestra las sentencias SQL).
+siged_ws_url=URL completa de los servicios web del SIGED, por ejemplo: "http://11.160.121.132:8180/siged-rest-old/remote".
+mdi_ws_url=URL completa de los servicios web del MDI, por ejemplo: "http://11.160.124.103:7010/mdiws/remote".
+sibad_ruta_archivos_temporales=Ruta física de descarga de archivos del INPS, por ejemplo: "/data/tmpDescarga/".

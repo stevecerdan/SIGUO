@@ -1,0 +1,35 @@
+.moduloEditar .panelUnidadSupervisada{
+	width: 80%;
+	margin: auto;
+	display: none;
+/* 	padding: 10px; */
+}
+
+.moduloEditar .panelUnidadSupervisada:first-child{
+	display: block;
+}
+
+.moduloEditar .panelUnidadSupervisada .pui-panel-titlebar .ui-panel-title{
+	font: normal 16px 'Calibri';
+}
+
+.moduloEditar .panelUnidadSupervisada fieldset{
+	padding: 15px;
+}
+
+.moduloEditar .panelUnidadSupervisada fieldset .tblFormulario tbody tr td{
+	padding: 1px 10px 1px 0px;
+}
+
+.moduloEditar .panelUnidadSupervisada fieldset .ui-jqgrid{
+	margin-top: 5px;
+	margin-bottom: 20px;
+}
+
+.moduloEditar .botones{
+	width: 80%;
+	margin: auto;
+	margin-top: 5px;
+	margin-bottom: 20px;
+	text-align: center;
+}

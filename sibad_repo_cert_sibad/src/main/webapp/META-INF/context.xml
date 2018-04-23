@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" path="/sibad">
+	<ResourceLink global="jdbc/osinerg_sibad" name="jdbc/osinerg_sibad" type="oracle.jdbc.OracleDriver"/>
+</Context>

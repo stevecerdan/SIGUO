@@ -1,0 +1,145 @@
+.overflow{
+	overflow: auto;
+}
+.center{
+	text-align: center;
+}
+div.stepsClass{
+	position: relative;
+	margin: 20px 0;
+        width: 100%; z-index: 100;
+}
+div.stepsClass ul{
+	display: inline-block;
+}			
+div.stepsClass ul li{
+	display: block;
+ 	float: left; 
+ 	width: 63px; 
+	margin: 0 25px;
+	position: relative;
+}			
+div.stepsClass li:hover a,
+div.stepsClass li.active a{
+	color: #016AA3;
+}			
+div.stepsClass li:hover a:before,
+div.stepsClass li.active a:before{
+	border-color: #002C53;
+	background-color: #016AA3;
+}			
+div.stepsClass li:first-child a{
+	margin-left: 0;
+}							
+div.stepsClass li:last-child a{
+	margin-right: 0;
+}				
+div.stepsClass li a:before{
+	content: '';
+	width: 55px;
+	height: 55px;
+	display: block;
+	background-color: #002C53;
+	background-image: url('/sibad/images/icons.png');
+	background-size:190px;
+	border-radius: 50%;
+	margin: 0 auto 7px auto;
+	z-index: 5;
+	position: relative;
+	border: 2px solid #3B4959;
+}							
+div.stepsClass li:first-child a:after,
+div.stepsClass li:last-child a:after{
+	content: '';
+	display: block;
+	width: 100px;
+	height: 2px;
+	background-color: #3B4959;
+	position: absolute;
+	top: 30px;
+}
+div.stepsClass li:first-child a:after{
+	left: 50%;
+}			
+div.stepsClass li:last-child a:after{ 
+	right: 50%; 
+} 
+div.stepsClass li:not(:first-child):not(:last-child) a:after{
+	content: '';
+	display: block;
+	width: 150px;
+	height: 2px;
+	background-color: #3B4959;
+	position: absolute;
+	left: 0;
+	top: 30px;
+}
+div.stepsClass li a{
+	font-size: 13px;
+	font-weight: bold;
+	color: #415B76;
+	display: block;
+}	
+
+/* ---------------------------------------------------------------------------  */
+
+div.stepsClass li:nth-child(1) a:before{
+                background-position: -63px -471px; 
+            }			
+            div.stepsClass li:nth-child(2) a:before{
+                background-position: -3px -524px; 
+            }			
+            div.stepsClass li:nth-child(3) a:before{
+                background-position: -124px -43px;
+            }			
+            div.stepsClass li:nth-child(4) a:before{
+                background-position: -123px -471px;
+                /*background-position: -5px -1050px;*/
+            }			
+            div.stepsClass li:nth-child(5) a:before{
+                background-position: -3px -289px;
+                /*background-position: -63px -105px;*/
+            }			
+            div.stepsClass li:nth-child(6) a:before{
+                background-position: -1px -990px;
+                /*background-position: -123px -471px;*/
+            }			
+            div.stepsClass li:nth-child(7) a:before{
+                background-position: -65px -990px;
+                /*background-position: -3px -289px;*/
+            }			
+            div.stepsClass li:nth-child(8) a:before{
+                background-position: -127px -990px;
+                /*background-position: -1px -990px;*/
+            }
+            div.stepsClass li:nth-child(9) a:before{
+                background-position: -65px -990px;
+            }
+            div.stepsClass li:nth-child(10) a:before{
+                background-position: -127px -990px;
+            }		
+
+            /*estilo desabilitado de bolitas*/
+            .stepsClass li.disabled a:before{
+                background-color: #CCD8E3; 
+                border: 2px solid  #CCD8E3;
+                color: white;
+                display: block;
+                font-size: 14px;
+                font-weight: bold;
+                cursor: not-allowed;
+            }
+            .stepsClass li.disabled a:hover:before{
+                cursor: not-allowed;
+                color: #415B76;
+                background-color: #CCD8E3;
+                border: 2px solid #CCD8E3;
+                color: #FFFFFF;
+            }			
+            .stepsClass li.disabled {
+                cursor: not-allowed;
+            }
+            
+            .divModuloStep{
+                overflow-y: scroll; height: 400px;
+            }
