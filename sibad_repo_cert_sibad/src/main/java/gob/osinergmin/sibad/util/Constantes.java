@@ -260,4 +260,7 @@ public class Constantes {
     public static final String COLUMNA_CORREO_ELECTRONICO_REPORTE_DIRECTORIO = "CORREO ELECTRONICO";
     public static final String NOMBRE_FUENTE_REPORTE_DIRECTORIO = "Arial";
     
+    public static final String ESTADO_ACTIVO_LETRA="A";
+    public static final String ESTADO_INACTIVO_LETRA="I";
+    
 }

@@ -1,1 +1,1 @@
-<jsp:forward page="/pages/mantenimientoEmpresasAcreditadas" />
+<jsp:forward page="/pages/MenuPrincipal" />

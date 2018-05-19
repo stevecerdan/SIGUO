@@ -5,9 +5,10 @@
 package gob.osinergmin.sibad.service.dao.impl;
 
 import gob.osinergmin.sibad.domain.PghEmpresaAcreditada;
+import gob.osinergmin.sibad.domain.PghEmpresaAcreditadaV;
 import gob.osinergmin.sibad.domain.builder.EmpresaAcreditadaBuilder;
 import gob.osinergmin.sibad.domain.dto.EmpresaAcreditadaDTO;
-//import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
+import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
 import gob.osinergmin.sibad.filter.EmpresaAcreditadaFilter;
 import gob.osinergmin.sibad.filter.PersonaJuridicaFilter;
 import gob.osinergmin.sibad.service.dao.EmpresaAcreditadaDAO;
@@ -21,13 +22,17 @@ import javax.inject.Inject;
 import javax.persistence.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author jpiro
  */
-@Service("empacredDAO")
+//@Service("empacredDAO")
+@Repository("EmpresaAcreditadaDAO")
+@Transactional
 public class EmpresaAcreditadaDAOImpl implements EmpresaAcreditadaDAO {
     private static final Logger LOG = LoggerFactory.getLogger(EmpresaAcreditadaDAOImpl.class);
     @Inject
@@ -38,72 +43,75 @@ public class EmpresaAcreditadaDAOImpl implements EmpresaAcreditadaDAO {
         List<EmpresaAcreditadaDTO> listado;
         
         Query query = getFindQuery(filtro);
+        
+        LOG.info(query.toString());
+        
         listado = EmpresaAcreditadaBuilder.toListEmpresaAcreditadaDto(query.getResultList());
 
         return listado;
     }
     
-    /*@Override
-    public AutoayudaDTO update(AutoayudaDTO autoayudaDTO,UsuarioDTO usuarioDTO) throws AutoayudaException{
-        AutoayudaDTO retorno = null;
-        try{
-            PghAutoayuda registroDAO = AutoayudaBuilder.getAutoayuda(autoayudaDTO);
-            registroDAO.setDatosAuditoria(usuarioDTO);
-            crud.update(registroDAO);
-            
-            retorno=AutoayudaBuilder.toAutoayudaDto(registroDAO);
-        }catch(Exception e){
-            LOG.error("Error al editar Requisito",e);
-            AutoayudaException e2 = new AutoayudaException("Error al editar Requisito",e);
-            throw e2;
-        }
-        return retorno;
-    }*/
+    @Override
+    public List<EmpresaAcreditadaDTO> find2 (EmpresaAcreditadaFilter filtro2) throws EmpresaAcreditadaException {
+        List<EmpresaAcreditadaDTO> listado2;
+        
+        Query query2 = getFindQuery2(filtro2);
+        listado2 = EmpresaAcreditadaBuilder.toListEmpresaAcreditDto(query2.getResultList());
+
+        return listado2;
+    }
     
+    //UITLIZADO CON FIND
     private Query getFindQuery(EmpresaAcreditadaFilter filtro) {
         Query query=null;
         try{
             if(filtro.getIdAlcanceAcreditacion()!=null){
-            	query = crud.getEm().createNamedQuery("PghEmpresaAcreditada.findByAlcance");
+            	query = crud.getEm().createNamedQuery("PghEmpresaAcreditadaV.findByAlcance");
             }else{
-            	query = crud.getEm().createNamedQuery("PghEmpresaAcreditada.findByFilter");
+            	if(filtro.getIdEmpresaAcreditada()!=null){
+            		//query = crud.getEm().createNamedQuery("PghEmpresaAcreditadaV.findByAlcance");
+            		query = crud.getEm().createNamedQuery("PghEmpresaAcreditadaV.findByFechaUA");	
+            	}else{
+            		query = crud.getEm().createNamedQuery("PghEmpresaAcreditadaV.findByFilter");	
+            	}
             }
             
            if(filtro.getIdAlcanceAcreditacion()==null){
-                if(filtro.getRuc()!=null && !filtro.getRuc().equals("")){
-                    query.setParameter("ruc","%"+filtro.getRuc().toUpperCase()+"%");
+        	   
+        	   if(filtro.getIdEmpresaAcreditada()==null){
+        		   
+	                if(filtro.getRuc()!=null && !filtro.getRuc().equals("")){
+	                    query.setParameter("ruc","%"+filtro.getRuc().toUpperCase()+"%");
+	                }else{
+	                    query.setParameter("ruc","%");
+	                }
+	                if(filtro.getRazonSocial()!=null && !filtro.getRazonSocial().equals("")){
+	                    query.setParameter("razonSocial","%"+filtro.getRazonSocial().toUpperCase()+"%");
+	                }else{
+	                    query.setParameter("razonSocial","%");
+	                }
+	                if(filtro.getDireccion()!=null && !filtro.getDireccion().equals("")){
+	                    query.setParameter("direccion","%"+filtro.getDireccion().toUpperCase()+"%");
+	                }else{
+	                    query.setParameter("direccion","%");
+	                }
+	                if(filtro.getDepartamento()!=null && !filtro.getDepartamento().equals("")){
+	                    query.setParameter("departamento","%"+filtro.getDepartamento().toUpperCase()+"%");
+	                }else{
+	                    query.setParameter("departamento","%");
+	                }
+	                if(filtro.getProvincia()!=null && !filtro.getProvincia().equals("")){
+	                    query.setParameter("provincia","%"+filtro.getProvincia().toUpperCase()+"%");
+	                }else{
+	                    query.setParameter("provincia","%");
+	                }
+	                if(filtro.getDistrito()!=null && !filtro.getDistrito().equals("")){
+	                    query.setParameter("distrito","%"+filtro.getDistrito().toUpperCase()+"%");
+	                }else{
+	                    query.setParameter("distrito","%");
+	                }
                 }else{
-                    query.setParameter("ruc","%");
-                }
-                if(filtro.getRazonSocial()!=null && !filtro.getRazonSocial().equals("")){
-                    query.setParameter("razonSocial","%"+filtro.getRazonSocial().toUpperCase()+"%");
-                }else{
-                    query.setParameter("razonSocial","%");
-                }
-                if(filtro.getDireccion()!=null && !filtro.getDireccion().equals("")){
-                    query.setParameter("direccion","%"+filtro.getDireccion().toUpperCase()+"%");
-                }else{
-                    query.setParameter("direccion","%");
-                }
-                if(filtro.getDepartamento()!=null && !filtro.getDepartamento().equals("")){
-                    query.setParameter("departamento","%"+filtro.getDepartamento().toUpperCase()+"%");
-                }else{
-                    query.setParameter("departamento","%");
-                }
-                if(filtro.getProvincia()!=null && !filtro.getProvincia().equals("")){
-                    query.setParameter("provincia","%"+filtro.getProvincia().toUpperCase()+"%");
-                }else{
-                    query.setParameter("provincia","%");
-                }
-                if(filtro.getDistrito()!=null && !filtro.getDistrito().equals("")){
-                    query.setParameter("distrito","%"+filtro.getDistrito().toUpperCase()+"%");
-                }else{
-                    query.setParameter("distrito","%");
-                }
-                if(filtro.getTelefono()!=null && !filtro.getTelefono().equals("")){
-                    query.setParameter("telefono","%"+filtro.getTelefono().toUpperCase()+"%");
-                }else{
-                    query.setParameter("telefono","%");
+                    query.setParameter("idEmpresaAcreditada",filtro.getIdEmpresaAcreditada());
                 }
             }else{
                 query.setParameter("idAlcanceAcreditacion",filtro.getIdAlcanceAcreditacion());
@@ -116,4 +124,75 @@ public class EmpresaAcreditadaDAOImpl implements EmpresaAcreditadaDAO {
         }
         return query;
     }
+    
+  //UITLIZADO CON FIND2
+    private Query getFindQuery2(EmpresaAcreditadaFilter filtro2) {
+        Query query2=null;
+        try{
+            if(filtro2.getIdEmpresaAcreditada()!=null){
+            	query2 = crud.getEm().createNamedQuery("PghEmpresaAcreditada.findByEA");
+            }else{
+            	query2 = crud.getEm().createNamedQuery("PghEmpresaAcreditada.findByFilterPJ");
+            }
+            
+           if(filtro2.getIdEmpresaAcreditada()==null){
+                if(filtro2.getIdPersonaJuridica()!=null){
+                    query2.setParameter("idPersonaJuridica",filtro2.getIdPersonaJuridica());
+                }else{
+                    query2.setParameter("idPersonaJuridica","%");
+                }
+            }else{
+                query2.setParameter("idEmpresaAcreditada",filtro2.getIdEmpresaAcreditada());
+            }
+        }catch(Exception e){
+        	
+            LOG.error("Error getFindQuery2: "+e.getMessage());
+            
+        }
+        return query2;
+    }
+    
+    @Override
+	public EmpresaAcreditadaDTO create(EmpresaAcreditadaDTO empresaAcreditadaDTO, UsuarioDTO usuarioDTO)throws EmpresaAcreditadaException {
+		
+        LOG.info("Iniciando registro de Empresa Acreditada");
+		EmpresaAcreditadaDTO retorno=null;
+		
+		try{
+			
+			PghEmpresaAcreditada  pghEmpresaAcreditada=  new PghEmpresaAcreditada();
+			
+			pghEmpresaAcreditada.setIdEmpresaAcreditada(empresaAcreditadaDTO.getIdEmpresaAcreditada());
+			pghEmpresaAcreditada.setIdPersonaJuridica(empresaAcreditadaDTO.getIdPersonaJuridica());
+			pghEmpresaAcreditada.setEstado(empresaAcreditadaDTO.getEstado());
+			pghEmpresaAcreditada.setDatosAuditoria(usuarioDTO);
+			
+		    LOG.info(" Datos:"+pghEmpresaAcreditada.getEstado()+" - " +pghEmpresaAcreditada.getIdPersonaJuridica());
+
+		    if(empresaAcreditadaDTO.getIdEmpresaAcreditada()!= null) {
+		    	
+		    	pghEmpresaAcreditada = crud.find(empresaAcreditadaDTO.getIdEmpresaAcreditada(), PghEmpresaAcreditada.class);
+		    	pghEmpresaAcreditada.setIdEmpresaAcreditada(empresaAcreditadaDTO.getIdEmpresaAcreditada());
+		    	pghEmpresaAcreditada.setEstado(empresaAcreditadaDTO.getEstado());
+				pghEmpresaAcreditada.setDatosAuditoria(usuarioDTO);
+		    	
+				LOG.info(" Datos de Update:"+pghEmpresaAcreditada.getIdEmpresaAcreditada()+ " - " +pghEmpresaAcreditada.getEstado());
+		    	
+				crud.update(pghEmpresaAcreditada);
+		    } else  {	    	
+
+				crud. create(pghEmpresaAcreditada);
+		    	
+		    }
+		    
+			retorno = EmpresaAcreditadaBuilder.toEmpresaAcreditadaDTO(pghEmpresaAcreditada);
+			 
+			LOG.info("(Registro exitoso) retorno: "+retorno.toString());
+		
+		}catch(Exception ex){
+            LOG.error("",ex);
+        }
+		
+		return retorno;
+	}
 }

@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author jpiro
  */
 @Entity
-@Table(name = "VIEW_EMPRESA_ACREDITADA")
+@Table(name = "MDI_PERSONA_JURIDICA")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "MdiPersonaJuridica.findByIdPersonaJ", query = "SELECT p FROM MdiPersonaJuridica p WHERE p.idPersonaJuridica=:idPersonaJuridica "),
@@ -48,17 +48,17 @@ public class MdiPersonaJuridica extends Auditoria{
     private String direccion;
     @Size(max = 512)
     
-    @Column(name = "DEPARTAMENTO")
+    @Column(name = "ID_DEPARTAMENTO")
     private String departamento;
-    @Size(max = 100)
+    @Size(max = 2)
     
-    @Column(name = "PROVINCIA")
+    @Column(name = "ID_PROVINCIA")
     private String provincia;
-    @Size(max = 100)
+    @Size(max = 2)
     
-    @Column(name = "DISTRITO")
+    @Column(name = "ID_DISTRITO")
     private String distrito;
-    @Size(max = 100)
+    @Size(max = 2)
     
     @Column(name = "TELEFONO")
     private String telefono;

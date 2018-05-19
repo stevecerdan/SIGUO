@@ -1,19 +1,16 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package gob.osinergmin.sibad.service;
 
-import gob.osinergmin.sibad.domain.dto.AlcanceAcreditacionDTO;
-//import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
-import gob.osinergmin.sibad.filter.AlcanceAcreditacionFilter;
 import java.util.List;
 
-/**
- *
- * @author jpiro
- */
+import gob.osinergmin.sibad.domain.dto.AlcanceAcreditacionDTO;
+import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
+import gob.osinergmin.sibad.filter.AlcanceAcreditacionFilter;
+
 public interface AlcanceAcreditacionService {
-    public List<AlcanceAcreditacionDTO> listarAlcanceAcreditacion(AlcanceAcreditacionFilter filtro);
-    //public AutoayudaDTO editarAutoayuda(AutoayudaDTO autoayudaDTO,UsuarioDTO usuarioDTO);
+	
+     public List<AlcanceAcreditacionDTO> listarDatosAlcance(AlcanceAcreditacionFilter filtro);	
+	 public AlcanceAcreditacionDTO EditarEstadoAlcanceEmpresa(AlcanceAcreditacionDTO alcanceAcreditacionDTO, UsuarioDTO usuarioDTO);
+	 public AlcanceAcreditacionDTO EditarEstadoAlcanceAcreditacion(AlcanceAcreditacionDTO alcanceAcreditacionDTO, UsuarioDTO usuarioDTO);
+	 public AlcanceAcreditacionDTO RegistrarAlcanceAcreditacion(AlcanceAcreditacionDTO alcanceAcreditacionDTO, UsuarioDTO usuarioDTO);
+
 }

@@ -222,7 +222,7 @@
 	text-decoration: none;
 }
 .ui-datepicker-today a.ui-state-highlight {
-	background: aliceblue !important;
+	background: #9cbcdc !important;
 	color: #333 !important;
 }
 .ui-datepicker-today a.ui-state-active,

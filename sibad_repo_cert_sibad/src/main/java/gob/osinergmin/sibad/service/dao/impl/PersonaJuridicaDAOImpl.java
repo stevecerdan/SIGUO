@@ -5,9 +5,10 @@
 package gob.osinergmin.sibad.service.dao.impl;
 
 import gob.osinergmin.sibad.domain.MdiPersonaJuridica;
+import gob.osinergmin.sibad.domain.MdiPersonaJuridica1;
 import gob.osinergmin.sibad.domain.builder.PersonaJuridicaBuilder;
 import gob.osinergmin.sibad.domain.dto.PersonaJuridicaDTO;
-//import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
+import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
 import gob.osinergmin.sibad.filter.PersonaJuridicaFilter;
 import gob.osinergmin.sibad.service.dao.PersonaJuridicaDAO;
 import gob.osinergmin.sibad.service.dao.CrudDAO;
@@ -18,13 +19,16 @@ import javax.inject.Inject;
 import javax.persistence.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author jpiro
  */
-@Service("personajuridicaDAO")
+//@Service("personajuridicaDAO")
+@Repository("PersonaJuridicaDAO")
+@Transactional
 public class PersonaJuridicaDAOImpl implements PersonaJuridicaDAO {
     private static final Logger LOG = LoggerFactory.getLogger(PersonaJuridicaDAOImpl.class);
     @Inject
@@ -81,4 +85,45 @@ public class PersonaJuridicaDAOImpl implements PersonaJuridicaDAO {
         }
         return query;
     }
+    
+    @Override
+	public PersonaJuridicaDTO create(PersonaJuridicaDTO personaJuridicaDTO, UsuarioDTO usuarioDTO)throws PersonaJuridicaException {
+		
+		LOG.info("Iniciando registro de Empresa Acreditada");
+		
+		PersonaJuridicaDTO retorno = null;
+		
+		
+		try {
+			
+			MdiPersonaJuridica1 mdiPersonaJuridica1 = new MdiPersonaJuridica1();
+			
+			mdiPersonaJuridica1.setIdPersonaJuridica(personaJuridicaDTO.getIdPersonaJuridica());
+			mdiPersonaJuridica1.setIdDepartamento(personaJuridicaDTO.getIdDepartamento());
+			mdiPersonaJuridica1.setIdDistrito(personaJuridicaDTO.getIdDistrito());
+			mdiPersonaJuridica1.setIdProvincia(personaJuridicaDTO.getIdProvincia());
+			mdiPersonaJuridica1.setRuc(personaJuridicaDTO.getRuc());
+			mdiPersonaJuridica1.setRazonSocial(personaJuridicaDTO.getRazonSocial());
+			mdiPersonaJuridica1.setDireccion(personaJuridicaDTO.getDireccion());
+			mdiPersonaJuridica1.setTelefono(personaJuridicaDTO.getTelefono());
+			mdiPersonaJuridica1.setEmail(personaJuridicaDTO.getEmail());
+			mdiPersonaJuridica1.setWeb(personaJuridicaDTO.getWeb());
+			mdiPersonaJuridica1.setDatosAuditoria(usuarioDTO);
+			
+			
+			LOG.info(" Datos:"+mdiPersonaJuridica1.getIdDepartamento()+" - " +mdiPersonaJuridica1.getIdDistrito()+" - " +mdiPersonaJuridica1.getIdProvincia()+" - " +mdiPersonaJuridica1.getRuc()+" - " +mdiPersonaJuridica1.getRazonSocial()+" - " +mdiPersonaJuridica1.getDireccion()+" - " +mdiPersonaJuridica1.getTelefono()+" - " +mdiPersonaJuridica1.getEmail()+" - " +mdiPersonaJuridica1.getWeb());
+			
+			crud.create(mdiPersonaJuridica1);
+			
+			retorno = PersonaJuridicaBuilder.toPersonaJuridicaDto1(mdiPersonaJuridica1);
+			 
+			LOG.info("(Registro exitoso) retorno: "+retorno.toString());
+			
+			
+		}catch(Exception ex){
+            LOG.error("",ex);
+        }
+		
+		return retorno;
+	}
 }

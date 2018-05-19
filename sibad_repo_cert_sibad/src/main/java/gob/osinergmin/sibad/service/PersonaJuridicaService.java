@@ -5,7 +5,7 @@
 package gob.osinergmin.sibad.service;
 
 import gob.osinergmin.sibad.domain.dto.PersonaJuridicaDTO;
-//import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
+import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
 import gob.osinergmin.sibad.filter.PersonaJuridicaFilter;
 import java.util.List;
 
@@ -15,5 +15,6 @@ import java.util.List;
  */
 public interface PersonaJuridicaService {
     public List<PersonaJuridicaDTO> listarPersonaJuridica(PersonaJuridicaFilter filtro);
+    public PersonaJuridicaDTO RegistrarPersonaJuridica(PersonaJuridicaDTO personaJuridicaDTO,UsuarioDTO usuarioDTO);
     //public AutoayudaDTO editarAutoayuda(AutoayudaDTO autoayudaDTO,UsuarioDTO usuarioDTO);
 }

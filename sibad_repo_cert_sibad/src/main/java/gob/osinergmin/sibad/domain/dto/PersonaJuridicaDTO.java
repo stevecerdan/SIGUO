@@ -15,6 +15,9 @@ import javax.validation.constraints.Size;
  */
 public class PersonaJuridicaDTO {
 	private Long idPersonaJuridica;
+	private String idDepartamento;
+	private String idProvincia;
+	private String idDistrito;
     private String ruc;
     private String razonSocial;
     private String direccion;
@@ -33,6 +36,30 @@ public class PersonaJuridicaDTO {
 
 	public void setIdPersonaJuridica(Long idPersonaJuridica) {
 		this.idPersonaJuridica = idPersonaJuridica;
+	}
+
+	public String getIdDepartamento() {
+		return idDepartamento;
+	}
+
+	public void setIdDepartamento(String idDepartamento) {
+		this.idDepartamento = idDepartamento;
+	}
+
+	public String getIdProvincia() {
+		return idProvincia;
+	}
+
+	public void setIdProvincia(String idProvincia) {
+		this.idProvincia = idProvincia;
+	}
+
+	public String getIdDistrito() {
+		return idDistrito;
+	}
+
+	public void setIdDistrito(String idDistrito) {
+		this.idDistrito = idDistrito;
 	}
 
 	public String getRuc() {

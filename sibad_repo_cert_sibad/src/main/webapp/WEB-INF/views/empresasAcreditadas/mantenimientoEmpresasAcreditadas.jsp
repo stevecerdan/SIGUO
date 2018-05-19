@@ -4,12 +4,17 @@
     <jsp:attribute name="headArea">
         <script type="text/javascript" src='<c:url value="/javascript/app/empresasAcreditadas/mantenimientoEmpresasAcreditadas.js" />' charset="utf-8"></script>
         <script type="text/javascript" src='<c:url value="/javascript/app/empresasAcreditadas/panelPestana.js" />' ></script>
-        <!--<script type="text/javascript" src='<c:url value="/javascript/app/common.js" />' ></script>-->
+        <script type="text/javascript" src='<c:url value="/javascript/app/empresasAcreditadas/latinize.js"/>' charset="utf-8"></script>
         <style>
-			.ui-datepicker-calendar, .ui-datepicker-current {
+			/*.ui-datepicker-calendar, .ui-datepicker-current {
 				display: none;
+			}*/
+			
+			.ui-datepicker-today a.ui-state-highlight {
+				background: #9cbcdc !important;
+				color: #333 !important;
 			}
-			.ui-jqgrid tr.jqgrow td { white-space:pre; height:22px; text-align:center; padding-top:2px; }
+			.ui-jqgrid tr.jqgrow td { white-space:pre-wrap; height:22px; text-align:center; padding-top:2px; }
 			.ui-jqgrid .ui-jqgrid-htable th div { height:auto; overflow:hidden; padding-right:4px; padding-top:2px; position:relative; vertical-align:text-top; white-space:normal !important; }
 			
 			<!-- style panel -->
@@ -56,6 +61,10 @@
 						color: #000;
 						overflow: auto;
 					}*/
+					
+					.ui-dialog .ui-button-text {
+				    display: block;
+		  			}
 		</style>
     </jsp:attribute>
     
@@ -91,8 +100,7 @@
 			                                    <option value="3">Direcci&oacute;n</option> 
 			                                    <option value="4">Departamento</option> 
 			                                    <option value="5">Provincia</option> 
-			                                    <option value="6">Distrito</option> 
-			                                    <option value="7">Telefono</option>   
+			                                    <option value="6">Distrito</option>   
 			                                </select>
 			                            </div>
 		                            <div class="ipt-small vam" style="margin-left: 40px;"> </div>
@@ -108,19 +116,60 @@
 		                </fieldset>
 		
 		                <div class="gridMargin" style="margin:10px;">
-		                <!-- <div id="gridContenedorEmpAcred" class="content-grilla"></div> -->
 		                	<div id="gridContenedorEmpAcred"></div>
-		                    <div id="divContextMenuAutoAyuda"></div>
 		                </div>
+		                
+		                <div style="margin: 10px 0px 0px 10px;">
+		                    <input type="button" id="btnExportar" title="Exportar a Excel" class="btnSimple" style="width: 150px" value="Exportar a Excel">
+	                    </div>
 
 		                <div id="dialogNuevaEmpresaAcreditada" class="dialog"  title="Nueva Empresa Acreditada" style="display:none;"></div>
+		                <!-- <div id="dialogProcesoAcreditacion1" class="dialog"  title="Editar Proceso Acreditado" style="display:none;"></div> -->
 						
 						</div>
 					</div>
 					
 					</form>
 					<form id="panel_02">
-						<span class="ui-panel-title" id="lbltitulo"> PANEL HISTORIAL DE INSPECCIONES </span>
+						
+						<div class="container">
+            			<div class="pui-panel ui-widget-content">
+            			
+            			<span class="ui-panel-title" style="margin-left:10px;font-size:30px;" id="Titulo"></span>
+             
+		             	<fieldset class='tac' style="margin: 10px 10px">
+		                    <div class="form" style="width:auto; float:left; margin-left: 30px;">
+		                        
+		                        <div class="filaForm">
+		                            <div class="ipt-small vam" style="margin-right: 20px;"><label>Buscar por :</label> </div>
+			                            <div>
+			                                <select id="cmbTipoBusquedaH" name="tipoBusqueda" class="ipt-medium-small">
+			                                    <option value="">--Seleccione--</option>
+			                                    <option value="1">Empresa</option>  
+			                                    <option value="2">Unidad Operativa</option>
+			                                    <option value="3">Tipo de Prueba</option> 
+			                                </select>
+			                            </div>
+		                            <div class="ipt-small vam" style="margin-left: 40px;"> </div>
+		                            <input id="txtFiltroBusquedaHistorial" class="ipt-medium-large" name="FiltroBusqueda" type="text" maxlength="200" style="text-transform:uppercase;width: 325px;"/>                           
+		                            
+		                           	<div style="margin-left: 30px;">
+				                    <input type="button" id="btnBuscarHistorial" title="Buscar" class="btnSimple" style="width: 100px" value="Buscar">
+				                    </div>
+		                        </div>
+		                        
+		                    </div>
+		                </fieldset>
+		
+		                <!-- <div class="gridMargin" style="margin:10px;">
+		                	<div id="gridContenedorEmpAcred"></div>
+		                </div> -->
+
+		                
+		                <!-- <div id="dialogNuevaEmpresaAcreditada" class="dialog"  title="Nueva Empresa Acreditada" style="display:none;"></div>-->
+		                
+						</div>
+					</div>
 					</form>
 				</div>
 				<script type="text/javascript">

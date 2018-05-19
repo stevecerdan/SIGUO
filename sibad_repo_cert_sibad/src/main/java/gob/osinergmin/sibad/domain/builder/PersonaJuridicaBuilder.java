@@ -5,6 +5,7 @@
 package gob.osinergmin.sibad.domain.builder;
 
 import gob.osinergmin.sibad.domain.MdiPersonaJuridica;
+import gob.osinergmin.sibad.domain.MdiPersonaJuridica1;
 import gob.osinergmin.sibad.domain.dto.PersonaJuridicaDTO;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,25 @@ public class PersonaJuridicaBuilder {
         
         return registroDTO;
     }
+    
+    //Utilizado para el Registro
+    public static PersonaJuridicaDTO toPersonaJuridicaDto1(MdiPersonaJuridica1 registro) {
+        PersonaJuridicaDTO registroDTO = new PersonaJuridicaDTO();
+        
+        registroDTO.setIdPersonaJuridica(registro.getIdPersonaJuridica());
+        registroDTO.setRuc(registro.getRuc());
+        registroDTO.setRazonSocial(registro.getRazonSocial());
+        registroDTO.setDireccion(registro.getDireccion());
+        registroDTO.setIdDepartamento(registro.getIdDepartamento());
+        registroDTO.setIdProvincia(registro.getIdProvincia());
+        registroDTO.setIdDistrito(registro.getIdDistrito());
+        registroDTO.setTelefono(registro.getTelefono());
+        registroDTO.setEmail(registro.getEmail());
+        registroDTO.setWeb(registro.getWeb());
+        
+        return registroDTO;
+    }
+    //----------------------
     
     public static MdiPersonaJuridica getPersonaJuridica(PersonaJuridicaDTO registroDTO) {
         MdiPersonaJuridica registro = null;

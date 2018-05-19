@@ -21,8 +21,9 @@ public class EmpresaAcreditadaFilter extends BasePaginatorFilter{
     private String departamento;
     private String provincia;
     private String distrito;
-    private String telefono;
     
+    private Long idEmpresaAcreditada;
+    private Long idPersonaJuridica;
     
 	public Long getIdAlcanceAcreditacion() {
 		return idAlcanceAcreditacion;
@@ -67,12 +68,20 @@ public class EmpresaAcreditadaFilter extends BasePaginatorFilter{
 	public void setDistrito(String distrito) {
 		this.distrito = distrito;
 	}
-	public String getTelefono() {
-		return telefono;
+	
+	//-----
+	
+	public Long getIdEmpresaAcreditada() {
+		return idEmpresaAcreditada;
 	}
-	public void setTelefono(String telefono) {
-		this.telefono = telefono;
+	public void setIdEmpresaAcreditada(Long idEmpresaAcreditada) {
+		this.idEmpresaAcreditada = idEmpresaAcreditada;
 	}
-    
+	public Long getIdPersonaJuridica() {
+		return idPersonaJuridica;
+	}
+	public void setIdPersonaJuridica(Long idPersonaJuridica) {
+		this.idPersonaJuridica = idPersonaJuridica;
+	}
 	
 }

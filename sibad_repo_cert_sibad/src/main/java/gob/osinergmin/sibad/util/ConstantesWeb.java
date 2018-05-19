@@ -56,12 +56,24 @@ public class ConstantesWeb {
         public static final String PAGE_BANDEJA_SUPERVISION = "supervisiones/bandejaSupervision";
         public static final String PAGE_DETALLE_SUPERVISION = "supervisiones/detalleSupervision";
         
+        public static final String PAGE_MENU_PRINCIPAL= "menuGeneral";
+        
         public static final String PAGE_BANDEJA_EMPRESAS_ACREDITADAS = "empresasAcreditadas/mantenimientoEmpresasAcreditadas";
         public static final String PAGE_FRM_NUEVA_EMPRESA_ACREDITADA = "empresasAcreditadas/nuevaEmpresaAcreditada";
+        public static final String PAGE_GENERAL_FRM_ESTADO_ACCION = "empresasAcreditadas/frmEstadoAccion";
+        public static final String PAGE_FRM_NUEVO_ALCANCE_ACREDITACION = "empresasAcreditadas/nuevoAlcanceAcreditacion";
+        public static final String PAGE_FRM_NUEVA_SEDE = "empresasAcreditadas/frmNuevaSede";
+        public static final String PAGE_FRM_INSPECTOR_AUTORIZADO = "empresasAcreditadas/frmInspectorAutorizado";
+        public static final String PAGE_FRM_EQUIPO_CERTIFICADO = "empresasAcreditadas/frmEquipoCertificado";
+        public static final String PAGE_FRM_INACTIVAR_EQUIPO_AUTORIZADO = "empresasAcreditadas/frmInactivarEquipoAutorizado";
         
-      //Concurso
-        //public static final String PAGE_GENERAL_MANT_CONSURSO="general/concurso/mantenimiento";
-        //public static final String PAGE_GENERAL_MANT_CONSURSO_ADJUNTOS="general/concurso/mantFrmArchivo";
+        public static final String PAGE_FRM_VENTANA_CRON = "empresasAcreditadas/VentanaCron";
+        
+        public static final String PAGE_BANDEJA_TANQUE_CL = "InspeccionMantenimientoLimpieza/tanqueCL";
+        public static final String PAGE_FRM_NUEVA_PROGRAMACION_INSPECCION_MANTENIMIENTO_LIMPIEZA = "InspeccionMantenimientoLimpieza/pIndividualMasiva";
+    	public static final String PAGE_FRM_PRUEBA = "InspeccionMantenimientoLimpieza/fmrDocumentoAdjunto";
+        
+    	public static final String PAGE_BANDEJA_PRUEBA_HERMETICIDAD = "solicitudPruebasHermeticidad/bandejaPruebasHermeticidad";
     }
     
     public static class mensajes{

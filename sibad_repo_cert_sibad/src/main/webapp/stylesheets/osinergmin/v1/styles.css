@@ -29,10 +29,12 @@ legend
 
 /* CHECKBOX, RADIO BUTTON */
 
-input[type="checkbox"], input[type="radio"]
+/*input[type="checkbox"], input[type="radio"]
 {
 	display: none;
-}
+}*/
+
+
 
 .checkbox,
 .radio

@@ -5,10 +5,11 @@
 package gob.osinergmin.sibad.service.impl;
 
 import gob.osinergmin.sibad.domain.dto.EmpresaAcreditadaDTO;
-//import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
+import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
 import gob.osinergmin.sibad.filter.EmpresaAcreditadaFilter;
 import gob.osinergmin.sibad.service.EmpresaAcreditadaService;
 import gob.osinergmin.sibad.service.dao.EmpresaAcreditadaDAO;
+import gob.osinergmin.sibad.service.exception.EmpresaAcreditadaException;
 
 import java.util.List;
 import javax.inject.Inject;
@@ -41,17 +42,36 @@ public class EmpresaAcreditadaServiceImpl implements EmpresaAcreditadaService{
         return retorno;
     }
     
-   /* @Override
-    @Transactional
-    public AutoayudaDTO editarAutoayuda(AutoayudaDTO autoayudaDTO,UsuarioDTO usuarioDTO){
-        LOG.info("editarAutoayuda");
-        AutoayudaDTO registro=null;
+    @Override
+    @Transactional(readOnly = true)
+    public List<EmpresaAcreditadaDTO> listarEmpAcred2(EmpresaAcreditadaFilter filtro2){
+        List<EmpresaAcreditadaDTO> retorno=null;
         try{
-            registro=autoayudaDAO.update(autoayudaDTO,usuarioDTO);
-            LOG.info("(Actualizar Base Legal ServiceNegImpl) registro: "+registro.toString());
+            retorno = empacredDAO.find2(filtro2);
+            LOG.info("cuenta -size: "+retorno.size());
         }catch(Exception ex){
-            LOG.error("error editarAutoayuda",ex);
+            LOG.error("Error en listarEmpresaAcreditada",ex);
         }
-        return registro;
-    }*/
+        return retorno;
+    }
+    
+    @Override
+	public EmpresaAcreditadaDTO RegistrarEmpresaAcreditada(EmpresaAcreditadaDTO empresaAcreditadaDTO,UsuarioDTO usuarioDTO) {
+		
+		LOG.info("Iniciando envio de datos de Empresa Acreditada al DAO");
+		LOG.info("DATOS en service: " + empresaAcreditadaDTO.getIdEmpresaAcreditada() + " - " + empresaAcreditadaDTO.getEstado());
+ 		EmpresaAcreditadaDTO registro=null;
+		
+		try {
+			
+			registro = empacredDAO.create(empresaAcreditadaDTO,usuarioDTO);
+			LOG.info("(Se envio con exito los datos de Empresa Acreditada al DAO) registro: "+registro.toString());
+			 
+		} catch (EmpresaAcreditadaException e) {
+			
+			LOG.error("error enviar datos de Empresa Acreditada al DAO",e);
+		}
+	
+		return registro;
+	}
 }

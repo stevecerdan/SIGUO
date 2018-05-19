@@ -5,7 +5,7 @@
 package gob.osinergmin.sibad.service.impl;
 
 import gob.osinergmin.sibad.domain.dto.PersonaJuridicaDTO;
-//import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
+import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
 import gob.osinergmin.sibad.filter.PersonaJuridicaFilter;
 import gob.osinergmin.sibad.service.PersonaJuridicaService;
 import gob.osinergmin.sibad.service.dao.PersonaJuridicaDAO;
@@ -40,17 +40,24 @@ public class PersonaJuridicaServiceImpl implements PersonaJuridicaService{
         return retorno;
     }
     
-   /* @Override
-    @Transactional
-    public AutoayudaDTO editarAutoayuda(AutoayudaDTO autoayudaDTO,UsuarioDTO usuarioDTO){
-        LOG.info("editarAutoayuda");
-        AutoayudaDTO registro=null;
-        try{
-            registro=autoayudaDAO.update(autoayudaDTO,usuarioDTO);
-            LOG.info("(Actualizar Base Legal ServiceNegImpl) registro: "+registro.toString());
-        }catch(Exception ex){
-            LOG.error("error editarAutoayuda",ex);
-        }
-        return registro;
-    }*/
+    @Override
+	public PersonaJuridicaDTO RegistrarPersonaJuridica(PersonaJuridicaDTO personaJuridicaDTO, UsuarioDTO usuarioDTO) {
+		
+    LOG.info("Iniciando envio de datos de Persona Juridica al DAO");
+		
+    PersonaJuridicaDTO registro=null;
+		
+		try {
+			
+			
+			registro = personajuridicaDAO.create(personaJuridicaDTO,usuarioDTO);
+			LOG.info("(Se envio con exito los datos de Persona Juridica al DAO) registro: "+registro.getIdPersonaJuridica());
+			 
+		} catch (Exception e) {
+			
+			LOG.error("error enviar datos de Persona Juridica al DAO",e);
+		}
+	
+		return registro;
+	}
 }

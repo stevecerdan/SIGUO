@@ -6,8 +6,31 @@ var numeros = "0123456789";
 var numeros_caracteres = numeros + caracteres;
 var moneda = numeros + ".";
 var global = {
-    rowNum: 5
-};
+		   rowNum:5,
+		   rowNumPrinc:10,
+		   confirm:{
+		       save:"Se  &nbsp;registr&oacute;  satisfactoriamente.",
+		       edit:"Se  &nbsp;actualiz&oacute; el registro satisfactoriamente.",
+		       edit2:"Se han actualizado los datos del registro",
+		       delete:"Se  &nbsp;elimin&oacute; el registro satisfactoriamente."
+		   },
+		   accion:{ /* OSINE_SFS-480 - RSIS09 - mdiosesf - Inicio */
+		       save:1,
+		       update:2,
+		       delete:3,
+		       edit2:4,
+		       consult:5
+		   }, 
+		   msjMaxNivel:{ 
+		   	error:"No se puede agregar nuevo nivel."
+		   }, /* OSINE_SFS-480 - RSIS09 - mdiosesf - Fin */
+		   terminoUtilizarBaseLegal:{
+		   	articulo: "A",
+		   	numeral: "N"
+		   },
+		   si: 'S',
+		   no: 'N'
+		};
 
 $(function() {
     baseURL = "/sibad/"; //TODO EMc
