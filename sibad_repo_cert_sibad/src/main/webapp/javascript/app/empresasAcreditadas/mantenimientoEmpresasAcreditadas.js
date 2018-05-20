@@ -1,4 +1,3 @@
-//prueba
 var nombreEmpresa;
 $(function() {
 	listarEmpresasAcreditadas(0);
