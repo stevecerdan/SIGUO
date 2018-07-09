@@ -1,4 +1,5 @@
 //Funciones Generales --
+
 var baseURL;
 var id;
 var caracteres = "abcdefghijklmn�opqrstuvwxyzABCDEFGHIJKLMN�OPQRSTUVWXYZ";
