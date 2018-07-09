@@ -74,32 +74,43 @@ public class EquipoCertificadoDAOImpl implements EquipoCertificadoDAO {
         Query query=null;
         try{
         	
-        	if(filtro.getIdEquipoCertificado()!=null){
-            	query = crud.getEm().createNamedQuery("PghEquipoCertificadoV.findByEquipo");  
-        	}else {
-        		if(filtro.getIdAlcanceAcreditacion()!=null){
-        			query = crud.getEm().createNamedQuery("PghEquipoCertificadoV.findByFilterA");
-        		}else {
-        			query = crud.getEm().createNamedQuery("PghEquipoCertificadoV.findByFechaPC");
-        		}
+        	if(filtro.getIdEmpresaAcreditada()!=null){
+            	query = crud.getEm().createNamedQuery("PghEquipoCertificadoV.findBycbxResultadoEquipo");  
+        	} else {
+        		if(filtro.getIdEquipoCertificado()!=null){
+                	query = crud.getEm().createNamedQuery("PghEquipoCertificadoV.findByEquipo");  
+            	} else {
+            		if(filtro.getIdAlcanceAcreditacion()!=null){
+            			query = crud.getEm().createNamedQuery("PghEquipoCertificadoV.findByFilterA");
+            		}else {
+            			query = crud.getEm().createNamedQuery("PghEquipoCertificadoV.findByFechaPC");
+            		}
+                }
             }
             
-            if(filtro.getIdEquipoCertificado()==null){
+            if(filtro.getIdEmpresaAcreditada()==null){
             	
-                if(filtro.getIdAlcanceAcreditacion()==null){
-                    
-                    if(filtro.getFechaProximaCalibracion()!=null){
-                        query.setParameter("fechaProximaCalibracion",filtro.getFechaProximaCalibracion());
+            	if(filtro.getIdEquipoCertificado()==null){
+                	
+                    if(filtro.getIdAlcanceAcreditacion()==null){
+                        
+                        if(filtro.getFechaProximaCalibracion()!=null){
+                            query.setParameter("fechaProximaCalibracion",filtro.getFechaProximaCalibracion());
+                        }else{
+                            query.setParameter("fechaProximaCalibracion","");
+                        }
+                        
                     }else{
-                        query.setParameter("fechaProximaCalibracion","");
+                    	query.setParameter("idAlcanceAcreditacion",filtro.getIdAlcanceAcreditacion());
                     }
                     
                 }else{
-                	query.setParameter("idAlcanceAcreditacion",filtro.getIdAlcanceAcreditacion());
+                    query.setParameter("idEquipoCertificado",filtro.getIdEquipoCertificado());
                 }
                 
             }else{
-                query.setParameter("idEquipoCertificado",filtro.getIdEquipoCertificado());
+                query.setParameter("idEmpresaAcreditada",filtro.getIdEmpresaAcreditada());
+                query.setParameter("idTipoEquipo",filtro.getIdTipoEquipo());
             }
             
         }catch(Exception e){

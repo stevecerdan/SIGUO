@@ -4,8 +4,66 @@
 <html>
     <head>
         <script type="text/javascript" src='<c:url value="/javascript/app/empresasAcreditadas/frmEstadoAccion.js" />' charset="utf-8"></script>
-        <script type="text/javascript" src='<c:url value="/javascript/app/empresasAcreditadas/latinize.js"/>' charset="utf-8"></script>
+        <script type="text/javascript" src='<c:url value="/javascript/third-party/latinize.js"/>' charset="utf-8"></script>
     </head>
+    <style>
+       .customfile {
+       
+		    position: relative;
+		    overflow: hidden;
+		    width: 230px;
+		    height: 19px;
+		    border: solid 0px red;
+		    background: #fff;
+		    -moz-border-radius: 5px;
+		    -webkit-border-radius: 5px;
+		    border-radius: 5px;
+		    border: solid 1px #c2c2c2;
+		    padding: 2px;
+		    -webkit-box-shadow: inset 1px 1px 2px #e4e4e4;
+		    box-shadow: inset 1px 1px 2px #e4e4e4;
+		}
+		
+		.customfile span.cust-btn {
+		    float: right;
+		    line-height: 20px;
+		    padding: 1px 10px;
+		    height: 18px;
+		    text-align: center;
+		    font-weight: bold;
+		    cursor: pointer;
+		    color: #fff;
+		    background: #e1e1e1;
+		    -moz-border-radius: 3px;
+		    -webkit-border-radius: 3px;
+		    border-radius: 3px;
+		    text-transform: uppercase;
+		    background-color: #002c53;
+		    /*margin-top: 1px;*/
+		}
+		
+		.customfile span.cust-field {
+		    line-height: 20px;
+		    padding: 3px 4px;
+		    width: 225px;
+		    height: 20px;
+		    cursor: pointer;
+		    color: #212121;
+		    display: block;
+		    font-weight: normal;
+		    color: #333;
+		}
+		
+		.customfile .fileinput {
+		    position: absolute;
+		    left: 0px;
+		    top: 0px;
+		    cursor: pointer;
+		    z-index: 99;
+		}
+		
+
+    </style>
     <body>
     	<fieldset>
 	        <form id="fileUploadForm1" class="tac" method="post" enctype="multipart/form-data">  
@@ -27,19 +85,18 @@
 	                        <textarea name="observacion" id="txtObservacion" rows="4" style="text-transform:uppercase;width: 226px;" type="text" validate="[O]"></textarea>
 	                    </div>
 	                </div>
-	                <div class="filaForm">
-	                    <!-- <div class="lble vat"><label id="lblCedula">Adjuntar Cedula :</label></div> -->
-	                    <span class="ui-panel-title" style="font:normal 12px 'Calibri';font-weight: bold;" id="lblCedula"></span>
+	                <div class="filaForm" style="margin-top:10px">
+	                	<span class="ui-panel-title" style="margin-right:8px; font:normal 11.5px 'Calibri';font-weight: bold;" id="lblCedula"></span>
 	                    <div>
-	                    	<div class="customfile" style="border:2px solid #3B4959 ;position: absolute; width: 162px;border-radius: 4px; padding: 5px 4px;">
+	                    	<div class="customfile" style="border:2px solid #3B4959 ;position: absolute; width:220px; margin-top:-19px;">
 					             <div class="innersec">
 					                  <input type="file" class="fileinput" name="uploadfileC" id="uploadfileC" style="width: 100%;height: 100%;position: absolute;left: 0px;top: 0px;opacity: 0;">
+					                  <span class="cust-btn" style="margin-right:12px;">Adjuntar</span>
 					                  <span class="cust-field" style="font:normal 12px 'Calibri';" id="nombreArchivoC">Subir Archivo, Click Aquí</span>
 					             </div>
 				         	</div>
-                            <button type="button" class="btnSimple" title="Subir Archivo" id="btnSubirArchivo" style="margin-left:176px; width:50px;"><img src="/sibad//../images/save.png" style="margin-left:-3px;"/></button>
-	                        <!-- <input id="txtCedula" class="ipt-medium" name="orden" type="text" maxlength="64" style="text-transform:uppercase; width:172px;"/> -->
-	                        <!-- <input type="button" id="btnSubirArchivo" title="Subir Archivo" class="btnSimple" value="..." style="width:50px;"/> -->
+                            <!-- <button type="button" class="btnSimple" title="Subir Archivo" id="btnSubirArchivo" style="margin-left:176px; width:50px;"><img src="/sibad//../images/save.png" style="margin-left:-3px;"/></button> -->
+	                        
 	                        <input type="hidden" id="txtCedula"/>
 	                    </div>
 	                </div> 

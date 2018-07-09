@@ -8,14 +8,12 @@ var idAux="";
 var tipoPrueba="";
 var aae = "";
 var idAlcanceAcreditacionAux="";
+var aai = "";
+var accion = "";
+var aas = "";
+var accionS = "";
 
 $(function() {
-	//initDialogs();
-	//listarSedes(0);
-	//listarInspector(0);
-	//listarEquipo(0);
-	//listarDocumentoAdjuntoAA(0);
-	//listarDocumentoAlcanceAA(0);
 	initInicioNuevoAlcanceAcreditacion();  
 	$("#MensajeFECHA").hide();
 	$('#MensajeValA').hide();
@@ -45,6 +43,7 @@ function formattedDate(d = new Date) {
 function convertDateFormat(string) {
 	var info = string.split('/');
 	return info[1] + '/' + info[0] + '/' + info[2];
+	
 }
 
 //----------Funciones de Validaciones----------
@@ -71,9 +70,8 @@ $("#cmbTipoPrueba").change(function(){
 
 function initInicioNuevoAlcanceAcreditacion(){
 	confirm.start();
-	cargarTipo();
-	cargarTipoOrganismo();
-	$("#cmbTipoOrganismo").attr('disabled','disabled');
+	//cargarTipo();
+	
 	desactivarBotonesSIE();
 	
 	//cargar o no grillas
@@ -88,14 +86,24 @@ function initInicioNuevoAlcanceAcreditacion(){
 	}
 	
 	$('#txtFechaIV').change(function(){
+		//Fecha Ultima Acreditacion
 		var fua = $('#txtFechaUA').val();
+		//Fecha Primera Acreditacion
+		var fa = $('#txtFechaA').val();
+		//Fecha Inicio de Vigencia
 		var fiv = $('#txtFechaIV').val();
+		//Fecha Vencimiento
 		var fv = $('#txtFechaV').val();
 		
 		var vua = fua.split("/");
 		var dua = vua[0];
 		var mua = vua[1];
 		var aua = vua[2];
+		
+		var va = fa.split("/");
+		var da = va[0];
+		var ma = va[1];
+		var aa = va[2];
 		
 		var viv = fiv.split("/");
 		var div = viv[0];
@@ -107,15 +115,25 @@ function initInicioNuevoAlcanceAcreditacion(){
 		var mv = vv[1];
 		var av = vv[2];
 		
-		if(dua > div && mua >= miv && aua >= aiv){
+		/*if(fua!=""){
+			if(dua > div && mua >= miv && aua >= aiv){
 			$("#MensajeFECHA").show();
 			$('#txtFechaIV').val('');
-		}
-		
-		if(fv!=""){
-			if(div > dv && miv >= mv && aiv >= av){
+			}
+		}else{
+			if(da > div && ma >= miv && aa >= aiv){
 			$("#MensajeFECHA").show();
-			$('#txtFechaV').val('');
+			$('#txtFechaIV').val('');
+			}
+		}*/
+		
+		//Si esta la fecha de vencimiento
+		if(fv!=""){
+			//validar que la fecha de inicio de vigencia (iv), no sea mayor a la de vencimiento (v)
+			  //dias          meses          años         dias        meses       años
+			if((div >= dv && miv >= mv && aiv >= av) || (div < dv && miv > mv && aiv >= av)){
+			$("#MensajeFECHA").show();
+			$('#txtFechaIV').val('');
 			}
 		}
 		
@@ -140,7 +158,7 @@ function initInicioNuevoAlcanceAcreditacion(){
 		var mv2 = vv2[1];
 		var av2 = vv2[2];
 		
-		if(dv2 < div2 && mv2 <= miv2 && av2 <= aiv2){
+		if((dv2 <= div2 && mv2 <= miv2 && av2 <= aiv2) || (dv2 > div2 && mv2 < miv2 && av2 <= aiv2)){
 			$("#MensajeFECHA").show();
 			$('#txtFechaV').val('');
 		}
@@ -167,15 +185,282 @@ function initInicioNuevoAlcanceAcreditacion(){
 		$("#MensajeValA").hide();
 	});
 	//---------------------------------
-	$('#btnNuevaSede').click(function(){
-    	var aas = $('#idAlcanceAcreditacion').val();
-    	abrirNuevaSede(aas);
+	
+	$('#btnNuevoPersonal').click(function(){
+    	var aaps = $('#idAlcanceAcreditacion').val();
+    	abrirNuevoPersonal(aaps);
     });
 	
-	$('#btnNuevoInspector').click(function(){
-		var aai = $('#idAlcanceAcreditacion').val();
-    	abrirInspectorAutorizado(aai);
+	$('#btnNuevaSede').click(function(){
+    	aas = $('#idAlcanceAcreditacion').val();
+    	accionS = "R"
+    	abrirNuevaSede(aas, accionS);
     });
+	
+	$('body').on('click', '.MostrarDoc',function(){
+		
+		   var cadena= $(this).attr("id");
+	 	   
+	 	   var arrayCadena = cadena.split("%");
+	 	   
+	 	   var nombreDocumento = arrayCadena[0];
+	 	   var archivoAdjunto = arrayCadena[1];
+	 	   
+		    $.ajax({
+		        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/buscarDocumentoAdjunto",
+		        type:'post',
+		        async:false,
+		        data:{
+		        	idDocumentoAdjunto:$('#txtAdjuntarArchivo').val()
+		        },
+		        beforeSend:muestraLoading,
+		        success:function(data){
+		        	
+		            ocultaLoading();
+		            $.each(data.filas, function( index, value ) {
+		            	
+		            	var blob = new Blob([value.archivoAdjunto], {type: 'application/pdf'});
+		     	 	   
+		      	 	  //creamos un FileReader para leer el Blob
+		      	 	  var reader = new FileReader();
+		      	 	  //Definimos la función que manejará el archivo
+		      	 	  //una vez haya terminado de leerlo
+		      	 	  reader.onload = function (event) {
+		      	 	    //Usaremos un link para iniciar la descarga 
+		      	 	    var save = document.createElement('a');
+		      	 	    save.href = event.target.result;
+		      	 	    save.target = '_blank';
+		      	 	    //Truco: así le damos el nombre al archivo 
+		      	 	    save.download = value.nombreDocumento;
+		      	 	    var clicEvent = new MouseEvent('click', {
+		      	 	      'view': window,
+		      	 	      'bubbles': true,
+		      	 	      'cancelable': true
+		      	 	    });
+		      	 	    //Simulamos un clic del usuario
+		      	 	    //no es necesario agregar el link al DOM.
+		      	 	    save.dispatchEvent(clicEvent);
+		      	 	    //Y liberamos recursos...
+		      	 	    (window.URL || window.webkitURL).revokeObjectURL(save.href);
+		      	 	  };
+		      	 	  //Leemos el blob y esperamos a que dispare el evento "load"
+		      	 	  reader.readAsDataURL(blob);
+		            });
+		            
+		        },
+		        error:errorAjax
+		    });
+		    
+		    //------ otro caso...
+		    
+		    /*var a = document.createElement("a");
+	 	    document.body.appendChild(a);
+	 	    a.style = "display: none";
+	 	    
+ 	        var blob = new File([value.archivoAdjunto], value.nombreDocumento);
+ 	    	//var blob = new Blob([archivoAdjunto], {type: 'application/pdf'});
+ 	        url = window.URL.createObjectURL(blob);
+ 	        a.href = url;
+ 	        a.download = blob.name;
+ 	        //a.download =nombreDocumento;
+ 	        a.click();
+ 	        window.URL.revokeObjectURL(url);*/
+	 	   
+		    //------------
+		    
+	 	   /*var blob = new Blob([archivoAdjunto], {type: 'application/pdf'});
+	 	   
+	 	  //creamos un FileReader para leer el Blob
+	 	  var reader = new FileReader();
+	 	  //Definimos la función que manejará el archivo
+	 	  //una vez haya terminado de leerlo
+	 	  reader.onload = function (event) {
+	 	    //Usaremos un link para iniciar la descarga 
+	 	    var save = document.createElement('a');
+	 	    save.href = event.target.result;
+	 	    save.target = '_blank';
+	 	    //Truco: así le damos el nombre al archivo 
+	 	    save.download = nombreDocumento;
+	 	    var clicEvent = new MouseEvent('click', {
+	 	      'view': window,
+	 	      'bubbles': true,
+	 	      'cancelable': true
+	 	    });
+	 	    //Simulamos un clic del usuario
+	 	    //no es necesario agregar el link al DOM.
+	 	    save.dispatchEvent(clicEvent);
+	 	    //Y liberamos recursos...
+	 	    (window.URL || window.webkitURL).revokeObjectURL(save.href);
+	 	  };
+	 	  //Leemos el blob y esperamos a que dispare el evento "load"
+	 	  reader.readAsDataURL(blob);*/
+		    
+		    
+		    /*var xhr = new XMLHttpRequest();
+		                xhr.open('GET', baseURL + '/file', true);
+		                xhr.responseType = 'blob';
+
+		                xhr.onload = function(e) {
+		                  if (this.status == 200) {
+		                    var blob = new Blob([this.response], {type: 'application/pdf'});
+		                    var link = document.createElement('a');
+		                    link.href = window.URL.createObjectURL(blob);
+		                    link.download = value.nombreDocumento;
+		                    link.click();       
+		                  }
+		                };
+
+		                xhr.send();*/
+	 	   
+});
+	
+	//#txtAdjuntarAlcance
+	$('body').on('click', '.MostrarDocAlc',function(){
+		
+		   var cadena= $(this).attr("id");
+	 	   
+	 	   var arrayCadena = cadena.split("%");
+	 	   
+	 	   var nombreDocumento = arrayCadena[0];
+	 	   var archivoAdjunto = arrayCadena[1];
+	 	   
+		    $.ajax({
+		        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/buscarDocumentoAdjunto",
+		        type:'post',
+		        async:false,
+		        data:{
+		        	idDocumentoAdjunto:$('#txtAdjuntarAlcance').val()
+		        },
+		        beforeSend:muestraLoading,
+		        success:function(data){
+		        	
+		            ocultaLoading();
+		            $.each(data.filas, function( index, value ) {
+		            	
+		            	var blob = new Blob([value.archivoAdjunto], {type: 'application/pdf'});
+		     	 	   
+		      	 	  //creamos un FileReader para leer el Blob
+		      	 	  var reader = new FileReader();
+		      	 	  //Definimos la función que manejará el archivo
+		      	 	  //una vez haya terminado de leerlo
+		      	 	  reader.onload = function (event) {
+		      	 	    //Usaremos un link para iniciar la descarga 
+		      	 	    var save = document.createElement('a');
+		      	 	    save.href = event.target.result;
+		      	 	    save.target = '_blank';
+		      	 	    //Truco: así le damos el nombre al archivo 
+		      	 	    save.download = value.nombreDocumento;
+		      	 	    var clicEvent = new MouseEvent('click', {
+		      	 	      'view': window,
+		      	 	      'bubbles': true,
+		      	 	      'cancelable': true
+		      	 	    });
+		      	 	    //Simulamos un clic del usuario
+		      	 	    //no es necesario agregar el link al DOM.
+		      	 	    save.dispatchEvent(clicEvent);
+		      	 	    //Y liberamos recursos...
+		      	 	    (window.URL || window.webkitURL).revokeObjectURL(save.href);
+		      	 	  };
+		      	 	  //Leemos el blob y esperamos a que dispare el evento "load"
+		      	 	  reader.readAsDataURL(blob);
+		            });
+		            
+		        },
+		        error:errorAjax
+		    });
+	 	   
+});
+	
+	
+	$('body').on('click', '.EditarSede',function(){
+		
+		   var cadena= $(this).attr("id");
+	 	   
+	 	   var arrayCadena = cadena.split("%");
+	 	   
+	 	   var id = arrayCadena[0];
+	 	   var direccion = arrayCadena[1];
+	 	   var idDepartamento = arrayCadena[2];
+	 	   var idProvincia = arrayCadena[3];
+	 	   var idDistrito = arrayCadena[4];
+	 	   var idTipoDocumento = arrayCadena[5];
+	 	   var numeroDocumento = arrayCadena[6];
+	 	   var idCargo = arrayCadena[7];
+	 	   var idSedeAcreditacion = arrayCadena[8];
+	 	   
+	 	   if (id == '' || id == 'null'){id = '';
+	 	   } else {id =arrayCadena[0];}
+	 	   
+	       if (direccion == ''  || direccion == 'null'){direccion ='' ;
+	       } else {direccion =arrayCadena[1] ;}
+	       
+	       if (idDepartamento == '' || idDepartamento == 'null'){idDepartamento ='';
+	       } else {idDepartamento = arrayCadena[2];} 
+	       
+	       if (idProvincia == '' || idProvincia == 'null'){idProvincia ='' ;
+	       } else {idProvincia = arrayCadena[3];}
+	       
+	       if (idDistrito == '' || idDistrito == 'null'){idDistrito ='' ;
+	       } else {idDistrito = arrayCadena[4];}
+	       
+	      if (idTipoDocumento == '' || idTipoDocumento == 'null'){idTipoDocumento ='';
+	       } else {idTipoDocumento = arrayCadena[5];} 
+	       
+	       if (numeroDocumento == '' || numeroDocumento == 'null'){ numeroDocumento ='' ;
+	       } else {numeroDocumento = arrayCadena[6];}
+	       
+	       if (idCargo == '' || idCargo == 'null'){idCargo ='' ;
+	       } else {idCargo = arrayCadena[7];} 
+	       
+	       if (idSedeAcreditacion == '' || idSedeAcreditacion == 'null'){idSedeAcreditacion ='';
+	       }else{idSedeAcreditacion = arrayCadena[8];} 
+	       
+	       aas = $('#idAlcanceAcreditacion').val();
+	       accionS = "E"
+	       abrirNuevaSede(aas, accionS);
+	 	   cargarDatosSede(id,direccion,idDepartamento,idProvincia,idDistrito,idTipoDocumento,numeroDocumento,idCargo,idSedeAcreditacion);
+
+});
+	
+	$('#btnNuevoInspector').click(function(){
+		aai = $('#idAlcanceAcreditacion').val();
+		accion = "R"
+    	abrirInspectorAutorizado(aai,accion);
+    });
+	
+	$('body').on('click', '.EditarInspector',function(){
+		
+		   var cadena= $(this).attr("id");
+	 	   
+	 	   var arrayCadena = cadena.split("%");
+	 	   
+	 	   var id = arrayCadena[0];
+	 	   var direccion = arrayCadena[1];
+	 	   var idTipoDocumento = arrayCadena[2];
+	 	   var numeroDocumento = arrayCadena[3];
+	 	   var idEspecialidad = arrayCadena[4];
+	 	   
+	 	   if (id == '' || id == 'null'){id = '';
+	 	   } else {id =arrayCadena[0];}
+	 	   
+	       if (direccion == ''  || direccion == 'null'){direccion ='' ;
+	 	   } else {direccion =arrayCadena[1] ;}
+	       
+	       if (idTipoDocumento == '' || idTipoDocumento == 'null'){idTipoDocumento ='';
+	 	   } else {idTipoDocumento = arrayCadena[2];} 
+	       
+	       if (numeroDocumento == '' || numeroDocumento == 'null'){numeroDocumento ='' ;
+	 	   } else {numeroDocumento = arrayCadena[3];}
+	       
+	       if (idEspecialidad == '' || idEspecialidad == 'null'){idEspecialidad ='' ;
+	 	   } else {idEspecialidad = arrayCadena[4];} 
+	       
+	       aai = $('#idAlcanceAcreditacion').val();
+	       accion = "E"
+	       abrirInspectorAutorizado(aai, accion);
+	 	   cargarDatosInspector(id,direccion,idTipoDocumento,numeroDocumento,idEspecialidad);
+	 	   
+ });
 	
 	$('#btnNuevoEquipo').click(function(){
 		aae = $('#idAlcanceAcreditacion').val();
@@ -217,7 +502,6 @@ function initInicioNuevoAlcanceAcreditacion(){
 	
 	$('body').on('click', '.Eliminar',function(){
     	var id= $(this).attr("id");
-    	//alert("eliminar: " + id);
         confirm.open("¿Ud est&aacute; seguro de Eliminar?","eliminarPersonalAutorizado('" + id + "')");
     });
 	
@@ -227,7 +511,8 @@ function initInicioNuevoAlcanceAcreditacion(){
     	tipoPrueba = $("#cmbTipoPrueba").val();
     	abrirEquipoCertificado(aae, id, tipoPrueba);
     	$("#cmbEstado").removeAttr('disabled');
-    	//listarPersonal();
+    	cargarComponente(); 
+        LimpiarComponentesEncontrados();
 		
     });   
 	
@@ -241,15 +526,21 @@ function initInicioNuevoAlcanceAcreditacion(){
 		$('#MensajeValA').hide();
 	    var filename = $('#uploadfile')[0].files[0]
 	    $('#nombreArchivo').text(filename.name);
+	    if($('#nombreArchivo').text()!=="Subir Archivo, Click Aquí"){
+	    registrarDocumento();
+	    }
 	});
 	
 	$('#uploadfileA').change(function() {
 		$('#MensajeValA').hide();
 	    var filename = $('#uploadfileA')[0].files[0]
 	    $('#nombreArchivoA').text(filename.name);
+	    if($('#nombreArchivoA').text()!=="Subir Archivo, Click Aquí"){
+	    registrarDocumentoA();
+	    }
 	});
 	
-	$('#btnAdjuntarArchivo').click(function(){
+	/*$('#btnAdjuntarArchivo').click(function(){
 		
 		//$('#nombreArchivo').text("Subir Archivo, Click Aquí");
 		if($('#nombreArchivo').text()=="Subir Archivo, Click Aquí"){
@@ -260,9 +551,9 @@ function initInicioNuevoAlcanceAcreditacion(){
     	registrarDocumento();
     	//listarDocumentoAdjuntoAA(0);
 		}
-    });
+    });*/
 	
-	$('#btnAdjuntarAlcance').click(function(){
+	/*$('#btnAdjuntarAlcance').click(function(){
 		
 		if($('#nombreArchivoA').text()=="Subir Archivo, Click Aquí"){
 			$('#MensajeValA').show();
@@ -272,27 +563,21 @@ function initInicioNuevoAlcanceAcreditacion(){
     	registrarDocumentoA();
     	//listarDocumentoAlcanceAA(0);
 		}
-    });
+    });*/
 	
 	$('body').on('click', '.EliminarDocumento',function(){
 		
     	var id= $(this).attr("id");
-    	//alert("eliminar: " + id);
-        //confirm.open("¿Ud est&aacute; seguro de Eliminar?","eliminarPersonalAutorizado('" + id + "')");
-        //eliminarPersonalAutorizado('id');
 		modificarEstadoxEliminar(id);
 		$('#txtAdjuntarArchivo').val("");
 		desbloquearItemsDocumentoAdjunto();
 		$("#gridContenedorDocAA").html("");
-		$("#gridContenedorDocAA1").attr('style','margin-left:750px;');
+		$("#gridContenedorDocAA1").attr('style','margin-left:790px;');
     });
 	
 	$('body').on('click', '.EliminarDocumentoA',function(){
 		
 		var id= $(this).attr("id");
-		//alert("eliminar: " + id);
-        //confirm.open("¿Ud est&aacute; seguro de Eliminar?","eliminarPersonalAutorizado('" + id + "')");
-        //eliminarPersonalAutorizado('id');
 		modificarEstadoxEliminar(id);
 		$('#txtAdjuntarAlcance').val("");
 		desbloquearItemsAlcanceAdjunto();
@@ -306,6 +591,8 @@ function desactivarBotonesSIE(){
 	//Desactivar Botones
 	$('#btnNuevaSede').attr('disabled','disabled');
 	$('#btnNuevaSede').attr('style','background-color:#60869a; width:150px;');
+	$('#btnNuevoPersonal').attr('disabled','disabled');
+	$('#btnNuevoPersonal').attr('style','background-color:#60869a; width:150px;');
 	$('#btnNuevoInspector').attr('disabled','disabled');
 	$('#btnNuevoInspector').attr('style','background-color:#60869a; width:150px;');
 	$('#btnNuevoEquipo').attr('disabled','disabled');
@@ -317,6 +604,9 @@ function activarBotonesSIE(){
 	$("#btnNuevaSede").removeAttr('disabled');
 	$("#btnNuevaSede").removeAttr('style');
 	$('#btnNuevaSede').attr('style','width:150px');
+	$('#btnNuevoPersonal').removeAttr('disabled');
+	$('#btnNuevoPersonal').removeAttr('style');
+	$('#btnNuevoPersonal').attr('style','width:150px');
 	$('#btnNuevoInspector').removeAttr('disabled');
 	$('#btnNuevoInspector').removeAttr('style');
 	$('#btnNuevoInspector').attr('style','width:150px');
@@ -328,7 +618,7 @@ function activarBotonesSIE(){
 function bloquearInput(){
     $('#idAlcanceAcreditacion').attr('disabled','disabled');
     $('#txtResolucion').attr('disabled','disabled');
-    $('#txtRegistro').attr('disabled','disabled');
+   // $('#txtRegistro').attr('disabled','disabled');
     //$('#txtAdjuntarArchivo').attr('disabled','disabled');
     //$('#txtAdjuntarAlcance').attr('disabled','disabled');
     bloquearItemsDocumentoAdjunto();
@@ -341,29 +631,21 @@ function bloquearInput(){
     $('#txtFechaV').attr('disabled','disabled');
     $('#cmbTipoPrueba').attr('disabled','disabled');
     $('#cmbTipoOrganismo').attr('disabled','disabled');
-    $('#idEAcreditada').attr('disabled','disabled');   
-    //$('#btnGuardarAlcance').attr('disabled','disabled');
-    //$('#btnGuardarAlcance').attr('style','background-color:#60869a; width:120px;');
+    $('#idEAcreditada').attr('disabled','disabled');
     $('#btnGuardarAlcance').hide();
     $('#btnRegresarAlcance').hide();
-    // $('.EditarEquipo').attr('disabled','disabled');
-    // $('.EliminarEquipo').attr('disabled','disabled');
 }
 
 function bloquearItemsDocumentoAdjunto(){
 	$('#uploadfile').attr('disabled','disabled');
  	$('#nombreArchivo').attr('disabled','disabled');
  	$('#nombreArchivo').attr('style','font:normal 12px "Calibri"; cursor:not-allowed; background-color:#EBEBE4;');
- 	$('#btnAdjuntarArchivo').attr('disabled','disabled');
- 	$('#btnAdjuntarArchivo').attr('style','margin-left:176px; width:50px;background-color:#60869a;');
 }
 
 function bloquearItemsAlcanceAdjunto(){
 	$('#uploadfileA').attr('disabled','disabled');
  	$('#nombreArchivoA').attr('disabled','disabled');
  	$('#nombreArchivoA').attr('style','font:normal 12px "Calibri"; cursor:not-allowed; background-color:#EBEBE4;');
- 	$('#btnAdjuntarAlcance').attr('disabled','disabled');
- 	$('#btnAdjuntarAlcance').attr('style','margin-left:215px; width:50px;background-color:#60869a;');
 }
 
 function desbloquearItemsDocumentoAdjunto(){
@@ -371,9 +653,6 @@ function desbloquearItemsDocumentoAdjunto(){
  	$('#nombreArchivo').removeAttr('disabled');
  	$('#nombreArchivo').removeAttr('style');
  	$('#nombreArchivo').attr('style','font:normal 12px "Calibri";');
- 	//$('#nombreArchivo').text("Subir Archivo, Click Aquí");
- 	$('#btnAdjuntarArchivo').removeAttr('disabled');
- 	$('#btnAdjuntarArchivo').attr('style','margin-left:176px; width:50px;');
 }
 
 function desbloquearItemsAlcanceAdjunto(){
@@ -381,9 +660,6 @@ function desbloquearItemsAlcanceAdjunto(){
  	$('#nombreArchivoA').removeAttr('disabled');
  	$('#nombreArchivoA').removeAttr('style');
  	$('#nombreArchivoA').attr('style','font:normal 12px "Calibri";');
- 	//$('#nombreArchivoA').text("Subir Archivo, Click Aquí");
- 	$('#btnAdjuntarAlcance').removeAttr('disabled');
- 	$('#btnAdjuntarAlcance').attr('style','margin-left:215px; width:50px;');
 }
 
 function validarDatosFormularioAlcance(){
@@ -415,24 +691,11 @@ function validarDatosFormularioAlcance(){
 	return true;
 }
 
-/*function initDialogs() {
-	
-	$("#dialog-message_error_msg").dialog({
-		modal : true,
-		autoOpen : false,
-		buttons : {
-			Ok : function() {
-									
-				$(this).dialog("close");
-			}
-		}
-	});
-}*/
-
 function RetornarIdEmpAcred(IdEmpresaAcreditada,estadoForm){
 	
 	$('#idEAcreditada').val(IdEmpresaAcreditada);
 	$('#estadoForm').val(estadoForm);
+	$('#idAlcanceAcreditacion').val('');
 	
 	if($('#estadoForm').val()=="SAVE"){
 		
@@ -442,145 +705,171 @@ function RetornarIdEmpAcred(IdEmpresaAcreditada,estadoForm){
 		
 }
 
-function cargarDatosAlcance(id,resolucionCedula,registro,idDocumentoAdjunto,idDocumentoAlcanceAcredita,normaEvaluada,idOrganismoAcreditador,fechaIVigencia,fechaUActualizacion,fechaAcreditacion,fechaVencimiento,idTipoOrganismo,idTipoPrueba,estadoForm1,idEmpresaAcreditada,idPrimerAlcanceAcreditacion,estadoAlcance){
+function OrgAcreditadorEnAlcance(idOrgAcredEA,idCbxPrueba){
+	//idOrganismoAcreditador
+	$('#idOrganismoAcreditador').val(idOrgAcredEA);
+	
+	cargarTipo();
+	$('#cmbTipoPrueba').val(idCbxPrueba);
+	$('#cmbTipoPrueba').attr('disabled','disabled');
+	
+	if(idCbxPrueba == '1467'){
+		$("#cmbTipoOrganismo").removeAttr('disabled');
+		cargarTipoOrganismo();
+	}else{
+		$("#cmbTipoOrganismo").attr('disabled','disabled');
+	}
+	
+	/*$.ajax({
+        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/validarOrganismoAcreditadorIngreso",
+        type:'post',
+        async:false,
+        data:{
+            idOrganismoAcreditador:idOrgAcredEA
+        },
+        beforeSend:muestraLoading,
+        success:function(data){
+        	
+            ocultaLoading();
+                        
+            $.each(data.filas, function( index, value ) {
+            	    tiposOA = value.idTipoPrueba        	
+            });
+            
+        },
+        error:errorAjax
+    });*/
+	
+
+}
+
+function cargarEditarDatosAlcance(id,resolucionCedula,idDocumentoAdjunto,idDocumentoAlcanceAcredita,normaEvaluada,idOrganismoAcreditador,fechaIVigencia,fechaUActualizacion,fechaAcreditacion,fechaVencimiento,idTipoOrganismo,idTipoPrueba,estadoForm1,idEmpresaAcreditada,idPrimerAlcanceAcreditacion){
 
 	$('#idAlcanceAcreditacion').val(id);
 	$('#txtResolucion').val(resolucionCedula);
-	$('#txtRegistro').val(registro);
+	//$('#txtRegistro').val(registro);
 	$('#txtAdjuntarArchivo').val(idDocumentoAdjunto);
 	$('#txtAdjuntarAlcance').val(idDocumentoAlcanceAcredita);
 	$('#txtNorma').val(normaEvaluada);
-	$('#idOrganismoAcreditador').val(idOrganismoAcreditador);	
-	$('#txtFechaUA').val(fechaUActualizacion);
-	$('#txtFechaA').val(fechaAcreditacion);
+	$('#idOrganismoAcreditador').val(idOrganismoAcreditador);
+	
+	if(fechaUActualizacion=="31/12/1969"){
+		$('#txtFechaUA').val('');
+	}else{
+		$('#txtFechaUA').val(fechaUActualizacion);
+	}
+	
+	if(fechaAcreditacion=="31/12/1969"){
+		$('#txtFechaA').val('');
+	}else{
+		$('#txtFechaA').val(fechaAcreditacion);
+	}
 	$('#txtFechaIV').val(fechaIVigencia);
 	$('#txtFechaV').val(fechaVencimiento);
+	//$('#cmbTipoPrueba').val(idTipoPrueba);
+	//alert(idTipoPrueba);
+	cargarTipo();
 	$('#cmbTipoPrueba').val(idTipoPrueba);
+	$('#cmbTipoPrueba').attr('disabled','disabled');
+	
 	$('#cmbTipoOrganismo').val(idTipoOrganismo);
 	//$('#estadoForm').val(estadoForm1);
 	$('#idEAcreditada').val(idEmpresaAcreditada);
 	//idPrimerAlcanceAcreditacion
 	$('#idPrimerAlcanceAcreditacion').val(idPrimerAlcanceAcreditacion);
-	var est = estadoAlcance;
-	if(est=='A' || est =='S'){
-		$('#estadoForm').val(estadoForm1);
-		$('#RespuestaRegistrar').val("");
-		   //---- desploquear combo tipo organismo
-	 	   var text = $("#cmbTipoPrueba option:selected").text();
-			
-			if(text=="PRUEBA DE HERMETICIDAD"){
-				$("#cmbTipoOrganismo").removeAttr('disabled');
-			}else{
-				$("#cmbTipoOrganismo").val(0);
-				$("#cmbTipoOrganismo").attr('disabled','disabled');
-			}
-			//-------------------------
-			if($('#txtAdjuntarArchivo').val()!=''){
-				listarDocumentoAdjuntoAA();
-				bloquearItemsDocumentoAdjunto();
-			}
-			if($('#txtAdjuntarAlcance').val()!=''){
-				listarDocumentoAlcanceAA();
-				$("#gridContenedorDocAA1").attr('style','margin-top:-60px; margin-left:750px;');
-				bloquearItemsAlcanceAdjunto();
-			}
-			//-------------------------
-			$("#MensajeFECHA").hide();
-			$("#txtFechaUA").attr('disabled','disabled');
-			$("#txtFechaA").attr('disabled','disabled');
-			
-			$("#MensajeAS").hide();
-			listarSedes();
-			$("#MensajeAI").hide();
-			listarInspector();
-			$("#MensajeAE").hide();
-			listarEquipo();
-			
-			activarBotonesSIE();
-			//$("#btnRegresarAlcance").attr('disabled','disabled');
-			//$("#btnRegresarAlcance").attr('style','background-color:#60869a');
-	}else{
-		$('#estadoForm').val("");
-		$('#RespuestaRegistrar').val("consulta");
-		//------------
-		$("#MensajeAS").hide();
-		listarSedes(0);
-		$("#MensajeAI").hide();
-		listarInspector(0);
-		$("#MensajeAE").hide();
-		listarEquipo(0);
-		
-		listarDocumentoAdjuntoAA(0);
-		
-		if($('#txtAdjuntarAlcance').val()!=''){
- 			listarDocumentoAlcanceAA(0);
- 			$("#gridContenedorDocAA1").attr('style','margin-top:-60px; margin-left:750px;');
- 		}
-		
-        bloquearInput();
-	}
 	
+	$('#estadoForm').val(estadoForm1);
+	$('#RespuestaRegistrar').val("");
+	   //---- desploquear combo tipo organismo
+ 	   var text = $("#cmbTipoPrueba option:selected").text();
+		
+		if(text=="PRUEBA DE HERMETICIDAD"){
+			$("#cmbTipoOrganismo").removeAttr('disabled');
+		}else{
+			$("#cmbTipoOrganismo").val(0);
+			$("#cmbTipoOrganismo").attr('disabled','disabled');
+		}
+		//-------------------------
+		if($('#txtAdjuntarArchivo').val()!=''){
+			listarDocumentoAdjuntoAA();
+			bloquearItemsDocumentoAdjunto();
+		}
+		if($('#txtAdjuntarAlcance').val()!=''){
+			listarDocumentoAlcanceAA();
+			$("#gridContenedorDocAA1").attr('style','margin-top:-60px; margin-left:790px;');
+			bloquearItemsAlcanceAdjunto();
+		}
+		//-------------------------
+		$("#MensajeFECHA").hide();
+		$("#txtFechaUA").attr('disabled','disabled');
+		$("#txtFechaA").attr('disabled','disabled');
+		
+		$("#MensajeAS").hide();
+		listarSedes();
+		$("#MensajeAI").hide();
+		listarInspector();
+		$("#MensajeAE").hide();
+		listarEquipo();
+		
+		activarBotonesSIE();
 	
 }
 
-/*function cargarDatosAlcanceCTRL(){
-    idAlcanceAcreditacionAux = $('#idAlcanceAcreditacion').val();
-    //alert ("Cargar: " + idAlcanceAcreditacionAux);
+function cargarConsultarDatosAlcance(id,resolucionCedula,idDocumentoAdjunto,idDocumentoAlcanceAcredita,normaEvaluada,idOrganismoAcreditador,fechaIVigencia,fechaUActualizacion,fechaAcreditacion,fechaVencimiento,idTipoOrganismo,idTipoPrueba,estadoForm1,idEmpresaAcreditada,idPrimerAlcanceAcreditacion){
 
-        if(idAlcanceAcreditacionAux !== null && idAlcanceAcreditacionAux !== undefined){
-            //alert("Entrada alcance");
-            $.ajax({
-                url:baseURL + "pages/mantenimientoEmpresasAcreditadas/cargarDatosAlcanceCTRL",
-                type:'post',
-                async:false,
-                data:{
-                    idAlcanceAcreditacion : $('#idAlcanceAcreditacion').val()
-                },
-                beforeSend:muestraLoading,
-                success:function(data){
-                    
-                    ocultaLoading();
-                    
-                    $.each(data.filas, function( index, value ) {
-                        
-                        $('#idAlcanceAcreditacion').val( value.idAlcanceAcreditacion );
-                        $('#txtResolucion').val( value.resolucionCedula );
-                        $('#txtRegistro').val( value.registro );
-                        $('#txtAdjuntarArchivo').val( value.idDocumentoAdjunto );
-                        $('#txtAdjuntarAlcance').val( value.idDocumentoAlcanceAcredita );
-                        $('#txtNorma').val( value.normaEvaluada );
-                        $('#idOrganismoAcreditador').val( value.idOrganismoAcreditador ); 
-                        $('#idPrimerAlcanceAcreditacion').val( value.idPrimerAlcanceAcreditacion );  
-                        $('#txtFechaUA').val( formattedDate( new Date(value.fechaUActualizacion)) );
-                        $('#txtFechaA').val( formattedDate( new Date(value.fechaAcreditacion)) );
-                        $('#txtFechaIV').val( formattedDate( new Date(value.fechaIVigencia)) );
-                        $('#txtFechaV').val( formattedDate( new Date(value.fechaVencimiento)) );
-                        $('#cmbTipoPrueba').val( value.idTipoPrueba );
-                        $('#cmbTipoOrganismo').val( value.idTipoOrganismo );
-                        $('#idEAcreditada').val( value.idEmpresaAcreditada ); 
-                        $('#RespuestaRegistrar').val( "consulta" );
-                        //RespuestaRegistrar
-                    });
-                },
-                error:errorAjax
-            });
-            $("#MensajeAS").hide();
-    		listarSedes(0);
-    		$("#MensajeAI").hide();
-    		listarInspector(0);
-    		$("#MensajeAE").hide();
-    		listarEquipo(0);
-    		
-    		listarDocumentoAdjuntoAA(0);
-    		
-    		if($('#txtAdjuntarAlcance').val()!=''){
-     			listarDocumentoAlcanceAA(0);
-     			$("#gridContenedorDocAA1").attr('style','margin-top:-60px; margin-left:750px;');
-     		}
-    		
-            bloquearInput();
-        }
-}*/
+	$('#idAlcanceAcreditacion').val(id);
+	$('#txtResolucion').val(resolucionCedula);
+	//$('#txtRegistro').val(registro);
+	$('#txtAdjuntarArchivo').val(idDocumentoAdjunto);
+	$('#txtAdjuntarAlcance').val(idDocumentoAlcanceAcredita);
+	$('#txtNorma').val(normaEvaluada);
+	$('#idOrganismoAcreditador').val(idOrganismoAcreditador);
+	
+	if(fechaUActualizacion=="31/12/1969"){
+		$('#txtFechaUA').val('');
+	}else{
+		$('#txtFechaUA').val(fechaUActualizacion);
+	}
+	
+	if(fechaAcreditacion=="31/12/1969"){
+		$('#txtFechaA').val('');
+	}else{
+		$('#txtFechaA').val(fechaAcreditacion);
+	}
+	$('#txtFechaIV').val(fechaIVigencia);
+	$('#txtFechaV').val(fechaVencimiento);
+	//$('#cmbTipoPrueba').val(idTipoPrueba);
+	cargarTipo();
+	$('#cmbTipoPrueba').val(idTipoPrueba);
+	$('#cmbTipoPrueba').attr('disabled','disabled');
+	
+	$('#cmbTipoOrganismo').val(idTipoOrganismo);
+	//$('#estadoForm').val(estadoForm1);
+	$('#idEAcreditada').val(idEmpresaAcreditada);
+	//idPrimerAlcanceAcreditacion
+	$('#idPrimerAlcanceAcreditacion').val(idPrimerAlcanceAcreditacion);
+	
+	$('#estadoForm').val("");
+	$('#RespuestaRegistrar').val("consulta");
+	//------------
+	$("#MensajeAS").hide();
+	listarSedes(0);
+	$("#MensajeAI").hide();
+	listarInspector(0);
+	$("#MensajeAE").hide();
+	listarEquipo(0);
+	
+	listarDocumentoAdjuntoAA(0);
+	
+	if($('#txtAdjuntarAlcance').val()!=''){
+		listarDocumentoAlcanceAA(0);
+		$("#gridContenedorDocAA1").attr('style','margin-top:-60px; margin-left:790px;');
+	}
+	
+    bloquearInput();
+	
+}
+
 
 function RegistrarAlcanceAcreditacion(){
 	
@@ -608,6 +897,23 @@ function RegistrarAlcanceAcreditacion(){
 	}
   	//-------------------------------------------
   	
+	//Enviar fechas vacias
+	var ultimaF = $('#txtFechaUA').val();
+	if(ultimaF == ''){
+		ultimaF = new Date(null);
+	}else{
+		ultimaF = convertDateFormat($('#txtFechaUA').val());
+	}
+	
+	var acredF = $('#txtFechaA').val();
+	if(acredF == ''){
+		acredF = new Date(null);
+	}else{
+		acredF = convertDateFormat($('#txtFechaA').val());
+	}
+	
+	//-------------------------------------------
+	
 	$.ajax({
         url:baseURL + "pages/mantenimientoEmpresasAcreditadas/RegistrarAlcanceAcreditacion",
         type:'post',
@@ -617,10 +923,8 @@ function RegistrarAlcanceAcreditacion(){
 		        	     idTipoPrueba: $('#cmbTipoPrueba').val(),
 		        	 resolucionCedula: $('#txtResolucion').val().latinize().toUpperCase(),
 		           idDocumentoAdjunto: $('#txtAdjuntarArchivo').val(),
-         //idDocumentoAlcanceAcreditada: $('#txtAdjuntarAlcance').val(),
          idDocumentoAlcanceAcreditada: idDA,
         	          idTipoOrganismo: $('#cmbTipoOrganismo').val(),
-        	                 registro: $('#txtRegistro').val().latinize().toUpperCase(),
         	            normaEvualada: $('#txtNorma').val().latinize().toUpperCase(),
         	   idOrganismoAcreditador: $('#idOrganismoAcreditador').val(),
         	      idEmpresaAcreditada: $('#idEAcreditada').val(),    
@@ -630,8 +934,8 @@ function RegistrarAlcanceAcreditacion(){
 	                fechaAcreditacion: newFechaA,
 	              fechaInicioVigencia: newFechaIV,
 	                 fechaVencimiento: newFechaV,*/
-      		 fechaUltimaActualizacion: convertDateFormat($('#txtFechaUA').val()),
-      				fechaAcreditacion: convertDateFormat($('#txtFechaA').val()),
+      		 fechaUltimaActualizacion: ultimaF,
+      				fechaAcreditacion: acredF,
       			  fechaInicioVigencia: convertDateFormat($('#txtFechaIV').val()),
       			  	 fechaVencimiento: convertDateFormat($('#txtFechaV').val()),
              //------------------------
@@ -671,7 +975,7 @@ function RegistrarAlcanceAcreditacion(){
                 	 listarDocumentoAdjuntoAA(0);
                 	 if($('#txtAdjuntarAlcance').val()!=''){
              			listarDocumentoAlcanceAA(0);
-             			$("#gridContenedorDocAA1").attr('style','margin-top:-60px; margin-left:750px;');
+             			$("#gridContenedorDocAA1").attr('style','margin-top:-60px; margin-left:790px;');
              		}
             	 
             		$.ajax({
@@ -704,7 +1008,7 @@ function RegistrarAlcanceAcreditacion(){
             		});	
             		
             		$('#txtResolucion').attr('disabled','disabled');
-        			$('#txtRegistro').attr('disabled','disabled');
+        			//$('#txtRegistro').attr('disabled','disabled');
         			bloquearItemsDocumentoAdjunto();
         			bloquearItemsAlcanceAdjunto();
         			$('#txtNorma').attr('disabled','disabled');	
@@ -739,7 +1043,8 @@ function TraerFechaUltimaActualizacion() {
 	        type:'post',
 	        async:false,
 	        data:{
-	            idEmpresaAcreditada:$('#idEAcreditada').val()
+	            idEmpresaAcreditada:$('#idEAcreditada').val(),
+	            idOrganismoAcreditador:$('#idOrganismoAcreditador').val()
 	        },
 	        beforeSend:muestraLoading,
 	        success:function(data){
@@ -748,7 +1053,7 @@ function TraerFechaUltimaActualizacion() {
 	            
 	            if(data.filas!="[object Object]"){
 	            	
-	            	var hoy = new Date();
+	            	/*var hoy = new Date();
 	            	var dd = hoy.getDate();
 	            	var mm = hoy.getMonth()+1;
 	            	var yyyy = hoy.getFullYear();
@@ -757,10 +1062,10 @@ function TraerFechaUltimaActualizacion() {
 
 	            	if(mm<10) {mm='0'+mm} 
 
-	            	var fActual = dd+'/'+mm+'/'+yyyy;
+	            	var fActual = dd+'/'+mm+'/'+yyyy;*/
 	            	
-	            	$("#txtFechaUA").val('');
-	            	$("#txtFechaA").val(fActual);
+	            	//$("#txtFechaUA").val('');
+	            	//$("#txtFechaA").val(fActual);
 	            	//bloquear
 	            	$('#txtFechaUA').attr('disabled','disabled');
         			$('#txtFechaA').attr('disabled','disabled');
@@ -769,10 +1074,8 @@ function TraerFechaUltimaActualizacion() {
 	            
 	            $.each(data.filas, function( index, value ) {
 	            	var FUA = value.fechaVencimiento;
-	            	var FA = value.fechaAcreditacion;
 	            	
 	            	var f1=new Date(FUA);
-	            	var f2=new Date(FA);
 	            	
 	            	if(f1.getDate() < 10){
 	        			var diaf1 = '0' + f1.getDate();
@@ -785,25 +1088,11 @@ function TraerFechaUltimaActualizacion() {
 	        			var mesf1 = f1.getMonth() + 1;
 	        		}
 	        		
-	        		if(f2.getDate() < 10){
-	        			var diaf2 = '0' + f2.getDate();
-	        		}else{
-	        			var diaf2 = f2.getDate();
-	        		}
-	        		if((f2.getMonth()+1) < 10){
-	        			var mesf2 = '0' + (f2.getMonth() + 1);
-	        		}else{
-	        			var mesf2 = f2.getMonth() + 1;
-	        		}
-	        		
 	        		var fechaUAct = diaf1 + '/' + mesf1 + '/' + f1.getFullYear();
-	        		var fechaAcred = diaf2 + '/' + mesf2 + '/' + f2.getFullYear();
 	        		
 	            	$("#txtFechaUA").val(fechaUAct);
-	            	$("#txtFechaA").val(fechaAcred);
 	            	//bloquear
 	            	$('#txtFechaUA').attr('disabled','disabled');
-        			$('#txtFechaA').attr('disabled','disabled');
 	            	
 	            });
 	            }
@@ -836,6 +1125,26 @@ function TraerIDPrimerAlcance() {
 	            $.each(data.filas, function( index, value ) {
 	            	$("#idPrimerAlcanceAcreditacion").val(value.idAlcanceAcreditacion);
 	            	
+	            	var FA = value.fechaInicioVigencia;
+	            	var f2 = new Date(FA);
+	        		
+	        		if(f2.getDate() < 10){
+	        			var diaf2 = '0' + f2.getDate();
+	        		}else{
+	        			var diaf2 = f2.getDate();
+	        		}
+	        		if((f2.getMonth()+1) < 10){
+	        			var mesf2 = '0' + (f2.getMonth() + 1);
+	        		}else{
+	        			var mesf2 = f2.getMonth() + 1;
+	        		}
+	        		
+	        		var fechaAcred = diaf2 + '/' + mesf2 + '/' + f2.getFullYear();
+	        		
+	            	$("#txtFechaA").val(fechaAcred);
+	            	//bloquear
+        			$('#txtFechaA').attr('disabled','disabled');
+	            	
 	            });
 	            }
 	        },
@@ -844,15 +1153,14 @@ function TraerIDPrimerAlcance() {
 }
 
 function cargarTipo() {
-	
-	var encuentro = "TIPO_PRUEBA";
 
 	    $.ajax({
 	        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/cargarComboTipo",
 	        type:'post',
 	        async:false,
 	        data:{
-	            dominio:encuentro
+	        	dominio: 'TIPO_PRUEBA',
+	        	aplicacion: 'SIBAD'
 	        },
 	        beforeSend:muestraLoading,
 	        success:function(data){
@@ -937,9 +1245,14 @@ function eliminarEquipoCertificado(id){
     });
 }
 
-function abrirNuevaSede(aas){ 
+function abrirNuevaSede(aas, accionS){ 
 	
-	var title="AGREGAR SEDE";
+	if(accionS == "R"){
+		var title="AGREGAR SEDE";
+	}else{
+		var title="EDITAR SEDE";
+	}
+	
     $.ajax({
         url:baseURL + "pages/mantenimientoEmpresasAcreditadas/abrirNuevaSede", 
         type:'get',
@@ -967,9 +1280,43 @@ function abrirNuevaSede(aas){
     });
 }
 
-function abrirInspectorAutorizado(aai){ 
+function abrirNuevoPersonal(aaps){ 
 	
-	var title="AGREGAR INSPECTOR AUTORIZADO";
+	var title="AGREGAR PERSONAL AUTORIZADO";
+    $.ajax({
+        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/abrirNuevoPersonalSede", 
+        type:'get',
+        async:false,
+        beforeSend:muestraLoading,
+        success:function(data){
+            ocultaLoading();
+            $("#dialogPersonalSede").html(data);
+            $("#dialogPersonalSede").dialog({
+            	position: ['center', 'top+20'],
+            	resizable: false,
+                draggable: true,
+                autoOpen: true,
+                height:"auto",
+                width: "605",
+                modal: true,
+                dialogClass: 'dialog',
+                title: title,
+                closeText: "Cerrar"
+            });
+            IdAlcanceAPersonalSede(aaps);
+        },
+        error:errorAjax
+    });
+}
+
+function abrirInspectorAutorizado(aai, accion){ 
+	
+	if(accion == "R"){
+		var title="AGREGAR INSPECTOR AUTORIZADO";
+	}else{
+		var title="EDITAR INSPECTOR AUTORIZADO";
+	}
+	
     $.ajax({
         url:baseURL + "pages/mantenimientoEmpresasAcreditadas/abrirInspectorAutorizado", 
         type:'get',
@@ -984,7 +1331,7 @@ function abrirInspectorAutorizado(aai){
                 draggable: true,
                 autoOpen: true,
                 height:"auto",
-                width: "600",
+                width: "605",
                 modal: true,
                 dialogClass: 'dialog',
                 title: title,
@@ -995,6 +1342,7 @@ function abrirInspectorAutorizado(aai){
         error:errorAjax
     });
 }
+
 
 function abrirEquipoCertificado(aae, id, tipoPrueba){ 
 	
@@ -1009,14 +1357,15 @@ function abrirEquipoCertificado(aae, id, tipoPrueba){
             $("#dialogEquipoCertificado").html(data);
            if(id == "" || id == undefined){
         		title="NUEVO EQUIPO AUTORIZADO";
-        		//alert("Nuevo: " + id);
+        		//$("#dialogEquipoCertificado").append(" <input type='hidden' name='idEquipoCertificado' id='idEquipoCertificado' value='0'/> ");
         		$("#dialogEquipoCertificado").append(" <input type='hidden' name='idpruebaHermeticidad' id='idpruebaHermeticidad' value='"+tipoPrueba+"'/> ");
+        		$("#dialogEquipoCertificado").append(" <input type='hidden' name='aviso' id='aviso' value='save'/> ");
            }
            if(id !== "" && id !== undefined){
         	   title="EDITAR EQUIPO AUTORIZADO";
         	   $("#dialogEquipoCertificado").append(" <input type='hidden' name='idEquipoCertificado' id='idEquipoCertificado' value='"+id+"'/> ");
                $("#dialogEquipoCertificado").append(" <input type='hidden' name='idpruebaHermeticidad' id='idpruebaHermeticidad' value='"+tipoPrueba+"'/> ");
-
+               $("#dialogEquipoCertificado").append(" <input type='hidden' name='aviso' id='aviso' value='update'/> ");
                //alert("Editar: " + id);
            }
             
@@ -1061,21 +1410,27 @@ function listarSedes(flg_load) {
     $("#gridContenedorSedes").append(grid).append(pager);
 
 
-    var nombres = ['','N°', 'DIRECCI&Oacute;N','dpto', 'prov', 'dist', 'UBIGEO','tipoDoc', 'numeroDoc', 'nombre', 'apellidoPaterno', 'apellidoMaterno', 'PERSONA AUTORIZADA PARA FIRMAR LOS CERTIFICADOS / INFORMES DE INSPECCI&Oacute;N','CARGO','CIP','OPCION'];
+    var nombres = ['','N°','','DIRECCI&Oacute;N','', '', '','dpto', 'prov', 'dist', 'UBIGEO','','tipoDoc', 'numeroDoc', 'nombre', 'apellidoPaterno', 'apellidoMaterno', 'PERSONA AUTORIZADA PARA FIRMAR LOS CERTIFICADOS / INFORMES DE INSPECCI&Oacute;N','','CARGO','CIP','OPCION'];
     var columnas = [
         {name: "idSedePersonalAutorizado", width: 20, sortable: false, hidden: true, align: "center"},
         {name: "NS", width: 20, sortable: false, hidden: false, align: "center", fomatter:"NumeroFilasS"},
+        {name: "idSedeAcreditacion", width: 30, sortable: false, hidden: true, align: "center"},
         {name: "direccion", width: 180, sortable: false, hidden: false, align: "left"},
+        {name: "idDepartamento", width: 100, sortable: false, hidden: true, align: "center"},
+        {name: "idProvincia", width: 100, sortable: false, hidden: true, align: "center"},
+        {name: "idDistrito", width: 100, sortable: false, hidden: true, align: "center"},
         {name: "departamento", width: 100, sortable: false, hidden: true, align: "center"},
         {name: "provincia", width: 100, sortable: false, hidden: true, align: "center"},
         {name: "distrito", width: 100, sortable: false, hidden: true, align: "center"},
         {name: "ubigeo", width: 150, sortable: false, hidden: false, align: "center", formatter:"concatenaUbigeo"},
+        {name: "idTipoDocumento", width: 30, sortable: false, hidden: true, align: "center"},
         {name: "tipoDocumento", width: 100, sortable: false, hidden: true, align: "center"},
         {name: "numeroDocumento", width: 100, sortable: false, hidden: true, align: "center"},
         {name: "nombre", width: 100, sortable: false, hidden: true, align: "center"},
         {name: "apellidoPaterno", width: 100, sortable: false, hidden: true, align: "center"},
         {name: "apellidoMaterno", width: 100, sortable: false, hidden: true, align: "center"},
         {name: "personaAutorizada", width: 300, sortable: false, hidden: false, align: "left", formatter:"concatenaPersonalAutorizado"},
+        {name: "idCargo", width: 20, sortable: false, hidden: true, align: "center"},
         {name: "especialidadCargo", width: 180, sortable: false, hidden: false, align: "center"},
         {name: "cip", width: 100, sortable: false, hidden: false, align: "center"},
         {name: "opcion", width: 100, sortable: false, hidden: false, align: "center", formatter:"OpcionesE"}
@@ -1164,7 +1519,13 @@ function listarSedes(flg_load) {
     			return "<img src=\"" + baseURL + "/../images/cancel2.png\" style=\"cursor: pointer;\" title=\"SOLO LECTURA\"/>"
     			
     		}else{
-    		iconbutton = "<img src=\"" + baseURL + "/../images/eliminar.gif\" class='Eliminar' id='"+ rowdata.idSedePersonalAutorizado +"' onclick=\"bandejaSupervision.abrirDetalleSupervision('" + rowdata.idSedePersonalAutorizado + "')\" style=\"cursor: pointer;\" title=\"Eliminar\"/>"    		
+    			
+    		//iconbutton = "<img src=\"" + baseURL + "/../images/page_white_edit.png\" class='EditarSede' id='"+ rowdata.idSedePersonalAutorizado +"' style=\"cursor: pointer;\" title=\"Editar\"/>"+"\t\t"+
+    		//"<img src=\"" + baseURL + "/../images/eliminar.gif\" class='Eliminar' id='"+ rowdata.idSedePersonalAutorizado +"' style=\"cursor: pointer;\" title=\"Eliminar\"/>";
+    		
+			iconbutton = "<a class='EditarSede' id='"+ rowdata.idSedePersonalAutorizado +"%"+rowdata.direccion+"%"+rowdata.idDepartamento+"%"+rowdata.idProvincia+"%"+rowdata.idDistrito+"%"+rowdata.idTipoDocumento+"%"+rowdata.numeroDocumento+"%"+ rowdata.idCargo +"%"+ rowdata.idSedeAcreditacion +"' style='cursor: pointer;text-decoration:none;' ><u> Editar </u></a>"+"\t"+
+      	 	"<a class='Eliminar' id='"+ rowdata.idSedePersonalAutorizado  +"' style='cursor: pointer;text-decoration:none;' ><u> Eliminar </u></a>";
+        		
             return iconbutton;
     		}
         }
@@ -1191,7 +1552,7 @@ function listarInspector(flg_load) {
     $("#gridContenedorInspector").append(grid).append(pager);
 
 
-    var nombres = ['','N°', 'DIRECCI&Oacute;N','dpto', 'prov', 'dist', 'UBIGEO','TIPO DOCUMENTO', 'NUMERO', 'nombre', 'apellidoPaterno', 'apellidoMaterno', 'PERSONA','ESPECIALIDAD','CIP','OPCION'];
+    var nombres = ['','N°', 'DIRECCI&Oacute;N','dpto', 'prov', 'dist', 'UBIGEO','','TIPO DOCUMENTO', 'NUMERO', 'nombre', 'apellidoPaterno', 'apellidoMaterno', 'PERSONA','','ESPECIALIDAD','CIP','OPCION'];
     var columnas = [
         {name: "idSedePersonalAutorizado", width: 20, sortable: false, hidden: true, align: "center"},
         {name: "NI", width: 20, sortable: false, hidden: false, align: "center", formatter:"NumeroFilasI"},
@@ -1200,12 +1561,14 @@ function listarInspector(flg_load) {
         {name: "provincia", width: 100, sortable: false, hidden: true, align: "center"},
         {name: "distrito", width: 100, sortable: false, hidden: true, align: "center"},
         {name: "ubigeo", width: 120, sortable: false, hidden: false, align: "center", formatter:"concatenaUbigeo"},
+        {name: "idTipoDocumento", width: 30, sortable: false, hidden: true, align: "center"},
         {name: "tipoDocumento", width: 90, sortable: false, hidden: false, align: "center"},
         {name: "numeroDocumento", width: 100, sortable: false, hidden: false, align: "center"},
         {name: "nombre", width: 100, sortable: false, hidden: true, align: "center"},
         {name: "apellidoPaterno", width: 100, sortable: false, hidden: true, align: "center"},
         {name: "apellidoMaterno", width: 100, sortable: false, hidden: true, align: "center"},
         {name: "personaAutorizada", width: 200, sortable: false, hidden: false, align: "left", formatter:"concatenaPersona"},
+        {name: "idEspecialidad", width: 20, sortable: false, hidden: true, align: "center"},
         {name: "especialidadCargo", width: 148, sortable: false, hidden: false, align: "center"},
         {name: "cip", width: 90, sortable: false, hidden: false, align: "center"},
         {name: "opcion", width: 100, sortable: false, hidden: false, align: "center", formatter:"OpcionesE2"}
@@ -1294,10 +1657,16 @@ function listarInspector(flg_load) {
     			
     		}else{
     		
-    		iconbutton = "<img src=\"" + baseURL + "/../images/eliminar.gif\" class='Eliminar' id='"+ rowdata.idSedePersonalAutorizado +"' onclick=\"bandejaSupervision.abrirDetalleSupervision('" + rowdata.idSedePersonalAutorizado + "')\" style=\"cursor: pointer;\" title=\"Eliminar\"/>"
+    		//iconbutton = "<img src=\"" + baseURL + "/../images/page_white_edit.png\" class='EditarInspector' id='"+ rowdata.idSedePersonalAutorizado +"' style=\"cursor: pointer;\" title=\"Editar\"/>"+"\t\t"+
+    		//"<img src=\"" + baseURL + "/../images/eliminar.gif\" class='Eliminar' id='"+ rowdata.idSedePersonalAutorizado +"' style=\"cursor: pointer;\" title=\"Eliminar\"/>";
+    		
+    		iconbutton = "<a class='EditarInspector' id='"+ rowdata.idSedePersonalAutorizado +"%"+rowdata.direccion+"%"+rowdata.idTipoDocumento+"%"+rowdata.numeroDocumento+"%"+ rowdata.idEspecialidad +"' style='cursor: pointer;text-decoration:none;' ><u> Editar </u></a>"+"\t"+
+  	 	   	"<a class='Eliminar' id='"+ rowdata.idSedePersonalAutorizado  +"' style='cursor: pointer;text-decoration:none;' ><u> Eliminar </u></a>";
+    		
     		return iconbutton;
     		}
-        }
+			
+		}
     });
 }
 
@@ -1487,7 +1856,7 @@ cache: false,
           	 $('#txtAdjuntarArchivo').val(idDoc);
           	 listarDocumentoAdjuntoAA(0);
           	 if($('#txtAdjuntarAlcance').val()!=""){
-          	 $("#gridContenedorDocAA1").attr('style','margin-top:-60px; margin-left:750px;');
+          	 $("#gridContenedorDocAA1").attr('style','margin-top:-60px; margin-left:790px;');
           	 }
           	 bloquearItemsDocumentoAdjunto();
 		 }
@@ -1520,9 +1889,9 @@ function registrarDocumentoA(){
            	 $('#txtAdjuntarAlcance').val(idDocA);
            	 listarDocumentoAlcanceAA(0);
            	 if($('#txtAdjuntarArchivo').val()!=""){
-           	 $("#gridContenedorDocAA1").attr('style','margin-top:-60px; margin-left:750px;');
+           	 $("#gridContenedorDocAA1").attr('style','margin-top:-60px; margin-left:790px;');
            	 }else{
-       		 $("#gridContenedorDocAA1").attr('style','margin-left:750px;');
+       		 $("#gridContenedorDocAA1").attr('style','margin-left:790px;');
            	 }
            	 bloquearItemsAlcanceAdjunto();
  		 }
@@ -1571,11 +1940,13 @@ function listarDocumentoAdjuntoAA(flg_load) {
     
    $("#gridContenedorDocAA").append(grid).append(pager);
 
+   //, formatter:"LinkURL"
 
-    var nombres = ['','DOCUMENTO','OPCION'];
+    var nombres = ['','DOCUMENTO','','OPCION'];
     var columnas = [
     	{name: "idDocumentoAdjunto", width: 30, sortable: false, hidden: true, align: "center"},
-        {name: "nombreDocumento", width: 168, sortable: false, hidden: false, align: "left"},
+        {name: "nombreDocumento", width: 168, sortable: false, hidden: false, align: "left", formatter:"LinkURL"},
+        {name: "archivoAdjunto", width: 30, sortable: false, hidden: true, align: "left"},
         {name: "opcion", width: 50, sortable: false, align: "center", formatter:"OpcionesDA"}
     ];
     
@@ -1614,6 +1985,23 @@ function listarDocumentoAdjuntoAA(flg_load) {
         }
     });
     
+  //Link Mostrar Documento
+    jQuery.extend($.fn.fmatter, {
+    	LinkURL: function(cellvalue, options, rowdata) {
+			
+    		//var arch = rowdata.archivoAdjunto;
+    		
+    		//var blob = new Blob([arch], {type: 'application/octet-binary'});
+    		//var url = URL.createObjectURL(blob);
+    		
+    		return "<a class='MostrarDoc' id='"+rowdata.idDocumentoAdjunto+"' style='cursor: pointer;text-decoration:none;' ><u>"+rowdata.nombreDocumento+"</u></a>";
+    		
+    		//  http://docs.google.com/viewer?url=nombre_archivo.extension
+			//return "<a href='http://docs.google.com/viewer?url="+url+"' title='Mostrar Archivo' target='_blank'>"+rowdata.nombreDocumento+"</a>";
+			
+    	}
+    });
+    
     //Opciones
     jQuery.extend($.fn.fmatter, {
     	OpcionesDA: function(cellvalue, options, rowdata) {
@@ -1650,10 +2038,11 @@ function listarDocumentoAlcanceAA(flg_load) {
     
    $("#gridContenedorDocAA1").append(grid).append(pager);
 
-    var nombres = ['','DOCUMENTO','OPCION'];
+    var nombres = ['','DOCUMENTO','','OPCION'];
     var columnas = [
     	{name: "idDocumentoAdjunto", width: 30, sortable: false, hidden: true, align: "center"},
-        {name: "nombreDocumento", width: 168, sortable: false, hidden: false, align: "left"},
+        {name: "nombreDocumento", width: 168, sortable: false, hidden: false, align: "left",formatter:"LinkURL2"},
+        {name: "archivoAdjunto", width: 30, sortable: false, hidden: true, align: "left"},
         {name: "opcion", width: 50, sortable: false, align: "center", formatter:"OpcionesDAA"}
     ];
     
@@ -1690,6 +2079,23 @@ function listarDocumentoAlcanceAA(flg_load) {
         loadError: function(jqXHR) {
             errorAjax(jqXHR);
         }
+    });
+    
+  //Link Mostrar Documento
+    jQuery.extend($.fn.fmatter, {
+    	LinkURL2: function(cellvalue, options, rowdata) {
+			
+    		//var arch = rowdata.archivoAdjunto;
+    		
+    		//var blob = new Blob([arch], {type: 'application/octet-binary'});
+    		//var url = URL.createObjectURL(blob);
+    		
+    		return "<a class='MostrarDocAlc' id='"+ rowdata.nombreDocumento +"%"+rowdata.archivoAdjunto+"' style='cursor: pointer;text-decoration:none;' ><u>"+rowdata.nombreDocumento+"</u></a>";
+    		
+    		//  http://docs.google.com/viewer?url=nombre_archivo.extension
+			//return "<a href='http://docs.google.com/viewer?url="+url+"' title='Mostrar Archivo' target='_blank'>"+rowdata.nombreDocumento+"</a>";
+			
+    	}
     });
     
     //Opciones

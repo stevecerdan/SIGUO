@@ -29,18 +29,31 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
    // @NamedQuery(name = "PghEmpresaAcreditadaV.findByAlcance", query = "SELECT e FROM PghEmpresaAcreditadaV e"),
 	@NamedQuery(name = "PghEmpresaAcreditadaV.findByAlcance", query = "SELECT e FROM PghEmpresaAcreditadaV e WHERE e.idAlcanceAcreditacion = :idAlcanceAcreditacion"),
-    @NamedQuery(name = "PghEmpresaAcreditadaV.findByFilter", query = "SELECT e FROM PghEmpresaAcreditadaV e WHERE upper(e.ruc) like :ruc and" + 
+    @NamedQuery(name = "PghEmpresaAcreditadaV.findByFilter", query = "SELECT e FROM PghEmpresaAcreditadaV e WHERE e.idOrganismoAcreditador = :idOrganismoAcreditador and" +
+    																											" upper(e.ruc) like :ruc and" + 
     																											" upper(e.razonSocial) like :razonSocial and" +
-    																											" upper(e.direccion) like:direccion and" + 
-    																											" upper(e.departamento) like:departamento and" + 
-    																											" upper(e.provincia) like:provincia and" + 
-    																											" upper(e.distrito) like:distrito"),
+    																											" upper(e.direccion) like :direccion and" + 
+    																											" upper(e.departamento) like :departamento and" + 
+    																											" upper(e.provincia) like :provincia and" + 
+    																											" upper(e.distrito) like :distrito and" +
+    																											" (upper(e.estadoAlcance) like :estadoAlcance or" +
+																												" upper(e.estadoAccion) like :estadoAccion or" +
+																												" upper(e.estadoAccion) like :estadoEmpresa)"),
+	@NamedQuery(name = "PghEmpresaAcreditadaV.findByListarProcesos", query = "SELECT e FROM PghEmpresaAcreditadaV e WHERE e.idOrganismoAcreditador = :idOrganismoAcreditador and" +
+																												" upper(e.ruc) like :ruc and" + 
+																												" e.idTipoPrueba = :idTipoPrueba"),
     //Traer Fecha Ultima Actualizacion
-    @NamedQuery(name = "PghEmpresaAcreditadaV.findByFechaUA", query = "SELECT e FROM PghEmpresaAcreditadaV e WHERE e.idEmpresaAcreditada = :idEmpresaAcreditada and rownum = 1 order by idAlcanceAcreditacion desc")
+    @NamedQuery(name = "PghEmpresaAcreditadaV.findByFechaUA", query = "SELECT e FROM PghEmpresaAcreditadaV e WHERE e.idAlcanceAcreditacion = (SELECT max(e.idAlcanceAcreditacion) FROM PghEmpresaAcreditadaV e WHERE e.idEmpresaAcreditada = :idEmpresaAcreditada and e.idOrganismoAcreditador = :idOrganismoAcreditador and e.idTipoPrueba = :idTipoPrueba)"),
+    //Buscar Empresas con Alcance Vigente x Tipo de Prueba
+    @NamedQuery(name = "PghEmpresaAcreditadaV.findByAlcanceXPrueba", query = "SELECT e FROM PghEmpresaAcreditadaV e WHERE e.idTipoPrueba = :idTipoPrueba and (e.estadoAlcance = 'A' or e.estadoAccion = 'S')"),
+    //Traer Datos de la Empresa Acreditada
+    @NamedQuery(name = "PghEmpresaAcreditadaV.findByDatosEmpresa", query = "SELECT e FROM PghEmpresaAcreditadaV e WHERE e.idEmpresaAcreditada = :idEmpresaAcreditada")
+    
 
 })
 
 public class PghEmpresaAcreditadaV extends Auditoria{
+	
 	@Id
     @Basic(optional = false)
     @NotNull
@@ -101,7 +114,7 @@ public class PghEmpresaAcreditadaV extends Auditoria{
     private String normaEvaluada;
     
     @Column(name = "ID_ORGANISMO_ACREDITADOR")
-    private String idOrganismoAcreditador;
+    private Long idOrganismoAcreditador;
     //---------------------------------------------
     @Column(name = "FECHA_INICIO_VIGENCIA")
     private Date fechaIVigencia;
@@ -138,6 +151,9 @@ public class PghEmpresaAcreditadaV extends Auditoria{
     
     @Column(name = "ESTADO_ALCANCE")
     private String estadoAlcance;
+    
+	@Column(name = "ESTADO_ACCION")
+    private String estadoAccion;
     
     @Column(name = "ID_EMPRESA_ACREDITADA")
     private Long idEmpresaAcreditada;
@@ -343,6 +359,13 @@ public class PghEmpresaAcreditadaV extends Auditoria{
 	public void setEstadoAlcance(String estadoAlcance) {
 		this.estadoAlcance = estadoAlcance;
 	}
+	
+	public String getEstadoAccion() {
+		return estadoAccion;
+	}
+	public void setEstadoAccion(String estadoAccion) {
+		this.estadoAccion = estadoAccion;
+	}
 	//------------------------------------------------------
 	public String getIdDocumentoAdjunto() {
 		return idDocumentoAdjunto;
@@ -368,11 +391,11 @@ public class PghEmpresaAcreditadaV extends Auditoria{
 		this.normaEvaluada = normaEvaluada;
 	}
 
-	public String getIdOrganismoAcreditador() {
+	public Long getIdOrganismoAcreditador() {
 		return idOrganismoAcreditador;
 	}
 
-	public void setIdOrganismoAcreditador(String idOrganismoAcreditador) {
+	public void setIdOrganismoAcreditador(Long idOrganismoAcreditador) {
 		this.idOrganismoAcreditador = idOrganismoAcreditador;
 	}
 

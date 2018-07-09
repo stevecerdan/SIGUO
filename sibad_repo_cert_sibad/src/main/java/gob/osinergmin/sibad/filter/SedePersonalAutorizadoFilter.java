@@ -17,6 +17,7 @@ public class SedePersonalAutorizadoFilter extends BasePaginatorFilter{
 	private Long idSedePersonalAutorizado;
 	private Long idAlcanceAcreditacion;
 	private String flagPersonalAutorizado;
+	private String numeroDocumento;
 	
 	public Long getIdSedePersonalAutorizado() {
 		return idSedePersonalAutorizado;
@@ -35,6 +36,12 @@ public class SedePersonalAutorizadoFilter extends BasePaginatorFilter{
 	}
 	public void setFlagPersonalAutorizado(String flagPersonalAutorizado) {
 		this.flagPersonalAutorizado = flagPersonalAutorizado;
+	}
+	public String getNumeroDocumento() {
+		return numeroDocumento;
+	}
+	public void setNumeroDocumento(String numeroDocumento) {
+		this.numeroDocumento = numeroDocumento;
 	}
 	
 }

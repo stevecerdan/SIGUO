@@ -21,10 +21,14 @@ public class SedePersonalAutorizadoDTO {
 	private Long idSedePersonalAutorizado;
 	private Long idAlcanceAcreditacion;
     private String direccion;
+    private String idDepartamento;
+    private String idProvincia;
+    private String idDistrito;
     private String departamento;
     private String provincia;
     private String distrito;
     private String flagPersonalAutorizado;
+    private Long idTipoDocumento;
     private String tipoDocumento;
     private String numeroDocumento;
     private String nombre;
@@ -59,6 +63,24 @@ public class SedePersonalAutorizadoDTO {
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
+	public String getIdDepartamento() {
+		return idDepartamento;
+	}
+	public void setIdDepartamento(String idDepartamento) {
+		this.idDepartamento = idDepartamento;
+	}
+	public String getIdProvincia() {
+		return idProvincia;
+	}
+	public void setIdProvincia(String idProvincia) {
+		this.idProvincia = idProvincia;
+	}
+	public String getIdDistrito() {
+		return idDistrito;
+	}
+	public void setIdDistrito(String idDistrito) {
+		this.idDistrito = idDistrito;
+	}
 	public String getDepartamento() {
 		return departamento;
 	}
@@ -82,6 +104,12 @@ public class SedePersonalAutorizadoDTO {
 	}
 	public void setFlagPersonalAutorizado(String flagPersonalAutorizado) {
 		this.flagPersonalAutorizado = flagPersonalAutorizado;
+	}
+	public Long getIdTipoDocumento() {
+		return idTipoDocumento;
+	}
+	public void setIdTipoDocumento(Long idTipoDocumento) {
+		this.idTipoDocumento = idTipoDocumento;
 	}
 	public String getTipoDocumento() {
 		return tipoDocumento;

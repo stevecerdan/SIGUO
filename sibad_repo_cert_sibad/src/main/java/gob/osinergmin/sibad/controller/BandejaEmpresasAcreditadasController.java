@@ -6,16 +6,21 @@ import gob.osinergmin.sibad.service.EmpresaAcreditadaService;
 import gob.osinergmin.sibad.service.EquipoCertificadoService;
 import gob.osinergmin.sibad.service.EquipoComponenteService;
 import gob.osinergmin.sibad.service.MaestroColumnaTipoService;
+import gob.osinergmin.sibad.service.OrganismoAcreditadorService;
 import gob.osinergmin.sibad.service.PersonaJuridicaService;
 import gob.osinergmin.sibad.service.PersonaNaturalVService;
 import gob.osinergmin.sibad.service.SedeAcreditacionService;
 import gob.osinergmin.sibad.service.SedePersonalAutorizadoService;
+import gob.osinergmin.sibad.service.SolicitudxEmpresaService;
+import gob.osinergmin.sibad.service.TipoPruebaOrganismoService;
 import gob.osinergmin.sibad.service.TrazAlcanceAcredService;
 import gob.osinergmin.sibad.service.UbigeoDPDService;
 import gob.osinergmin.sibad.domain.dto.UbigeodpdDTO;
 import gob.osinergmin.sibad.filter.UbigeoDPDFilter;
 import gob.osinergmin.sibad.domain.dto.MaestroColumnaTipoDTO;
+import gob.osinergmin.sibad.domain.dto.OrganismoAcreditadorDTO;
 import gob.osinergmin.sibad.filter.MaestroColumnaTipoFilter;
+import gob.osinergmin.sibad.filter.OrganismoAcreditadorFilter;
 import gob.osinergmin.sibad.domain.dto.PersonaNaturalVDTO;
 import gob.osinergmin.sibad.domain.dto.SedeAcreditacionDTO;
 import gob.osinergmin.sibad.filter.PersonaNaturalVFilter;
@@ -27,6 +32,8 @@ import gob.osinergmin.sibad.domain.dto.EquipoCertificadoDTO;
 import gob.osinergmin.sibad.domain.dto.EquipoComponenteDTO;
 import gob.osinergmin.sibad.domain.dto.PersonaJuridicaDTO;
 import gob.osinergmin.sibad.domain.dto.SedePersonalAutorizadoDTO;
+import gob.osinergmin.sibad.domain.dto.SolicitudPruebaRepruebaDTO;
+import gob.osinergmin.sibad.domain.dto.TipoPruebaOrganismoDTO;
 import gob.osinergmin.sibad.domain.dto.TrazAlcanceAcredDTO;
 import gob.osinergmin.sibad.filter.AlcanceAcreditacionFilter;
 import gob.osinergmin.sibad.filter.DocumentoAdjuntoFilter;
@@ -35,6 +42,9 @@ import gob.osinergmin.sibad.filter.EquipoCertificadoFilter;
 import gob.osinergmin.sibad.filter.EquipoComponenteFilter;
 import gob.osinergmin.sibad.filter.PersonaJuridicaFilter;
 import gob.osinergmin.sibad.filter.SedePersonalAutorizadoFilter;
+import gob.osinergmin.sibad.filter.SolicitudPruebaRepruebaFilter;
+import gob.osinergmin.sibad.filter.TipoPruebaOrganismoFilter;
+import gob.osinergmin.sibad.filter.TrazAlcanceAcredFilter;
 import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
 import gob.osinergmin.sibad.util.Constantes;
 import gob.osinergmin.sibad.util.ConstantesWeb;
@@ -45,21 +55,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.inject.Inject;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/mantenimientoEmpresasAcreditadas")
@@ -69,6 +89,8 @@ public class BandejaEmpresasAcreditadasController {
 	
 	@Inject
 	private EmpresaAcreditadaService empAcredService;
+	@Inject
+	private OrganismoAcreditadorService orgAcreditadorService;
 	@Inject
 	private SedePersonalAutorizadoService SedepersonalautorizadoService;
 	@Inject
@@ -91,6 +113,11 @@ public class BandejaEmpresasAcreditadasController {
 	private AlcanceAcreditacionService alcanceAcreditacionService;
 	@Inject
 	private TrazAlcanceAcredService trazAlcanceAcredService;
+	@Inject
+	private SolicitudxEmpresaService solicitudxEmpresaService;
+	@Inject
+	private TipoPruebaOrganismoService tipoPruebaOrganismoService;
+	
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public String inicio(Model model, HttpSession session, HttpServletRequest request){
@@ -159,6 +186,33 @@ public class BandejaEmpresasAcreditadasController {
         return retorno;
     }
 	
+	@RequestMapping(value="/listarSolicitudes",method= RequestMethod.GET)
+	public @ResponseBody Map<String,Object> listarSolicitudes(SolicitudPruebaRepruebaFilter filtro,int rows, int page,HttpSession session,HttpServletRequest request){
+        LOG.info("Inicia el listarSolicitudes");
+    	
+        Map<String,Object> retorno=new HashMap<String,Object>();
+        try{
+            List<SolicitudPruebaRepruebaDTO> listado = solicitudxEmpresaService.listarSolicitudes(filtro);
+            
+            Long contador = (long) listado.size();
+            int indiceInicial = (page - 1) * rows;
+            int indiceFinal = indiceInicial + rows;
+            List<SolicitudPruebaRepruebaDTO> listadoPaginado = listado.subList(indiceInicial, indiceFinal > listado.size() ? listado.size() : indiceFinal );
+            Long numeroFilas = (contador / rows);
+            if ((contador % rows) > 0) {
+                numeroFilas = numeroFilas + 1L;
+            }
+               
+            retorno.put("total", numeroFilas);
+            retorno.put("pagina", page);
+            retorno.put("registros", contador);
+            retorno.put("filas", listadoPaginado);
+        }catch(Exception ex){
+            LOG.error("",ex);
+        }
+        return retorno;
+    }
+	
 	@RequestMapping(value="/listarEquipoCertificado",method= RequestMethod.GET)
 	public @ResponseBody Map<String,Object> listarEquipoCertificado(EquipoCertificadoFilter filtro,int rows, int page,HttpSession session,HttpServletRequest request){
         LOG.info("Inicia el listarEquipoCertificado");
@@ -212,6 +266,42 @@ public class BandejaEmpresasAcreditadasController {
         }
         return retorno;
     }
+	
+	//----------------------- VALIDAR ORGANISMO ACREDITADOR QUE INGRESO --------------------------------
+	
+	@RequestMapping(value="/validarOrganismoAcreditadorIngreso",method=RequestMethod.POST)
+    public @ResponseBody Map<String,Object> validarOrganismoAcreditadorIngreso(OrganismoAcreditadorFilter filtro){
+        LOG.info("procesando buscar Organismo Acreditador");
+        Map<String,Object> retorno=new HashMap<String,Object>();
+        try{
+            List<OrganismoAcreditadorDTO> listado;
+            listado= orgAcreditadorService.listarOrganismoAcreditador(filtro);
+            retorno.put("filas", listado);
+        }catch(Exception ex){
+            LOG.error("",ex);
+        }
+        return retorno;
+    }
+	
+	//-------------------------FIN VALIDAR ORGANISMO ACREDITADOR QUE INGRESO ------------------------------------
+	
+	//-----------------------Buscar Componentes--------------------------------
+	
+	@RequestMapping(value="/buscarComponentes",method=RequestMethod.POST)
+    public @ResponseBody Map<String,Object> buscarComponentes(EquipoComponenteFilter filtro){
+        LOG.info("procesando buscar componentes");
+        Map<String,Object> retorno=new HashMap<String,Object>();
+        try{
+            List<EquipoComponenteDTO> listado;
+            listado= equipoComponenteService.listarEquipoComponente(filtro);
+            retorno.put("filas", listado);
+        }catch(Exception ex){
+            LOG.error("",ex);
+        }
+        return retorno;
+    }
+	
+	//-------------------------FIN BUSCAR COMPONENTES------------------------------------
 	
 	//Listar Documento Adjunto
 	
@@ -288,6 +378,17 @@ public class BandejaEmpresasAcreditadasController {
         return ConstantesWeb.Navegacion.PAGE_FRM_NUEVA_SEDE;
     }
 	
+	@RequestMapping(value = "/abrirNuevoPersonalSede", method = RequestMethod.GET)
+    public String abrirFrmNuevoPersonalSede (HttpSession sesion, Model model) {
+     
+        try{        	     	
+            
+        }catch(Exception e){
+            LOG.error("Error, "+e.getMessage());
+        }                   
+        return ConstantesWeb.Navegacion.PAGE_FRM_PERSONAL_SEDE;
+    }
+	
 	@RequestMapping(value = "/abrirInspectorAutorizado", method = RequestMethod.GET)
     public String abrirFrmInspectorAutorizado (HttpSession sesion, Model model) {
      
@@ -321,6 +422,17 @@ public class BandejaEmpresasAcreditadasController {
         return ConstantesWeb.Navegacion.PAGE_FRM_INACTIVAR_EQUIPO_AUTORIZADO;
     }
 	
+	@RequestMapping(value = "/abrirInformacion", method = RequestMethod.GET)
+    public String abrirInformacion (HttpSession sesion, Model model) {
+     
+        try{        	     	
+            
+        }catch(Exception e){
+            LOG.error("Error, "+e.getMessage());
+        }                   
+        return ConstantesWeb.Navegacion.PAGE_FRM_INFORMACION;
+    }
+	
 	//-------------------------- VALIDAR PERSONA JURIDICA -----------------------------
 	@RequestMapping(value="/cargarDatos",method=RequestMethod.POST)
     public @ResponseBody Map<String,Object> cargarDatos(PersonaJuridicaFilter filtro){
@@ -337,8 +449,40 @@ public class BandejaEmpresasAcreditadasController {
     }
 	//------------------------ FIN VALIDAR PERSONA JURIDICA -----------------------------
 	
+	//-------------------------- VALIDAR DOCUMENTO -----------------------------
+		@RequestMapping(value="/buscarDocumentoAdjunto",method=RequestMethod.POST)
+	    public @ResponseBody Map<String,Object> buscarDocumentoAdjunto(DocumentoAdjuntoFilter filtro){
+	        LOG.info("procesando buscarDocumentoAdjunto");
+	        Map<String,Object> retorno=new HashMap<String,Object>();
+	        try{
+	            List<DocumentoAdjuntoDTO> listado;
+	            listado= documentoadjuntoService.listarDocumentoAdjunto(filtro);
+	            retorno.put("filas", listado);
+	        }catch(Exception ex){
+	            LOG.error("",ex);
+	        }
+	        return retorno;
+	    }
+		//------------------------ FIN VALIDAR DOCUMENTO -----------------------------
+	
+	//-------------------------- VALIDAR PERSONAL AUTORIZADO YA REGISTRADO -----------------------------
+		@RequestMapping(value="/validarSedePersonal",method=RequestMethod.POST)
+	    public @ResponseBody Map<String,Object> validarSedePersonal(SedePersonalAutorizadoFilter filtro){
+	        LOG.info("procesando Validar Sede Personal Registrado");
+	        Map<String,Object> retorno=new HashMap<String,Object>();
+	        try{
+	            List<SedePersonalAutorizadoDTO> listado;
+	            listado= SedepersonalautorizadoService.listarSedePersonalAutorizado(filtro);
+	            retorno.put("filas", listado);
+	        }catch(Exception ex){
+	            LOG.error("",ex);
+	        }
+	        return retorno;
+	    }
+		//------------------------ FIN VALIDAR PERSONAL AUTORIZADO YA REGISTRADO -----------------------------
+	
 	//-------------------------- CONSULTAR ALCANCE ACREDITACION -----------------------------
-		@RequestMapping(value="/cargarDatosAlcanceCTRL",method=RequestMethod.POST)
+		@RequestMapping(value="/cargarDatosAlcanceCTRL",method=RequestMethod.GET)
 	    public @ResponseBody Map<String,Object> cargarDatosAlcanceCTRL(EmpresaAcreditadaFilter filtro){
 	        LOG.info("procesando cargarDatos");
 	        Map<String,Object> retorno=new HashMap<String,Object>();
@@ -431,7 +575,7 @@ public class BandejaEmpresasAcreditadasController {
 		
 		//-------------------------- REGISTRAR EMPRESA ACREDITADA ----------------------------
 				@RequestMapping(value="/RegistrarEmpresaAcreditada", method= RequestMethod.POST)
-			    public @ResponseBody Map<String,Object> RegistrarEmpresaAcreditada(@RequestParam Long idPersonaJuridica,String estado, HttpSession session,HttpServletRequest request){
+			    public @ResponseBody Map<String,Object> RegistrarEmpresaAcreditada(@RequestParam Long idPersonaJuridica,String estado, String registro, HttpSession session,HttpServletRequest request){
 				
 					Map<String,Object> retorno = new HashMap<String,Object>();
 					
@@ -445,12 +589,12 @@ public class BandejaEmpresasAcreditadasController {
 						
 			            empresaAcreditadaDTO.setIdEmpresaAcreditada(null);
 						empresaAcreditadaDTO.setIdPersonaJuridica(idPersonaJuridica);
-						
 						if(estado.equals("INACTIVO") ) {
 							empresaAcreditadaDTO.setEstado(Constantes.ESTADO_INACTIVO_LETRA);
 			            }
+						empresaAcreditadaDTO.setRegistro(registro);
 						
-			            LOG.info(empresaAcreditadaDTO.getIdPersonaJuridica()+" - "+ empresaAcreditadaDTO.getEstado());
+			            LOG.info(empresaAcreditadaDTO.getIdPersonaJuridica()+" - "+ empresaAcreditadaDTO.getEstado()+" - "+ empresaAcreditadaDTO.getRegistro());
 			            
 			            empresaAcreditadaDTO = empAcredService.RegistrarEmpresaAcreditada(empresaAcreditadaDTO, usuarioDTO); 
 			            
@@ -503,6 +647,22 @@ public class BandejaEmpresasAcreditadasController {
 		        return retorno;
 		    }
 	//------------------------ FIN ENCONTRAR EMPRESA ACREDITADA - FECHA ULTIMA ACTUALIZACION -----------------------------
+			
+	//-------------------------- ENCONTRAR DATOS DE INFORMACION -----------------------------
+	@RequestMapping(value="/cargarInforme",method=RequestMethod.POST)
+    public @ResponseBody Map<String,Object> cargarInforme(TrazAlcanceAcredFilter filtro){
+        LOG.info("procesando cargarInforme");
+        Map<String,Object> retorno=new HashMap<String,Object>();
+        try{
+            List<TrazAlcanceAcredDTO> listado;
+            listado= trazAlcanceAcredService.listarTrazAlcanceAcred(filtro);
+            retorno.put("filas", listado);
+        }catch(Exception ex){
+            LOG.error("",ex);
+        }
+        return retorno;
+    }
+	//------------------------ FIN ENCONTRAR DATOS DE INFORMACION -----------------------------
 	
 	//-------------------------- CARGAR COMBOS TIPOS -----------------------------
 	@RequestMapping(value="/cargarComboTipo",method=RequestMethod.POST)
@@ -519,6 +679,22 @@ public class BandejaEmpresasAcreditadasController {
         return retorno;
     }
 	//------------------------ FIN CARGAR COMBOS TIPOS --------------------------------
+	
+	//-------------------------- CARGAR TIPO PRUEBA ORGANISMO -----------------------------
+		@RequestMapping(value="/cargarComboTipoPruebaOrg",method=RequestMethod.POST)
+	    public @ResponseBody Map<String,Object> cargarComboTipoPruebaOrg(TipoPruebaOrganismoFilter filtro){
+	        LOG.info("procesando TipoPruebaOrganismo");
+	        Map<String,Object> retorno=new HashMap<String,Object>();
+	        try{
+	            List<TipoPruebaOrganismoDTO> listado;
+	            listado= tipoPruebaOrganismoService.listarTipoPruebaOrganismo(filtro);
+	            retorno.put("filas", listado);
+	        }catch(Exception ex){
+	            LOG.error("",ex);
+	        }
+	        return retorno;
+	    }
+	//------------------------ FIN CARGAR TIPO PRUEBA ORGANISMO --------------------------------
 	
 	//-------------------------- CARGAR DIRECCION SEDE ACREDITACION -----------------------------
 		@RequestMapping(value="/cargarDireccionSede",method=RequestMethod.POST)
@@ -606,6 +782,8 @@ public class BandejaEmpresasAcreditadasController {
             	
             }
            
+            retorno.put("registros", contador);
+            
         }catch(Exception ex){
             LOG.error("",ex);
         }
@@ -774,15 +952,15 @@ public class BandejaEmpresasAcreditadasController {
 	}
 	
 	@RequestMapping(value="/RegistrarAlcanceAcreditacion", method= RequestMethod.POST)
-    public @ResponseBody Map<String,Object> RegistrarAlcanceAcreditacion(@RequestParam  Long idAlcanceAcreditacion, Long idEmpresaAcreditada, String estadoEmpresaAcreditada, Long idTipoPrueba, Long idOrganismoAcreditador,String resolucionCedula, Long idPrimerAlcanceAcreditacion, Long idDocumentoAdjunto,Long idDocumentoAlcanceAcreditada, Long idTipoOrganismo, String registro, String normaEvualada, Date fechaUltimaActualizacion, Date fechaAcreditacion, Date fechaInicioVigencia, Date fechaVencimiento,String estado, String estadoAccion, String estadoForm, HttpSession session,HttpServletRequest request){
+    public @ResponseBody Map<String,Object> RegistrarAlcanceAcreditacion(@RequestParam  Long idAlcanceAcreditacion, Long idEmpresaAcreditada, String estadoEmpresaAcreditada, Long idTipoPrueba, Long idOrganismoAcreditador,String resolucionCedula, Long idPrimerAlcanceAcreditacion, Long idDocumentoAdjunto,Long idDocumentoAlcanceAcreditada, Long idTipoOrganismo, String normaEvualada, Date fechaUltimaActualizacion, Date fechaAcreditacion, Date fechaInicioVigencia, Date fechaVencimiento,String estado, String estadoAccion, String estadoForm, HttpSession session,HttpServletRequest request){
 	                             
 		Map<String,Object> retorno = new HashMap<String,Object>();
 		
-		LOG.info(" Datos ANTES DE TRY:"+idEmpresaAcreditada+" - " +idTipoPrueba+" - " +idOrganismoAcreditador+" - " +resolucionCedula+" - " +idPrimerAlcanceAcreditacion+" - " +idDocumentoAdjunto+" - " +idDocumentoAlcanceAcreditada+" - " +idTipoOrganismo+" - " +registro+" - " +normaEvualada+" - " +fechaUltimaActualizacion+" - " +fechaAcreditacion+" - " +fechaInicioVigencia+" - " +fechaVencimiento+" - " +estado+" - " +estadoAccion);
+		LOG.info(" Datos ANTES DE TRY:"+idEmpresaAcreditada+" - " +idTipoPrueba+" - " +idOrganismoAcreditador+" - " +resolucionCedula+" - " +idPrimerAlcanceAcreditacion+" - " +idDocumentoAdjunto+" - " +idDocumentoAlcanceAcreditada+" - " +normaEvualada+" - " +fechaUltimaActualizacion+" - " +fechaAcreditacion+" - " +fechaInicioVigencia+" - " +fechaVencimiento+" - " +estado+" - " +estadoAccion);
 
 		try{ 
 			
-			LOG.info(" Datos DESPUES DE TRY:"+idEmpresaAcreditada+" - " +idTipoPrueba+" - " +idOrganismoAcreditador+" - " +resolucionCedula+" - " +idPrimerAlcanceAcreditacion+" - " +idDocumentoAdjunto+" - " +idDocumentoAlcanceAcreditada+" - " +idTipoOrganismo+" - " +registro+" - " +normaEvualada+" - " +fechaUltimaActualizacion+" - " +fechaAcreditacion+" - " +fechaInicioVigencia+" - " +fechaVencimiento+" - " +estado+" - " +estadoAccion);
+			LOG.info(" Datos DESPUES DE TRY:"+idEmpresaAcreditada+" - " +idTipoPrueba+" - " +idOrganismoAcreditador+" - " +resolucionCedula+" - " +idPrimerAlcanceAcreditacion+" - " +idDocumentoAdjunto+" - " +idDocumentoAlcanceAcreditada+" - " +idTipoOrganismo+" - "+normaEvualada+" - " +fechaUltimaActualizacion+" - " +fechaAcreditacion+" - " +fechaInicioVigencia+" - " +fechaVencimiento+" - " +estado+" - " +estadoAccion);
 
 
 			LOG.info(" Estado empresa :"+ estadoEmpresaAcreditada);
@@ -808,7 +986,6 @@ public class BandejaEmpresasAcreditadasController {
                  alcanceAcreditacionDTO.setIdDocumentoAdjunto(idDocumentoAdjunto);
                  alcanceAcreditacionDTO.setIdDocumentoAlcanceAcreditada(idDocumentoAlcanceAcreditada);
                  alcanceAcreditacionDTO.setIdTipoOrganismo(idTipoOrganismo);
-                 alcanceAcreditacionDTO.setRegistro(registro);
                  alcanceAcreditacionDTO.setNormaEvualada(normaEvualada);
                  alcanceAcreditacionDTO.setFechaAcreditacion(fechaAcreditacion);
                  alcanceAcreditacionDTO.setFechaUltimaActualizacion(fechaUltimaActualizacion);
@@ -843,7 +1020,6 @@ public class BandejaEmpresasAcreditadasController {
                  alcanceAcreditacionDTO.setIdDocumentoAdjunto(idDocumentoAdjunto);
                  alcanceAcreditacionDTO.setIdDocumentoAlcanceAcreditada(idDocumentoAlcanceAcreditada);
                  alcanceAcreditacionDTO.setIdTipoOrganismo(idTipoOrganismo);
-                 alcanceAcreditacionDTO.setRegistro(registro);
                  alcanceAcreditacionDTO.setNormaEvualada(normaEvualada);
                  alcanceAcreditacionDTO.setFechaAcreditacion(fechaAcreditacion);
                  alcanceAcreditacionDTO.setFechaUltimaActualizacion(fechaUltimaActualizacion);
@@ -1279,8 +1455,254 @@ public class BandejaEmpresasAcreditadasController {
 		
 		//-------------------------- FIN MODIFICAR ESTADO DOCUMENTO AL ELIMINAR -----------------------------
 	
+		//-------------------------- MODIFICAR PERSONA NATURAL --------------------------------
 		
+			@RequestMapping(value="/modificarPersonaNatural", method= RequestMethod.POST)
+		    public @ResponseBody Map<String,Object> modificarPersonaNatural(@RequestParam Long idPersonaNatural, String nombre, String apellidoPaterno, String apellidoMaterno, Long cip ,HttpSession session,HttpServletRequest request){
+			
+				Map<String,Object> retorno = new HashMap<String,Object>();
+				
+				LOG.info(" Datos antes del TRY CATCH:"+idPersonaNatural+" - " +nombre+" - " +apellidoPaterno+" - " +apellidoMaterno+" - " +cip);
+
+				try{ 
+					
+					LOG.info(" Datos despues del TRY CATCH :"+idPersonaNatural+" - " +nombre+" - " +apellidoPaterno+" - " +apellidoMaterno+" - " +cip);
+					
+					PersonaNaturalVDTO personaNaturalDTO = new PersonaNaturalVDTO();
+					
+					UsuarioDTO usuarioDTO = new UsuarioDTO();
+		           
+					usuarioDTO.setLogin("USU01");
+		            usuarioDTO.setTerminal(Inet4Address.getLocalHost().getHostAddress().toString());
+		            
+		            personaNaturalDTO.setIdPersonaNatural(idPersonaNatural);
+		            personaNaturalDTO.setNombre(nombre);
+		            personaNaturalDTO.setApellidoPaterno(apellidoPaterno);
+		            personaNaturalDTO.setApellidoMaterno(apellidoMaterno);
+		            personaNaturalDTO.setCip(cip);
+		            
+		            personanaturalService.editarPersonaNatural(personaNaturalDTO, usuarioDTO);
+		           
+		            
+		            retorno.put(ConstantesWeb.VV_RESULTADO, ConstantesWeb.VV_EXITO);
+				}catch(Exception e){ 
+		        	
+		            retorno.put(ConstantesWeb.VV_RESULTADO, ConstantesWeb.VV_ERROR);
+		            retorno.put(ConstantesWeb.VV_MENSAJE, e.getMessage());
+		            LOG.error("Error al guardar LA MODIFICACION DE LA PERSONA NATURAL: "+e.getMessage());
+		            e.printStackTrace();
+		            
+		        }        
+		        return retorno;
+				
+			}
+			
+			//-------------------------- FIN MODIFICAR PERSONA NATURAL -----------------------------	
 		
+			//-------------------------- MODIFICAR CARGO/ESPECIALIDAD - SEDE/INSPECTOR --------------------------------
+			
+			@RequestMapping(value="/modificarSedeInspector", method= RequestMethod.POST)
+		    public @ResponseBody Map<String,Object> modificarSedeInspector(@RequestParam Long idSedePersonalAutorizado, Long idCargo, Long idEspecialidad ,HttpSession session,HttpServletRequest request){
+			
+				Map<String,Object> retorno = new HashMap<String,Object>();
+				
+				LOG.info(" Datos antes del TRY CATCH:"+idSedePersonalAutorizado+" - " +idCargo+" - " +idEspecialidad);
+
+				try{ 
+					
+					LOG.info(" Datos despues del TRY CATCH :"+idSedePersonalAutorizado+" - " +idCargo+" - " +idEspecialidad);
+					
+					SedePersonalAutorizadoDTO sedePersonalAutorizadoDTO = new SedePersonalAutorizadoDTO();
+					
+					UsuarioDTO usuarioDTO = new UsuarioDTO();
+		           
+					usuarioDTO.setLogin("USU01");
+		            usuarioDTO.setTerminal(Inet4Address.getLocalHost().getHostAddress().toString());
+		            
+		            sedePersonalAutorizadoDTO.setIdSedePersonalAutorizado(idSedePersonalAutorizado);
+		            sedePersonalAutorizadoDTO.setIdCargo(idCargo);
+		            sedePersonalAutorizadoDTO.setIdEspecialidad(idEspecialidad);
+		            
+		            SedepersonalautorizadoService.EditarSedePersonalAutorizado(sedePersonalAutorizadoDTO, usuarioDTO);
+		           
+		            
+		            retorno.put(ConstantesWeb.VV_RESULTADO, ConstantesWeb.VV_EXITO);
+				}catch(Exception e){ 
+		        	
+		            retorno.put(ConstantesWeb.VV_RESULTADO, ConstantesWeb.VV_ERROR);
+		            retorno.put(ConstantesWeb.VV_MENSAJE, e.getMessage());
+		            LOG.error("Error al guardar LA MODIFICACION DE PERSONAL SEDE: "+e.getMessage());
+		            e.printStackTrace();
+		            
+		        }        
+		        return retorno;
+				
+			}
+			
+			//-------------------------- FIN MODIFICAR CARGO/ESPECIALIDAD - SEDE/INSPECTOR -----------------------------
+			
+			//-------------------------- MODIFICAR DATOS DE SEDE --------------------------------
+			
+			@RequestMapping(value="/modificarSede", method= RequestMethod.POST)
+		    public @ResponseBody Map<String,Object> modificarSede(@RequestParam Long idSedeAcreditacion, String idDepartamento, String idProvincia, String idDistrito, String direccion ,HttpSession session,HttpServletRequest request){
+			
+				Map<String,Object> retorno = new HashMap<String,Object>();
+				
+				LOG.info(" Datos antes del TRY CATCH:"+idSedeAcreditacion+" - " +idDepartamento+" - " +idProvincia+" - " +idDistrito+" - " +direccion);
+
+				try{ 
+					
+					LOG.info(" Datos despues del TRY CATCH :"+idSedeAcreditacion+" - " +idDepartamento+" - " +idProvincia+" - " +idDistrito+" - " +direccion);
+					
+					SedeAcreditacionDTO sedeAcreditacionDTO = new SedeAcreditacionDTO();
+					
+					UsuarioDTO usuarioDTO = new UsuarioDTO();
+		           
+					usuarioDTO.setLogin("USU01");
+		            usuarioDTO.setTerminal(Inet4Address.getLocalHost().getHostAddress().toString());
+		            
+		            sedeAcreditacionDTO.setIdSedeAcreditacion(idSedeAcreditacion);
+		            sedeAcreditacionDTO.setIdDepartamento(idDepartamento);
+		            sedeAcreditacionDTO.setIdProvincia(idProvincia);
+		            sedeAcreditacionDTO.setIdDistrito(idDistrito);
+		            sedeAcreditacionDTO.setDireccion(direccion);
+		            
+		            sedeacreditacionService.EditarSedeAcreditacion(sedeAcreditacionDTO, usuarioDTO);
+		           
+		            
+		            retorno.put(ConstantesWeb.VV_RESULTADO, ConstantesWeb.VV_EXITO);
+				}catch(Exception e){ 
+		        	
+		            retorno.put(ConstantesWeb.VV_RESULTADO, ConstantesWeb.VV_ERROR);
+		            retorno.put(ConstantesWeb.VV_MENSAJE, e.getMessage());
+		            LOG.error("Error al guardar LA MODIFICACION DATOS DE SEDE: "+e.getMessage());
+		            e.printStackTrace();
+		            
+		        }        
+		        return retorno;
+				
+			}
+			
+			//-------------------------- FIN MODIFICAR DATOS DE SEDE -----------------------------
+			
+			//-------------------------- MODIFICAR DATOS DE PERSONA JURIDICA --------------------------------
+			
+			@RequestMapping(value="/modificarDatosPersonaJuridica", method= RequestMethod.POST)
+		    public @ResponseBody Map<String,Object> modificarDatosPersonaJuridica(@RequestParam Long idPersonaJuridica, String telefono, String email, String web, HttpSession session,HttpServletRequest request){
+			
+				Map<String,Object> retorno = new HashMap<String,Object>();
+				
+				LOG.info(" Datos antes del TRY CATCH:"+idPersonaJuridica+" - " +telefono+" - " +email+" - " +web);
+
+				try{ 
+					
+					LOG.info(" Datos despues del TRY CATCH :"+idPersonaJuridica+" - " +telefono+" - " +email+" - " +web);
+					
+					PersonaJuridicaDTO personaJuridicaDTO = new PersonaJuridicaDTO();
+					
+					UsuarioDTO usuarioDTO = new UsuarioDTO();
+		           
+					usuarioDTO.setLogin("USU01");
+		            usuarioDTO.setTerminal(Inet4Address.getLocalHost().getHostAddress().toString());
+		            
+		            personaJuridicaDTO.setIdPersonaJuridica(idPersonaJuridica);
+		            personaJuridicaDTO.setTelefono(telefono);
+		            personaJuridicaDTO.setEmail(email);
+		            personaJuridicaDTO.setWeb(web);
+		            
+		            personajuridicaService.EditarPersonaJuridica(personaJuridicaDTO, usuarioDTO);
+		           
+		            
+		            retorno.put(ConstantesWeb.VV_RESULTADO, ConstantesWeb.VV_EXITO);
+				}catch(Exception e){ 
+		        	
+		            retorno.put(ConstantesWeb.VV_RESULTADO, ConstantesWeb.VV_ERROR);
+		            retorno.put(ConstantesWeb.VV_MENSAJE, e.getMessage());
+		            LOG.error("Error al guardar LA MODIFICACION DATOS DE PERSONA JURIDICA: "+e.getMessage());
+		            e.printStackTrace();
+		            
+		        }        
+		        return retorno;
+				
+			}
+			
+			//-------------------------- FIN MODIFICAR DATOS DE PERSONA JURIDICA -----------------------------
+			
+			//-------------------------- MODIFICAR DATOS DE EMPRESA ACREDITADA --------------------------------
+			
+			@RequestMapping(value="/modificarDatosEmpresaAcreditada", method= RequestMethod.POST)
+		    public @ResponseBody Map<String,Object> modificarDatosEmpresaAcreditada(@RequestParam Long idEmpresaAcreditada, String registro, HttpSession session,HttpServletRequest request){
+			
+				Map<String,Object> retorno = new HashMap<String,Object>();
+				
+				LOG.info(" Datos antes del TRY CATCH:"+idEmpresaAcreditada+" - " +registro);
+
+				try{ 
+					
+					LOG.info(" Datos despues del TRY CATCH :"+idEmpresaAcreditada+" - " +registro);
+					
+					EmpresaAcreditadaDTO empresaAcreditadaDTO = new EmpresaAcreditadaDTO();
+					
+					UsuarioDTO usuarioDTO = new UsuarioDTO();
+		           
+					usuarioDTO.setLogin("USU01");
+		            usuarioDTO.setTerminal(Inet4Address.getLocalHost().getHostAddress().toString());
+		            
+		            empresaAcreditadaDTO.setIdEmpresaAcreditada(idEmpresaAcreditada);
+		            empresaAcreditadaDTO.setRegistro(registro);
+		            
+		            empAcredService.EditarEmpresaAcreditada(empresaAcreditadaDTO, usuarioDTO);
+		           
+		            
+		            retorno.put(ConstantesWeb.VV_RESULTADO, ConstantesWeb.VV_EXITO);
+				}catch(Exception e){ 
+		        	
+		            retorno.put(ConstantesWeb.VV_RESULTADO, ConstantesWeb.VV_ERROR);
+		            retorno.put(ConstantesWeb.VV_MENSAJE, e.getMessage());
+		            LOG.error("Error al guardar LA MODIFICACION DATOS DE EMPRESA ACREDITADA: "+e.getMessage());
+		            e.printStackTrace();
+		            
+		        }        
+		        return retorno;
+				
+			}
+			
+			//-------------------------- FIN MODIFICAR DATOS DE EMPRESA ACREDITADA -----------------------------
+			
+			/*private DocumentoAdjuntoService filesService;
+			 
+		    public void setFilesService(DocumentoAdjuntoService filesService) {
+		        this.filesService = filesService;
+		    }
+			
+		    protected ModelAndView handleRequestInternal(HttpServletRequest request,
+		            HttpServletResponse response) throws Exception {
+		     
+		            List<Files> files = this.filesService.listAll();
+		     
+		            return new ModelAndView("files", "files", files);
+		        }
+		    
+			//----------
+			
+			public ModelAndView download(HttpServletRequest request, HttpServletResponse response) throws Exception {
+				
+		        int idDocumentoAdjunto = ServletRequestUtils.getRequiredIntParameter(request, "idDocumentoAdjunto");
+		        
+		        //DocumentoAdjuntoDTO file = this.documentoadjuntoService.find(idDocumentoAdjunto);
+		        List<DocumentoAdjuntoDTO> file = documentoadjuntoService.listarDocumentoAdjunto(idDocumentoAdjunto);
+		        //response.setContentType(file.getType());
+		        response.setContentLength(file.getArchivoAdjunto().length);
+		        response.setHeader("Content-Disposition","attachment; nombreDocumento=\"" + file.getNombreDocumento() +"\"");
+		 
+		        FileCopyUtils.copy(file.getFile(), response.getOutputStream());
+		 
+		        return null;
+		 
+		    }*/
+			
+			//----------
+				
 }
 
 

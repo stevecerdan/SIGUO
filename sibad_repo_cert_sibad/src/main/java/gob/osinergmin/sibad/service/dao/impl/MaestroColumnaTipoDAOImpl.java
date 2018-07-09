@@ -68,12 +68,12 @@ public class MaestroColumnaTipoDAOImpl implements MaestroColumnaTipoDAO {
             
             if(filtro.getIdMaestroColumna()==null){
                 if(filtro.getDominio()!=null && !filtro.getDominio().equals("")){
-                    query.setParameter("dominio","%"+filtro.getDominio().toUpperCase()+"%");
+                    query.setParameter("dominio",filtro.getDominio().toUpperCase());
                 }else{
-                    query.setParameter("dominio","%");
+                    query.setParameter("dominio","");
                 }
                 if(filtro.getAplicacion()!=null && !filtro.getAplicacion().equals("")){
-                    query.setParameter("aplicacion","%"+filtro.getAplicacion().toUpperCase()+"%");
+                    query.setParameter("aplicacion",filtro.getAplicacion().toUpperCase());
                 }else{
                     query.setParameter("aplicacion","%");
                 }

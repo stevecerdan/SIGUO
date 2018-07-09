@@ -57,23 +57,52 @@ public class ConstantesWeb {
         public static final String PAGE_DETALLE_SUPERVISION = "supervisiones/detalleSupervision";
         
         public static final String PAGE_MENU_PRINCIPAL= "menuGeneral";
+        public static final String PAGE_MENU_UNIDAD_OPERATIVA= "menuUnidadOperativa";
         
         public static final String PAGE_BANDEJA_EMPRESAS_ACREDITADAS = "empresasAcreditadas/mantenimientoEmpresasAcreditadas";
         public static final String PAGE_FRM_NUEVA_EMPRESA_ACREDITADA = "empresasAcreditadas/nuevaEmpresaAcreditada";
         public static final String PAGE_GENERAL_FRM_ESTADO_ACCION = "empresasAcreditadas/frmEstadoAccion";
         public static final String PAGE_FRM_NUEVO_ALCANCE_ACREDITACION = "empresasAcreditadas/nuevoAlcanceAcreditacion";
         public static final String PAGE_FRM_NUEVA_SEDE = "empresasAcreditadas/frmNuevaSede";
+        public static final String PAGE_FRM_PERSONAL_SEDE = "empresasAcreditadas/frmPersonalSede";
         public static final String PAGE_FRM_INSPECTOR_AUTORIZADO = "empresasAcreditadas/frmInspectorAutorizado";
         public static final String PAGE_FRM_EQUIPO_CERTIFICADO = "empresasAcreditadas/frmEquipoCertificado";
         public static final String PAGE_FRM_INACTIVAR_EQUIPO_AUTORIZADO = "empresasAcreditadas/frmInactivarEquipoAutorizado";
+        public static final String PAGE_FRM_INFORMACION = "empresasAcreditadas/frmInformacion";
         
         public static final String PAGE_FRM_VENTANA_CRON = "empresasAcreditadas/VentanaCron";
         
         public static final String PAGE_BANDEJA_TANQUE_CL = "InspeccionMantenimientoLimpieza/tanqueCL";
         public static final String PAGE_FRM_NUEVA_PROGRAMACION_INSPECCION_MANTENIMIENTO_LIMPIEZA = "InspeccionMantenimientoLimpieza/pIndividualMasiva";
-    	public static final String PAGE_FRM_PRUEBA = "InspeccionMantenimientoLimpieza/fmrDocumentoAdjunto";
+    	public static final String PAGE_FRM_PRUEBA = "InspeccionMantenimientoLimpieza/frmDocumentoAdjunto";
+    	public static final String PAGE_FRM_CANCELAR_PROGRAMACION = "InspeccionMantenimientoLimpieza/frmCancelacion";
+    	public static final String PAGE_FRM_REPROGRAMAR = "InspeccionMantenimientoLimpieza/frmReprogramacion";
+    	public static final String PAGE_FRM_REVISION = "InspeccionMantenimientoLimpieza/frmRevision";
+    	public static final String PAGE_FRM_RESUTADO_PERSONAL_AUTORIZADO = "InspeccionMantenimientoLimpieza/frmResultadoPersonalAut";
+    	public static final String PAGE_FRM_INFORMACION_ESTADO_IML = "InspeccionMantenimientoLimpieza/frmInformeEstado";
         
     	public static final String PAGE_BANDEJA_PRUEBA_HERMETICIDAD = "solicitudPruebasHermeticidad/bandejaPruebasHermeticidad";
+    	public static final String PAGE_FRM_PRUEBA_HERMETICIDAD = "solicitudPruebasHermeticidad/frmPruebaHermeticidad";
+    	public static final String PAGE_FRM_EST_REPROGRAMAR_CANCELAR = "solicitudPruebasHermeticidad/frmEstReprogramarCancelar";
+    	public static final String PAGE_FRM_CONFIRMAR_SOLICITUD = "solicitudPruebasHermeticidad/frmConfirmarSolicitud";
+    	public static final String PAGE_FRM_INFORMACION_ESTADO = "solicitudPruebasHermeticidad/frmInformeEstado";
+    	public static final String PAGE_FRM_INFORME_RIESGO = "solicitudPruebasHermeticidad/frmIndiceRiesgo";
+    	public static final String PAGE_FRM_PROXIMA_PRUEBA_HERMETICIDAD = "solicitudPruebasHermeticidad/frmProximaPruebaHermeticidad";
+    	public static final String PAGE_FRM_RESULTADO_PERSONA_AUT = "solicitudPruebasHermeticidad/frmResultadoPersonalAut";
+    	
+    	public static final String PAGE_BANDEJA_REPRUEBA_CILINDRO_GNV = "repruebasCilindroGNV/BandejaRepruebasCilindroGNV";
+    	public static final String PAGE_FRM_REGISTRO_SOLICITUD_REPRUEBA = "repruebasCilindroGNV/frmRegistroSolicitudRepruebaGNV";
+    	public static final String PAGE_FRM_REPROGRAMACION_CANCELACION = "repruebasCilindroGNV/frmReprogramacionCancelacion";
+    	public static final String PAGE_FRM_CONFIRMAR_SOLICITUD_GNV = "repruebasCilindroGNV/frmMsjConfirmacion";
+    	
+    	//PAGE_FRM_REPRUEBA_CILINDROS_GNV
+		public static final String PAGE_FRM_REPRUEBA_CILINDROS_GNV = "repruebasCilindroGNV/frmRepruebaCilindrosGNV";
+    	
+    	public static final String PAGE_BANDEJA_RESULTADOS_PRUEBA_HERMETICIDAD = "resultadoPruebasHermeticidad/bandejaResultadoPruebasHermeticidad";
+    	public static final String PAGE_FRM_ESTADO_REPROG_CANCEL = "resultadoPruebasHermeticidad/frmEstadoReprogCancel";
+    	public static final String PAGE_FRM_RESULTADO_PRUEBA_HERMETICIDAD = "resultadoPruebasHermeticidad/frmResultadoPruebaHermeticidad";
+    	
+    	
     }
     
     public static class mensajes{

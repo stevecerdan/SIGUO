@@ -65,6 +65,19 @@ public class PersonaJuridicaBuilder {
     }
     //----------------------
     
+  //Utilizado para Editar
+    public static PersonaJuridicaDTO toPersonaJ1Dto(MdiPersonaJuridica1 registro) {
+        PersonaJuridicaDTO registroDTO = new PersonaJuridicaDTO();
+        
+        registroDTO.setIdPersonaJuridica(registro.getIdPersonaJuridica());
+        registroDTO.setTelefono(registro.getTelefono());
+        registroDTO.setEmail(registro.getEmail());
+        registroDTO.setWeb(registro.getWeb());
+        
+        return registroDTO;
+    }
+    //----------------------
+    
     public static MdiPersonaJuridica getPersonaJuridica(PersonaJuridicaDTO registroDTO) {
         MdiPersonaJuridica registro = null;
         if(registroDTO!=null){

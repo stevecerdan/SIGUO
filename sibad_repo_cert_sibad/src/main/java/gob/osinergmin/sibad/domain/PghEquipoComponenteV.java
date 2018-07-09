@@ -28,12 +28,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PghEquipoComponenteV.findByComponente", query = "SELECT eq FROM PghEquipoComponenteV eq WHERE eq.idEquipoComponente = :idEquipoComponente"),
-    @NamedQuery(name = "PghEquipoComponenteV.findByFilterC", query = "SELECT eq FROM PghEquipoComponenteV eq WHERE eq.idEquipoCertificado = :idEquipoCertificado")
+    @NamedQuery(name = "PghEquipoComponenteV.findByFilterC", query = "SELECT eq FROM PghEquipoComponenteV eq WHERE eq.idEquipoCertificado = :idEquipoCertificado"),
+    @NamedQuery(name = "PghEquipoComponenteV.findBycbxResultadoComponente", query = "SELECT eq FROM PghEquipoComponenteV eq WHERE eq.idEmpresaAcreditada = :idEmpresaAcreditada and"+
+																														    " eq.idEquipoCertificado = :idEquipoCertificado and" +
+																															" eq.idTipoPrueba = '1467' and" +
+																															" eq.estadoEquipo = 'A' and" +
+																															" (upper(eq.estadoAlcance) = 'A' or" + 
+																															" upper(eq.estadoAlcance) = 'S')")
    
     
 })
 
 public class PghEquipoComponenteV extends Auditoria{
+	
 	@Id
     @Basic(optional = false)
     @NotNull
@@ -42,6 +49,27 @@ public class PghEquipoComponenteV extends Auditoria{
     
     @Column(name = "ID_EQUIPO_CERTIFICADO")
     private Long idEquipoCertificado;
+    
+    @Column(name = "EQUIPO")
+    private String descripcionEquipo;
+    
+    @Column(name = "ID_TIPO_EQUIPO")
+    private Long idTipoEquipo;
+    
+    @Column(name = "TIPO_EQUIPO")
+    private String tipoEquipo;
+    
+    @Column(name = "ID_EMPRESA_ACREDITADA")
+    private Long idEmpresaAcreditada;
+    
+    @Column(name = "ID_TIPO_PRUEBA")
+    private Long idTipoPrueba;
+        
+    @Column(name = "ESTADO_ALCANCE")
+    private String estadoAlcance;
+    
+    @Column(name = "ESTADO_EQUIPO")
+    private String estadoEquipo;
     
     @Column(name = "ID_COMPONENTE_TANQUE")
     private Long idComponenteTanque;
@@ -80,6 +108,14 @@ public class PghEquipoComponenteV extends Auditoria{
 	public void setIdEquipoCertificado(Long idEquipoCertificado) {
 		this.idEquipoCertificado = idEquipoCertificado;
 	}
+	
+	public Long getIdComponenteTanque() {
+		return idComponenteTanque;
+	}
+
+	public void setIdComponenteTanque(Long idComponenteTanque) {
+		this.idComponenteTanque = idComponenteTanque;
+	}
 
 	public String getComponenteTanque() {
 		return componenteTanque;
@@ -87,6 +123,62 @@ public class PghEquipoComponenteV extends Auditoria{
 
 	public void setComponenteTanque(String componenteTanque) {
 		this.componenteTanque = componenteTanque;
+	}
+	//------
+	public Long getIdTipoEquipo() {
+		return idTipoEquipo;
+	}
+
+	public void setIdTipoEquipo(Long idTipoEquipo) {
+		this.idTipoEquipo = idTipoEquipo;
+	}
+
+	public Long getIdEmpresaAcreditada() {
+		return idEmpresaAcreditada;
+	}
+
+	public void setIdEmpresaAcreditada(Long idEmpresaAcreditada) {
+		this.idEmpresaAcreditada = idEmpresaAcreditada;
+	}
+
+	public Long getIdTipoPrueba() {
+		return idTipoPrueba;
+	}
+
+	public void setIdTipoPrueba(Long idTipoPrueba) {
+		this.idTipoPrueba = idTipoPrueba;
+	}
+
+	public String getEstadoAlcance() {
+		return estadoAlcance;
+	}
+
+	public void setEstadoAlcance(String estadoAlcance) {
+		this.estadoAlcance = estadoAlcance;
+	}
+
+	public String getEstadoEquipo() {
+		return estadoEquipo;
+	}
+
+	public void setEstadoEquipo(String estadoEquipo) {
+		this.estadoEquipo = estadoEquipo;
+	}
+	
+	public String getDescripcionEquipo() {
+		return descripcionEquipo;
+	}
+
+	public void setDescripcionEquipo(String descripcionEquipo) {
+		this.descripcionEquipo = descripcionEquipo;
+	}
+
+	public String getTipoEquipo() {
+		return tipoEquipo;
+	}
+
+	public void setTipoEquipo(String tipoEquipo) {
+		this.tipoEquipo = tipoEquipo;
 	}
 
 	@Override

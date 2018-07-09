@@ -68,4 +68,17 @@ public class SedeAcreditacionBuilder {
 
         return registroDTO;
     }
+    
+    public static SedeAcreditacionDTO toSedeAcredEditDto(PghSedeAcreditacion registro) {
+    	
+    	SedeAcreditacionDTO registroDTO = new SedeAcreditacionDTO();
+        
+        registroDTO.setIdSedeAcreditacion(registro.getIdSedeAcreditacion());
+        registroDTO.setIdDepartamento(registro.getIdDepartamento());
+        registroDTO.setIdProvincia(registro.getIdProvincia());
+        registroDTO.setIdDistrito(registro.getIdDistrito());
+        registroDTO.setDireccion(registro.getDireccion());
+
+        return registroDTO;
+    }
 }

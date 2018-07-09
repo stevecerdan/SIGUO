@@ -45,7 +45,7 @@ cache: false,
 	
 }
 
-$('#archivo').change(function() {
+$('#uploadfile').change(function() {
     var filename = $('#archivo')[0].files[0]
-    $('#nombreArchivo').text(filename.name);
+    $('#uploadfile').text(filename.name);
 });

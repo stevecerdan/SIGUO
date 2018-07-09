@@ -10,16 +10,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name = "PGH_PROGRAMACION")
+@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "PghProgramacion.findByIdCompartimiento", query = "SELECT t FROM PghProgramacion t WHERE t.idCompartimiento = :idCompartimiento and rownum = 1 order by t.idProgramacion desc "), 
+    @NamedQuery(name = "PghProgramacion.findByIdProgramacion", query = "SELECT a FROM PghProgramacion a WHERE a.idProgramacion=:idProgramacion "),
+    @NamedQuery(name = "PghProgramacion.findByIdCompartimiento", query = "SELECT t FROM PghProgramacion t WHERE t.idCompartimiento = :idCompartimiento and rownum = 1 order by t.idProgramacion desc ") 
 })
 
 public class PghProgramacion extends Auditoria{
@@ -43,7 +45,7 @@ public class PghProgramacion extends Auditoria{
 	 private String tipoRevision; 
 	 
 	 @Column(name = "FECHA_PROGRAMACION")
-	 @Temporal(TemporalType.TIMESTAMP)
+	 @Temporal(TemporalType.DATE)
 	 private Date fechaProgramacion; 
 	 
 	 @Column(name = "ID_COMPARTIMIENTO") 
@@ -75,7 +77,7 @@ public class PghProgramacion extends Auditoria{
 	}
 	
 	public PghProgramacion(Long idProgramacion, String usuarioCreacion, Date fechaCreacion, String terminalCreacion) {
-		
+		super();
 		this.idProgramacion = idProgramacion;
 		this.usuarioCreacion = usuarioCreacion;
         this.fechaCreacion = fechaCreacion;
@@ -137,7 +139,7 @@ public class PghProgramacion extends Auditoria{
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
-
+	
 	@Override
     public int hashCode() {
         int hash = 0;
@@ -163,9 +165,5 @@ public class PghProgramacion extends Auditoria{
         return "gob.osinergmin.sibad.domain.PghProgramacion[ idProgramacion=" + idProgramacion + " ]";
     }
     
-	@PrePersist
-    void createdAt() {		
-            this.fechaProgramacion = new Date();
-    }
-
+    
 }

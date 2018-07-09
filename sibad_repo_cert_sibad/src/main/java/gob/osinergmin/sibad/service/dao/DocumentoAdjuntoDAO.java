@@ -18,6 +18,9 @@ import java.util.List;
 public interface DocumentoAdjuntoDAO {
     public List<DocumentoAdjuntoDTO> find(DocumentoAdjuntoFilter filtro) throws DocumentoAdjuntoException;
     public DocumentoAdjuntoDTO create(DocumentoAdjuntoDTO documentoAdjuntoDTO,UsuarioDTO usuarioDTO) throws DocumentoAdjuntoException;
+	public DocumentoAdjuntoDTO delete(DocumentoAdjuntoDTO documentoAdjuntoDTO,UsuarioDTO usuarioDTO) throws DocumentoAdjuntoException;
     public DocumentoAdjuntoDTO update(DocumentoAdjuntoDTO documentoAdjuntoDTO,UsuarioDTO usuarioDTO) throws DocumentoAdjuntoException;
+    
+    
     
 }

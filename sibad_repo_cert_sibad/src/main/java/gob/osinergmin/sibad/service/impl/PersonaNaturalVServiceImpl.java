@@ -4,6 +4,7 @@
  */
 package gob.osinergmin.sibad.service.impl;
 
+import gob.osinergmin.sibad.domain.dto.DocumentoAdjuntoDTO;
 import gob.osinergmin.sibad.domain.dto.EmpresaAcreditadaDTO;
 import gob.osinergmin.sibad.domain.dto.PersonaNaturalVDTO;
 import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
@@ -57,5 +58,43 @@ public class PersonaNaturalVServiceImpl implements PersonaNaturalVService{
 		}
 		
 		return registro;
+	}
+    
+    @Override
+	public PersonaNaturalVDTO editarPersonaNatural(PersonaNaturalVDTO personaNaturalDTO,UsuarioDTO usuarioDTO) {
+		
+		 LOG.info("Iniciando actualizacion de datos de Persona Natural al DAO");
+			
+		 PersonaNaturalVDTO registro=null;
+				
+			try {
+				
+				registro = personanaturalDAO.update(personaNaturalDTO, usuarioDTO);
+				LOG.info("(Se envio con exito los datos de Persona Natural al DAO) registro: "+registro.toString());
+				 
+			} catch (Exception e) {
+				
+				LOG.error("error enviar datos de  Persona Natural al DAO",e);
+			}
+		
+			return registro;
+	}
+    
+    @Override
+	public List<PersonaNaturalVDTO> listarTablaPersonaNatural(Long idPersonaNatural, String numeroDoc,
+			String apellidoPaterno, String apellidoMaterno, String nombre) {
+		
+		List<PersonaNaturalVDTO> retorno=null;
+ 		 
+		LOG.info(idPersonaNatural +" - "+ numeroDoc +" - "+ apellidoPaterno +" - "+apellidoMaterno +" - "+nombre);
+ 		
+ 		try {
+ 			retorno = personanaturalDAO.llenarTablaPersonaNatural(idPersonaNatural, numeroDoc, apellidoPaterno, apellidoMaterno, nombre);
+ 			LOG.info("(Se envio con exito los datos de PersonaNaturalVDTO al DAO - Sernaque) registro: "+retorno.toString());
+ 		} catch (Exception e) {
+ 			LOG.error("error enviar datos de PersonaNaturalVDTO al DAO - Sernaque",e);
+ 		}
+ 		
+ 		return retorno;
 	}
 }

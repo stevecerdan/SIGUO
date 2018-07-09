@@ -15,6 +15,7 @@ import gob.osinergmin.sibad.filter.base.BasePaginatorFilter;
 public class DocumentoAdjuntoFilter extends BasePaginatorFilter{
 	
     private Long idDocumentoAdjunto;
+    private String descripcionDocumento;
 
 	public Long getIdDocumentoAdjunto() {
 		return idDocumentoAdjunto;
@@ -22,6 +23,14 @@ public class DocumentoAdjuntoFilter extends BasePaginatorFilter{
 
 	public void setIdDocumentoAdjunto(Long idDocumentoAdjunto) {
 		this.idDocumentoAdjunto = idDocumentoAdjunto;
+	}
+
+	public String getDescripcionDocumento() {
+		return descripcionDocumento;
+	}
+
+	public void setDescripcionDocumento(String descripcionDocumento) {
+		this.descripcionDocumento = descripcionDocumento;
 	}
     
 }

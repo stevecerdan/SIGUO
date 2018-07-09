@@ -44,6 +44,7 @@ public class DocumentoAdjuntoBuilder {
         registroDTO.setNombreDocumento(registro.getNombreDocumento());
         registroDTO.setArchivoAdjunto(registro.getArchivoAdjunto());
         registroDTO.setEstadoDocumento(registro.getEstadoDocumento());
+        registroDTO.setDescripcionDocumento(registro.getDescripcionDocumento());
               
         return registroDTO;
     }
@@ -56,6 +57,7 @@ public class DocumentoAdjuntoBuilder {
             registro.setNombreDocumento(registroDTO.getNombreDocumento());
             registro.setArchivoAdjunto(registroDTO.getArchivoAdjunto());
             registro.setEstadoDocumento(registroDTO.getEstadoDocumento());
+            registro.setDescripcionDocumento(registroDTO.getDescripcionDocumento());
         }
         return registro;
 

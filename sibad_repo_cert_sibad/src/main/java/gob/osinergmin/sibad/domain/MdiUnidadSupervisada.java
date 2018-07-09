@@ -16,7 +16,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "MDI_UNIDAD_SUPERVISADA")
 @NamedQueries({
-    @NamedQuery(name = "MdiUnidadSupervisada.findAll", query = "SELECT t FROM MdiUnidadSupervisada t"),
+    @NamedQuery(name = "MdiUnidadSupervisada.findAll", query = "SELECT t FROM MdiUnidadSupervisada t WHERE t.idUnidadSupervisada = :idUnidadSupervisada"),
     @NamedQuery(name = "MdiUnidadSupervisada.findByCodigoOsinergmin", query = "SELECT t FROM MdiUnidadSupervisada t WHERE t.codigoOsinergmin = :codigoOsinergmin AND t.estado = '1' "),
     @NamedQuery(name = "MdiUnidadSupervisada.findByRuc", query = "SELECT t FROM MdiUnidadSupervisada t WHERE t.ruc = :ruc AND t.estado = '1' ")
 })

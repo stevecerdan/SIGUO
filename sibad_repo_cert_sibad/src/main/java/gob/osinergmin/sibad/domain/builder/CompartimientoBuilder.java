@@ -5,6 +5,7 @@ import java.util.List;
 
 import gob.osinergmin.sibad.domain.MdiUbigeoDPD;
 import gob.osinergmin.sibad.domain.PghCompartimiento;
+import gob.osinergmin.sibad.domain.PghCompartimientoV;
 import gob.osinergmin.sibad.domain.dto.CompartimientoDTO;
 import gob.osinergmin.sibad.domain.dto.UbigeodpdDTO;
 
@@ -30,13 +31,34 @@ public class CompartimientoBuilder {
 		    registroDTO.setNumero(registro.getNumero());
 		    registroDTO.setIdCompartimiento(registro.getIdCompartimiento());
 		    registroDTO.setEstado(registro.getEstado());
+		    registroDTO.setFechaProximaPrueba(registro.getFechaProximaPrueba());
 		    registroDTO.setIdAlmacenamiento(registro.getIdAlmacenamiento());
-		    
-		   
-		    
-	        
+		            
 	        return registroDTO;
-	    }
+	}
+	
+	public static List<CompartimientoDTO> toListCompartimientoVDto(List<PghCompartimientoV> lista) {
+		CompartimientoDTO registroDTO;
+	        List<CompartimientoDTO> retorno = new ArrayList<CompartimientoDTO>();
+	        if (lista != null) {
+	            for (PghCompartimientoV valor : lista) {
+	                registroDTO = toCompartimientoVDto(valor);
+	                retorno.add(registroDTO);
+	            }
+	        }
+	        return retorno;
+	} 
+	
+	public static CompartimientoDTO toCompartimientoVDto(PghCompartimientoV registro) {
+	    	
+		    CompartimientoDTO registroDTO = new CompartimientoDTO();
+	        
+		    registroDTO.setIdCompartimiento(registro.getIdCompartimiento());
+		    registroDTO.setIdUnidadSupervisada(registro.getIdUnidadSupervisada());
+		    registroDTO.setNumeroProgramacion(registro.getNumeroProgramacion());
+ 
+	        return registroDTO;
+	}
 	
 	public static PghCompartimiento getCompartimiento(CompartimientoDTO registroDTO) {
 		PghCompartimiento registro = null;

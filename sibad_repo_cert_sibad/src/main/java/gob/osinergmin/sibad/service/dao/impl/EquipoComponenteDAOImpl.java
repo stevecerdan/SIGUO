@@ -48,22 +48,33 @@ public class EquipoComponenteDAOImpl implements EquipoComponenteDAO {
         Query query=null;
         try{
         	
-        	if(filtro.getIdEquipoComponente()!=null){
-            	query = crud.getEm().createNamedQuery("PghEquipoComponenteV.findByComponente");  
-        	}else {
-        		query = crud.getEm().createNamedQuery("PghEquipoComponenteV.findByFilterC");
+        	if(filtro.getIdEmpresaAcreditada()!=null){
+            	query = crud.getEm().createNamedQuery("PghEquipoComponenteV.findBycbxResultadoComponente");  
+        	} else {
+        		if(filtro.getIdEquipoComponente()!=null){
+                	query = crud.getEm().createNamedQuery("PghEquipoComponenteV.findByComponente");  
+            	} else {
+            		query = crud.getEm().createNamedQuery("PghEquipoComponenteV.findByFilterC");
+                }
             }
             
-            if(filtro.getIdEquipoComponente()==null){
+            if(filtro.getIdEmpresaAcreditada()==null){
             	
-                if(filtro.getIdEquipoCertificado()!=null){
-                    query.setParameter("idEquipoCertificado",filtro.getIdEquipoCertificado());
+            	if(filtro.getIdEquipoComponente()==null){
+                	
+                    if(filtro.getIdEquipoCertificado()!=null){
+                        query.setParameter("idEquipoCertificado",filtro.getIdEquipoCertificado());
+                    }else{
+                        query.setParameter("idEquipoCertificado","");
+                    }
+                    
                 }else{
-                    query.setParameter("idEquipoCertificado","");
+                    query.setParameter("idEquipoComponente",filtro.getIdEquipoComponente());
                 }
                 
             }else{
-                query.setParameter("idEquipoComponente",filtro.getIdEquipoComponente());
+                query.setParameter("idEmpresaAcreditada",filtro.getIdEmpresaAcreditada());
+                query.setParameter("idEquipoCertificado",filtro.getIdEquipoCertificado());
             }
             
         }catch(Exception e){

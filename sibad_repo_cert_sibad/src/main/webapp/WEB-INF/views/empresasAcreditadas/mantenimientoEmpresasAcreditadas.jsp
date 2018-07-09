@@ -4,7 +4,9 @@
     <jsp:attribute name="headArea">
         <script type="text/javascript" src='<c:url value="/javascript/app/empresasAcreditadas/mantenimientoEmpresasAcreditadas.js" />' charset="utf-8"></script>
         <script type="text/javascript" src='<c:url value="/javascript/app/empresasAcreditadas/panelPestana.js" />' ></script>
-        <script type="text/javascript" src='<c:url value="/javascript/app/empresasAcreditadas/latinize.js"/>' charset="utf-8"></script>
+        <script type="text/javascript" src='<c:url value="/javascript/third-party/latinize.js"/>' charset="utf-8"></script>
+        <script type="text/javascript" src='<c:url value="/javascript/third-party/jquery.table2excel.min.js"/>' ></script>
+       
         <style>
 			/*.ui-datepicker-calendar, .ui-datepicker-current {
 				display: none;
@@ -76,7 +78,7 @@
 			<div id="panel">
 				<ul id="tabs">
 			    	<li id="tab_01"><a href="#" onclick="tab('tab_01','panel_01');">Empresas Acreditadas</a></li>
-			        <li id="tab_02"><a href="#" onclick="tab('tab_02','panel_02');">Historial de Inspecciones</a></li>
+			        <li id="tab_02" style="display:none;"><a href="#" onclick="tab('tab_02','panel_02');">Historial de Inspecciones</a></li>
 			    </ul>
 				<div id="paneles" style="height:auto;">
 					<form id="panel_01">
@@ -100,7 +102,8 @@
 			                                    <option value="3">Direcci&oacute;n</option> 
 			                                    <option value="4">Departamento</option> 
 			                                    <option value="5">Provincia</option> 
-			                                    <option value="6">Distrito</option>   
+			                                    <option value="6">Distrito</option>
+			                                    <option value="7">Estado</option>   
 			                                </select>
 			                            </div>
 		                            <div class="ipt-small vam" style="margin-left: 40px;"> </div>
@@ -112,19 +115,41 @@
 				                    </div>
 		                        </div>
 		                        
+		                        <div class="filaForm">
+		                            <div class="ipt-small vam" style="margin-right: 40px;"><label>Estado :</label> </div>
+		                            <div>
+		                                <select id="cmbEstadoPrincipal" name="estadoPrincipal" class="ipt-medium-small">
+		                                    <option value="">--Seleccione--</option>
+		                                    <option value="1">VIGENTE</option>
+		                                    <option value="2">NO VIGENTE</option>
+		                                </select>
+		                            </div>
+		                        </div>
+		                        
+		                        <input type="hidden" id="idOrganismoAcreditadorEntrante" value="414"/>
+		                        
 		                    </div>
 		                </fieldset>
-		
+						
 		                <div class="gridMargin" style="margin:10px;">
 		                	<div id="gridContenedorEmpAcred"></div>
 		                </div>
 		                
-		                <div style="margin: 10px 0px 0px 10px;">
-		                    <input type="button" id="btnExportar" title="Exportar a Excel" class="btnSimple" style="width: 150px" value="Exportar a Excel">
+		                <div style="margin:10px;">
+		                	<table id= "tablitaEA" border="1" style="display:none;"> 
+		                	</table>
+		                </div>
+		                
+		                <div style="margin: 10px 10px 5px 0px; text-align: right;">
+		                   <input type="button" id="btnExportar" title="Exportar a Excel" class="btnSimple" style="width: 150px" value="Exportar a Excel">
+		                  
 	                    </div>
+	                    
+	                    
 
 		                <div id="dialogNuevaEmpresaAcreditada" class="dialog"  title="Nueva Empresa Acreditada" style="display:none;"></div>
 		                <!-- <div id="dialogProcesoAcreditacion1" class="dialog"  title="Editar Proceso Acreditado" style="display:none;"></div> -->
+						<div id="dialogInfo" class="dialog"  title="Informacion Alcance Acreditacion" style="display:none;"></div>
 						
 						</div>
 					</div>
@@ -156,18 +181,16 @@
 		                           	<div style="margin-left: 30px;">
 				                    <input type="button" id="btnBuscarHistorial" title="Buscar" class="btnSimple" style="width: 100px" value="Buscar">
 				                    </div>
-		                        </div>
-		                        
+		                        </div>		                        
 		                    </div>
 		                </fieldset>
-		
-		                <!-- <div class="gridMargin" style="margin:10px;">
-		                	<div id="gridContenedorEmpAcred"></div>
-		                </div> -->
+						
+						<div class="gridMargin" style="margin:10px;">
+					       	<div id="gridContenedorResultados"></div>
+					    </div>
 
-		                
-		                <!-- <div id="dialogNuevaEmpresaAcreditada" class="dialog"  title="Nueva Empresa Acreditada" style="display:none;"></div>-->
-		                
+					    <div id="dialogNuevaReprueba" class="dialog"  title="repruebita" style="display:none;"></div>
+		                	
 						</div>
 					</div>
 					</form>

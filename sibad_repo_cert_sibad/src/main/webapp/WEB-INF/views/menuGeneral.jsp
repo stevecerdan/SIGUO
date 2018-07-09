@@ -25,15 +25,19 @@
 		             	<fieldset class='tac' style="margin: 10px 10px">
 		                    <div class="form" style="width:auto; float:left; margin-left: 30px;">
 		                    
-		                        <div class="filaForm">
-		                            <a href="/sibad/pages/mantenimientoEmpresasAcreditadas">MANTENIMIENTO DE EMPRESA ACREDITADAS</a>
+		                        <div class="filaForm" style="margin-top:8px;">
+		                            <a href="/sibad/pages/mantenimientoEmpresasAcreditadas">MÓDULO DE EMPRESAS ACREDITADAS</a>
 		                        </div>
 		                        
-		                        <div class="filaForm">
-		                            <a href="/sibad/pages/InspMantLimp">INSPECCION, MANTENIMIENTO Y LIMPIEZA</a>
+		                        <div class="filaForm" style="margin-top:8px;">
+		                            <a href="/sibad/pages/MenuPrincipal/menuUnidadOperativa">MÓDULO DE UNIDAD OPERATIVA</a>
 		                        </div>
 		                        
-		                        <div class="filaForm">
+		                        <div class="filaForm" style="margin-top:8px;">
+		                            <a href="/sibad/pages/resultadosPruebasHermeticidad">MÓDULO DE PRUEBAS DE HERMETICIDAD</a>
+		                        </div> 
+		                        
+		                        <div class="filaForm" style="margin-top:8px;">
 		                            <a href="/sibad/pages/VerificarProcesosVencidos">CRON</a>
 		                        </div>
 		                        

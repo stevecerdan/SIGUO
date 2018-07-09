@@ -40,30 +40,44 @@ public class AlcanceAcreditacionDAOImpl implements AlcanceAcreditacionDAO{
 	private Query getFindQuery(AlcanceAcreditacionFilter filtro) {
         Query query=null;
         try{
-            if(filtro.getIdAlcanceAcreditacion()!=null){
-            	query = crud.getEm().createNamedQuery("PghAlcanceAcreditacion.findByIdAlcanceAcreditacion");
+            if(filtro.getEstado()!=null){
+            	query = crud.getEm().createNamedQuery("PghAlcanceAcreditacion.findByAlcanceVigente");
             }else{
-            	if(filtro.getIdEmpresaAcreditada()!=null){
-            		query = crud.getEm().createNamedQuery("PghAlcanceAcreditacion.findByPrimerAlcance");
-        		}else {
-        			query = crud.getEm().createNamedQuery("PghAlcanceAcreditacion.findByFechaV");
-        		}
+            	if(filtro.getIdAlcanceAcreditacion()!=null) {
+            		query = crud.getEm().createNamedQuery("PghAlcanceAcreditacion.findByIdAlcanceAcreditacion");
+            	}else {
+	            	if(filtro.getIdEmpresaAcreditada()!=null){
+	            		query = crud.getEm().createNamedQuery("PghAlcanceAcreditacion.findByPrimerAlcance");
+	        		}else {
+	        			query = crud.getEm().createNamedQuery("PghAlcanceAcreditacion.findByFechaV");
+	        		}
+            	}
             }
             
-           if(filtro.getIdAlcanceAcreditacion()==null){
+           if(filtro.getEstado()==null){
         	   
-        	   if(filtro.getIdEmpresaAcreditada()==null){
+        	   if(filtro.getIdAlcanceAcreditacion()==null){
         		   
-        		   	if(filtro.getFechaVencimiento()!=null){
-            		   query.setParameter("fechaVencimiento",filtro.getFechaVencimiento());
-                    }else{
-                    	query.setParameter("fechaVencimiento","");
-                    }
-        		   	
-                }else{
-                	query.setParameter("idEmpresaAcreditada",filtro.getIdEmpresaAcreditada());
-                }
+	        	   if(filtro.getIdEmpresaAcreditada()==null){
+	        		   
+	        		   	if(filtro.getFechaVencimiento()!=null){
+	            		   query.setParameter("fechaVencimiento",filtro.getFechaVencimiento());
+	                    }else{
+	                    	query.setParameter("fechaVencimiento","");
+	                    }
+	        		   	
+	                }else{
+	                	query.setParameter("idEmpresaAcreditada",filtro.getIdEmpresaAcreditada());
+	                }
+	        	   
+        	   }else {
+        		   
+        		   query.setParameter("idAlcanceAcreditacion",filtro.getIdAlcanceAcreditacion());
+        	   }
+        	   
             }else{
+            	query.setParameter("estado",filtro.getEstado());
+     		   query.setParameter("idEmpresaAcreditada",filtro.getIdEmpresaAcreditada());
                 query.setParameter("idAlcanceAcreditacion",filtro.getIdAlcanceAcreditacion());
             }
             //query.setParameter("idPersonal",filtro.getIdPersonal());
@@ -163,7 +177,6 @@ public class AlcanceAcreditacionDAOImpl implements AlcanceAcreditacionDAO{
 			pghAlcanceAcreditacion.setIdDocumentoAdjunto(alcanceAcreditacionDTO.getIdDocumentoAdjunto());
 			pghAlcanceAcreditacion.setIdDocumentoAlcanceAcreditada(alcanceAcreditacionDTO.getIdDocumentoAlcanceAcreditada());
 			pghAlcanceAcreditacion.setIdTipoOrganismo(alcanceAcreditacionDTO.getIdTipoOrganismo());
-			pghAlcanceAcreditacion.setRegistro(alcanceAcreditacionDTO.getRegistro());
 			pghAlcanceAcreditacion.setNormaEvualada(alcanceAcreditacionDTO.getNormaEvualada());
 			pghAlcanceAcreditacion.setFechaAcreditacion(alcanceAcreditacionDTO.getFechaAcreditacion());
 			pghAlcanceAcreditacion.setFechaUltimaActualizacion(alcanceAcreditacionDTO.getFechaUltimaActualizacion());

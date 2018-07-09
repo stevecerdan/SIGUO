@@ -18,5 +18,7 @@ import java.util.List;
  */
 public interface PersonaNaturalVDAO {
     public List<PersonaNaturalVDTO> find(PersonaNaturalVFilter filtro) throws PersonaNaturalVException;
+    public List<PersonaNaturalVDTO> llenarTablaPersonaNatural(Long idPersonaNatural, String numeroDoc, String apellidoPaterno, String apellidoMaterno,String nombre) throws PersonaNaturalVException;
 	public PersonaNaturalVDTO create(PersonaNaturalVDTO personaNaturalDTO, UsuarioDTO usuarioDTO);
+	public PersonaNaturalVDTO update(PersonaNaturalVDTO personaNaturalDTO, UsuarioDTO usuarioDTO) throws PersonaNaturalVException;
 }

@@ -25,7 +25,7 @@ function enviarDatos(){
 			$("#observa").val( $("#txtObservacionI").val ().latinize() );
 			$("#dialogInactivarEquipoA").dialog('close');
 		}else{
-			alert("INGRESE LA OBSERVACION");
+			alert("INGRESE LA OBSERVACIÓN");
 		}
 	}else{
 		alert("SELECCIONE UN MOTIVO");

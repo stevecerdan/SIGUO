@@ -27,9 +27,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PghAlcanceAcreditacion.findByIdAlcanceAcreditacion", query = "SELECT a FROM PghAlcanceAcreditacion a WHERE a.idAlcanceAcreditacion=:idAlcanceAcreditacion "),
+  //Buscar si la empresa tiene alcances vigentes
+    @NamedQuery(name = "PghAlcanceAcreditacion.findByAlcanceVigente", query = "SELECT a FROM PghAlcanceAcreditacion a WHERE a.idEmpresaAcreditada = :idEmpresaAcreditada and a.idAlcanceAcreditacion <> :idAlcanceAcreditacion and" +
+																														" (upper(a.estado) = :estado or" +
+																														" upper(a.estadoAccion) = 'S')"),
   //Traer ID Primer Alcance
     @NamedQuery(name = "PghAlcanceAcreditacion.findByPrimerAlcance", query = "SELECT a FROM PghAlcanceAcreditacion a WHERE a.idAlcanceAcreditacion = (SELECT min(a.idAlcanceAcreditacion) FROM PghAlcanceAcreditacion a WHERE a.idEmpresaAcreditada = :idEmpresaAcreditada)"),
-    @NamedQuery(name = "PghAlcanceAcreditacion.findByFechaV", query ="SELECT a FROM PghAlcanceAcreditacion a WHERE TO_DATE(a.fechaVencimiento,'DD/MM/YY') = :fechaVencimiento")
+    @NamedQuery(name = "PghAlcanceAcreditacion.findByFechaV", query ="SELECT a FROM PghAlcanceAcreditacion a WHERE TO_DATE(a.fechaVencimiento,'DD/MM/YY') <= :fechaVencimiento and (upper(a.estado) = 'A' or upper(a.estadoAccion) = 'S')")
 })
 public class PghAlcanceAcreditacion extends Auditoria{
     
@@ -70,13 +74,9 @@ public class PghAlcanceAcreditacion extends Auditoria{
     @Column(name = "ID_TIPO_ORGANISMO")
     private Long idTipoOrganismo;
     
-    @Column(name = "REGISTRO")
-    private String registro;
-    
     @Column(name = "NORMA_EVALUADA")
     private String normaEvualada;
-  
-    @Basic(optional = false)
+
     @Column(name = "FECHA_ULTIMA_ACTUALIZACION")
     private Date fechaUltimaActualizacion;
     
@@ -108,7 +108,7 @@ public class PghAlcanceAcreditacion extends Auditoria{
     
     public PghAlcanceAcreditacion(Long idAlcanceAcreditacion, Long idEmpresaAcreditada, Long idTipoPrueba,
 			String resolucionCedula, Long idPrimerAlcanceAcreditacion, Long idDocumentoAdjunto,
-			Long idDocumentoAlcanceAcreditada, Long idTipoOrganismo, String registro, String normaEvualada,
+			Long idDocumentoAlcanceAcreditada, Long idTipoOrganismo, String normaEvualada,
 			Date fechaUltimaActualizacion, Date fechaAcreditacion, Date fechaVencimiento, String estado,
 			String estadoAccion) {
 		super();
@@ -120,7 +120,6 @@ public class PghAlcanceAcreditacion extends Auditoria{
 		this.idDocumentoAdjunto = idDocumentoAdjunto;
 		this.idDocumentoAlcanceAcreditada = idDocumentoAlcanceAcreditada;
 		this.idTipoOrganismo = idTipoOrganismo;
-		this.registro = registro;
 		this.normaEvualada = normaEvualada;
 		this.fechaUltimaActualizacion = fechaUltimaActualizacion;
 		this.fechaAcreditacion = fechaAcreditacion;
@@ -131,7 +130,7 @@ public class PghAlcanceAcreditacion extends Auditoria{
 
 	public PghAlcanceAcreditacion(Long idAlcanceAcreditacion, Long idEmpresaAcreditada, Long idTipoPrueba,
 			Long idOrganismoAcreditador, String resolucionCedula, Long idPrimerAlcanceAcreditacion,
-			Long idDocumentoAdjunto, Long idDocumentoAlcanceAcreditada, Long idTipoOrganismo, String registro,
+			Long idDocumentoAdjunto, Long idDocumentoAlcanceAcreditada, Long idTipoOrganismo,
 			String normaEvualada, Date fechaUltimaActualizacion, Date fechaAcreditacion, Date fechaVencimiento,
 			Date fechaInicioVigencia, String estado, String estadoAccion) {
 		super();
@@ -144,7 +143,6 @@ public class PghAlcanceAcreditacion extends Auditoria{
 		this.idDocumentoAdjunto = idDocumentoAdjunto;
 		this.idDocumentoAlcanceAcreditada = idDocumentoAlcanceAcreditada;
 		this.idTipoOrganismo = idTipoOrganismo;
-		this.registro = registro;
 		this.normaEvualada = normaEvualada;
 		this.fechaUltimaActualizacion = fechaUltimaActualizacion;
 		this.fechaAcreditacion = fechaAcreditacion;
@@ -234,14 +232,6 @@ public class PghAlcanceAcreditacion extends Auditoria{
 		this.idTipoOrganismo = idTipoOrganismo;
 	}
 
-	public String getRegistro() {
-		return registro;
-	}
-
-	public void setRegistro(String registro) {
-		this.registro = registro;
-	}
-
 	public String getNormaEvualada() {
 		return normaEvualada;
 	}
@@ -325,7 +315,7 @@ public class PghAlcanceAcreditacion extends Auditoria{
     
     @PreUpdate
     void updatedAt() {
-            this.fechaUltimaActualizacion= new Date();
+            this.fechaAcreditacion= new Date();
     }
     
 }

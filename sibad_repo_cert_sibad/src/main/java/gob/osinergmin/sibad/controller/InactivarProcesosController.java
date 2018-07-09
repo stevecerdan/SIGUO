@@ -93,7 +93,13 @@ public class InactivarProcesosController {
 	        try{
 	            List<AlcanceAcreditacionDTO> listado;
 	            listado= alcanceAcreditacionService.listarDatosAlcance(filtro);
+	            
+	            Long contador = (long) listado.size();
+	            
 	            retorno.put("filas", listado);
+	            
+	            retorno.put("registros", contador);
+	            
 	        }catch(Exception ex){
 	            LOG.error("",ex);
 	        }
@@ -104,15 +110,15 @@ public class InactivarProcesosController {
 	//-------------------------- MODIFICAR ESTADO X FECHA DE VENCIMIENTO --------------------------------
 	
 		@RequestMapping(value="/modificarEstados", method= RequestMethod.POST)
-	    public @ResponseBody Map<String,Object> modificarEstados(@RequestParam Long idEmpresaAcreditada, Long idAlcanceAcreditacion, String estado,String estadoAccion ,HttpSession session,HttpServletRequest request){
+	    public @ResponseBody Map<String,Object> modificarEstados(@RequestParam Long idEmpresaAcreditada, Long idAlcanceAcreditacion, String estadoA, String estadoE,String estadoAccion ,HttpSession session,HttpServletRequest request){
 		
 			Map<String,Object> retorno = new HashMap<String,Object>();
 			
-			LOG.info(" Datos antes del TRY CATCH:"+idAlcanceAcreditacion+" - " +estado);
+			LOG.info(" Datos antes del TRY CATCH:"+idAlcanceAcreditacion+" - " +estadoA);
 
 			try{ 
 				
-				LOG.info(" Datos despues del TRY CATCH :"+idAlcanceAcreditacion+" - " +estado);
+				LOG.info(" Datos despues del TRY CATCH :"+idAlcanceAcreditacion+" - " +estadoA);
 				
 				AlcanceAcreditacionDTO alcanceAcreditacionDTO = new AlcanceAcreditacionDTO();
 				EmpresaAcreditadaDTO EmpresaAcreditadaDTO = new EmpresaAcreditadaDTO();
@@ -123,11 +129,11 @@ public class InactivarProcesosController {
 	            usuarioDTO.setTerminal(Inet4Address.getLocalHost().getHostAddress().toString());
 	            
 	            alcanceAcreditacionDTO.setIdAlcanceAcreditacion(idAlcanceAcreditacion);
-	            alcanceAcreditacionDTO.setEstado(estado);
+	            alcanceAcreditacionDTO.setEstado(estadoA);
 	            alcanceAcreditacionDTO.setEstadoAccion(estadoAccion);
 	            
 	            EmpresaAcreditadaDTO.setIdEmpresaAcreditada(idEmpresaAcreditada);
-	            EmpresaAcreditadaDTO.setEstado(estado);
+	            EmpresaAcreditadaDTO.setEstado(estadoE);
 	            
 	            alcanceAcreditacionService.EditarEstadoAlcanceEmpresa(alcanceAcreditacionDTO, usuarioDTO);
 	            empAcredService.RegistrarEmpresaAcreditada(EmpresaAcreditadaDTO, usuarioDTO);

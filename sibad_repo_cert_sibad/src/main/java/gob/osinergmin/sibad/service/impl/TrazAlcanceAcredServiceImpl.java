@@ -1,12 +1,18 @@
 package gob.osinergmin.sibad.service.impl;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import gob.osinergmin.sibad.domain.dto.EmpresaAcreditadaDTO;
 import gob.osinergmin.sibad.domain.dto.TrazAlcanceAcredDTO;
+import gob.osinergmin.sibad.filter.EmpresaAcreditadaFilter;
+import gob.osinergmin.sibad.filter.TrazAlcanceAcredFilter;
 import gob.osinergmin.sibad.service.TrazAlcanceAcredService;
 import gob.osinergmin.sibad.service.dao.TrazAlcanceAcredDAO;
 
@@ -16,6 +22,19 @@ public class TrazAlcanceAcredServiceImpl implements TrazAlcanceAcredService{
     
 	@Inject
 	TrazAlcanceAcredDAO trazAlcanceAcredDAO;
+	
+	@Override
+    @Transactional(readOnly = true)
+    public List<TrazAlcanceAcredDTO> listarTrazAlcanceAcred(TrazAlcanceAcredFilter filtro){
+        List<TrazAlcanceAcredDTO> retorno=null;
+        try{
+            retorno = trazAlcanceAcredDAO.find(filtro);
+            LOG.info("cuenta -size: "+retorno.size());
+        }catch(Exception ex){
+            LOG.error("Error en listarTrazAlcanceAcred",ex);
+        }
+        return retorno;
+    }
 	
 	@Override
 	public TrazAlcanceAcredDTO RegistrarObservacionTrazAlcanceAcred(TrazAlcanceAcredDTO trazAlcanceAcredDTO) {

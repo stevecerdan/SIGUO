@@ -8,6 +8,10 @@ var estadoAux1;
 var estadoEmp;
 var IdEmpresaAcreditadaAux = "";
 var idAlAcredAux = "";
+var mensj = "";
+var idOrgAcredEA = "";
+var idCbxPrueba = "";
+var valIDTP = "";
 
 $(function() {
 	//listarProcesosAcreditacion(0);
@@ -31,10 +35,11 @@ function validaNumericos(event) {
 
 function initInicioNuevaEmpresaAcreditada(){
 	confirm.start();
-	
+	$('#seccionTipoPrueba').hide();
 	cargarDepartamento();
 	desactivarBotonGuardar();
 	desactivarBotonProceso();
+	//cargarTipoPruebaEA();
 	
 	$("#txtRazonSocial").attr('disabled','disabled');
 	$("#cmbDepartamento").attr('disabled','disabled');
@@ -44,6 +49,7 @@ function initInicioNuevaEmpresaAcreditada(){
 	$("#txtTelefono").attr('disabled','disabled');
 	$("#txtEmail").attr('disabled','disabled');
 	$("#txtWeb").attr('disabled','disabled');
+	$("#txtRegistro").attr('disabled','disabled');
 	
 	$('#txtRUC').click(function(){
 		$("#MensajeVal").hide();
@@ -84,7 +90,10 @@ function initInicioNuevaEmpresaAcreditada(){
 		$("#txtTelefono").attr('disabled','disabled');
 		$("#txtEmail").attr('disabled','disabled');
 		$("#txtWeb").attr('disabled','disabled');
-    	abrirAlcanceAcreditacion();
+		$("#txtRegistro").attr('disabled','disabled');
+		idOrgAcredEA = $("#idOrgAcreditadorEA").val();
+		idCbxPrueba = $("#cmbTipoPruebaEA").val();
+    	abrirAlcanceAcreditacion(idOrgAcredEA,idCbxPrueba);
     	var IdEmpresaAcreditada = $('#idEmpresaAcreditada').val();
 		var estadoForm = 'SAVE';
 		RetornarIdEmpAcred(IdEmpresaAcreditada,estadoForm);
@@ -111,6 +120,8 @@ function initInicioNuevaEmpresaAcreditada(){
 		$("#txtEmail").attr('disabled','disabled');
 		$("#txtWeb").val('');
 		$("#txtWeb").attr('disabled','disabled');
+		$("#txtRegistro").val('');
+		$("#txtRegistro").attr('disabled','disabled');
 		$("#idEmpresaAcreditada").val('');
 		$("#MensajeEA").hide();
 		desactivarBotonGuardar();
@@ -125,29 +136,54 @@ function initInicioNuevaEmpresaAcreditada(){
 		cargarDistrito();
 	});
 	
-	$('body').on('click', '.Consultar',function(){
-			
+	$("#cmbTipoPruebaEA").change(function(){
+		//alert($("#cmbTipoPruebaEA").val());
+		valIDTP = $("#cmbTipoPruebaEA").val();
+		if(valIDTP !== ""){
+		validarEmpresaAcreditada();
+		listarProcesosAcreditacion();
+		}else{
+			$("#MensajeEA").hide();
+			desactivarBotonProceso();
+			$("#gridContenedorProcesos").html("");
+		}
+	});
+	
+	$('body').on('click', '.InformeE',function(){
+	       var cadena= $(this).attr("id");
+	  	   
+	  	   var arrayCadena = cadena.split("%");
+	  	   
+	  	   var id = arrayCadena[0];
+	  	   var estadoAccion = arrayCadena[1];
+	    	
+	    	var avi = "P"
+	    	
+	    	abrirInformacion2();
+	    	cargarDatosInformacion(id,estadoAccion,avi);
+	    });
+	
+	$('body').on('click', '.Editar',function(){
+		
 		   var cadena= $(this).attr("id");
 	 	   
 	 	   var arrayCadena = cadena.split("%");
 	 	   
 	 	   var id = arrayCadena[0];
 	 	   var resolucionCedula = arrayCadena[1];
-	 	   var registro = arrayCadena[2];
-	 	   var idDocumentoAdjunto = arrayCadena[3];
-	 	   var idDocumentoAlcanceAcredita = arrayCadena[4];
-	 	   var normaEvaluada = arrayCadena[5];
-	 	   var idOrganismoAcreditador = arrayCadena[6];
-	 	   var fechaIVigencia = arrayCadena[7];
-	 	   var fechaUActualizacion = arrayCadena[8];  
-	 	   var fechaAcreditacion = arrayCadena[9];
-	 	   var fechaVencimiento = arrayCadena[10];
-	 	   var idTipoOrganismo = arrayCadena[11]; 
-	 	   var idTipoPrueba = arrayCadena[12];
-	 	   var estadoForm1 = arrayCadena[13];
-	 	   var idEmpresaAcreditada = arrayCadena[14];
-	 	   var idPrimerAlcanceAcreditacion = arrayCadena[15];
-	 	   var estadoAlcance = arrayCadena[16];
+	 	   var idDocumentoAdjunto = arrayCadena[2];
+	 	   var idDocumentoAlcanceAcredita = arrayCadena[3];
+	 	   var normaEvaluada = arrayCadena[4];
+	 	   var idOrganismoAcreditador = arrayCadena[5];
+	 	   var fechaIVigencia = arrayCadena[6];
+	 	   var fechaUActualizacion = arrayCadena[7];  
+	 	   var fechaAcreditacion = arrayCadena[8];
+	 	   var fechaVencimiento = arrayCadena[9];
+	 	   var idTipoOrganismo = arrayCadena[10]; 
+	 	   var idTipoPrueba = arrayCadena[11];
+	 	   var estadoForm1 = arrayCadena[12];
+	 	   var idEmpresaAcreditada = arrayCadena[13];
+	 	   var idPrimerAlcanceAcreditacion = arrayCadena[14];
 	 	   
 	 	   if (id == '' || id == 'null'){
 	 		   
@@ -169,24 +205,13 @@ function initInicioNuevaEmpresaAcreditada(){
 	 		   
 	 	  }
 	       
-	       if (registro == '' || registro == 'null'){
-	 		   
-	     	  registro ='' ;
-	 	   
-	       } else {
-	 		   
-	     	  registro =arrayCadena[2];
-	 		   
-	 	  }
-	 		   
-
 	       if (idDocumentoAdjunto == '' || idDocumentoAdjunto == 'null'){
 	 		   
 	     	  idDocumentoAdjunto ='';
 	 	   
 	       } else {
 	 		   
-	     	  idDocumentoAdjunto = arrayCadena[3];
+	     	  idDocumentoAdjunto = arrayCadena[2];
 	 		   
 	 	  } 
 	       
@@ -196,7 +221,7 @@ function initInicioNuevaEmpresaAcreditada(){
 	 	   
 	       } else {
 	 		   
-	     	  idDocumentoAlcanceAcredita = arrayCadena[4];
+	     	  idDocumentoAlcanceAcredita = arrayCadena[3];
 	 		   
 	 	  } 
 	       
@@ -206,7 +231,7 @@ function initInicioNuevaEmpresaAcreditada(){
 	 	   
 	       } else {
 	 		   
-	     	  normaEvaluada =arrayCadena[5];
+	     	  normaEvaluada =arrayCadena[4];
 	 		   
 	 	  } 
 	       
@@ -216,7 +241,7 @@ function initInicioNuevaEmpresaAcreditada(){
 	 	   
 	       } else {
 	 		   
-	     	  idOrganismoAcreditador =arrayCadena[6];
+	     	  idOrganismoAcreditador =arrayCadena[5];
 	 		   
 	 	  } 
 	       
@@ -226,7 +251,7 @@ function initInicioNuevaEmpresaAcreditada(){
 	 	   
 	       } else {
 	 		   
-	     	  fechaIVigencia =arrayCadena[7];
+	     	  fechaIVigencia =arrayCadena[6];
 	 		   
 	 	  } 
 	       
@@ -236,7 +261,7 @@ function initInicioNuevaEmpresaAcreditada(){
 	 	   
 	       } else {
 	 		   
-	     	  fechaUActualizacion = arrayCadena[8];
+	     	  fechaUActualizacion = arrayCadena[7];
 	 		   
 	 	  } 
 	       
@@ -246,7 +271,7 @@ function initInicioNuevaEmpresaAcreditada(){
 	 	   
 	       } else {
 	 		   
-	     	  fechaAcreditacion =arrayCadena[9];
+	     	  fechaAcreditacion =arrayCadena[8];
 	 		   
 	 	  } 
 	       
@@ -256,7 +281,7 @@ function initInicioNuevaEmpresaAcreditada(){
 	 	   
 	       } else {
 	 		   
-	     	  fechaVencimiento =arrayCadena[10];
+	     	  fechaVencimiento =arrayCadena[9];
 	 		   
 	 	  } 
 	       
@@ -266,7 +291,7 @@ function initInicioNuevaEmpresaAcreditada(){
 	 	   
 	       } else {
 	 		   
-	     	  idTipoOrganismo = arrayCadena[11];
+	     	  idTipoOrganismo = arrayCadena[10];
 	 		   
 	 	  } 
 	       
@@ -276,13 +301,13 @@ function initInicioNuevaEmpresaAcreditada(){
 	 	   
 	       } else {
 	 		   
-	     	  idTipoPrueba =arrayCadena[12];
+	     	  idTipoPrueba =arrayCadena[11];
 	 		   
 	 	  }
 	       
 	       if (estadoForm1){
 	 		   
-	     	  estadoForm1 = arrayCadena[13];
+	     	  estadoForm1 = arrayCadena[12];
 	 	   
 	       } 
 	       
@@ -292,15 +317,176 @@ function initInicioNuevaEmpresaAcreditada(){
 	  	   
 	        } else {
 	  		   
-	      	  idPrimerAlcanceAcreditacion = arrayCadena[15];
+	      	  idPrimerAlcanceAcreditacion = arrayCadena[14];
 	  		   
 	  	  } 
-	       
-	 	   abrirEditarAlcanceAcreditacion();
-	 	   cargarDatosAlcance(id,resolucionCedula,registro,idDocumentoAdjunto,idDocumentoAlcanceAcredita,normaEvaluada,idOrganismoAcreditador,fechaIVigencia,fechaUActualizacion,fechaAcreditacion,fechaVencimiento,idTipoOrganismo,idTipoPrueba,estadoForm1,idEmpresaAcreditada,idPrimerAlcanceAcreditacion,estadoAlcance);
+	       idOrgAcredEA = $("#idOrgAcreditadorEA").val();
+	 	   abrirAuxAlcanceAcreditacion(idOrgAcredEA);
+	 	   cargarEditarDatosAlcance(id,resolucionCedula,idDocumentoAdjunto,idDocumentoAlcanceAcredita,normaEvaluada,idOrganismoAcreditador,fechaIVigencia,fechaUActualizacion,fechaAcreditacion,fechaVencimiento,idTipoOrganismo,idTipoPrueba,estadoForm1,idEmpresaAcreditada,idPrimerAlcanceAcreditacion);
 	 	   
-        //--------------------------------
-        //abrirConsultarAlcanceAcreditacion();
+ });
+	
+	$('body').on('click', '.Consultar',function(){
+			
+		   var cadena= $(this).attr("id");
+	 	   
+	 	   var arrayCadena = cadena.split("%");
+	 	   
+	 	   var id = arrayCadena[0];
+	 	   var resolucionCedula = arrayCadena[1];
+	 	   var idDocumentoAdjunto = arrayCadena[2];
+	 	   var idDocumentoAlcanceAcredita = arrayCadena[3];
+	 	   var normaEvaluada = arrayCadena[4];
+	 	   var idOrganismoAcreditador = arrayCadena[5];
+	 	   var fechaIVigencia = arrayCadena[6];
+	 	   var fechaUActualizacion = arrayCadena[7];  
+	 	   var fechaAcreditacion = arrayCadena[8];
+	 	   var fechaVencimiento = arrayCadena[9];
+	 	   var idTipoOrganismo = arrayCadena[10]; 
+	 	   var idTipoPrueba = arrayCadena[11];
+	 	   var estadoForm1 = arrayCadena[12];
+	 	   var idEmpresaAcreditada = arrayCadena[13];
+	 	   var idPrimerAlcanceAcreditacion = arrayCadena[14];
+	 	   
+	 	   if (id == '' || id == 'null'){
+	 		   
+	 		   id = '';
+	 	   
+	 	   } else {
+	 		   
+	 		   id =arrayCadena[0];
+	 		   
+	 	  }
+	 	   
+	       if (resolucionCedula == ''  || resolucionCedula == 'null'){
+	 		   
+	     	  resolucionCedula ='' ;
+	 	   
+	       } else {
+	 		   
+	     	  resolucionCedula =arrayCadena[1] ;
+	 		   
+	 	  }
+	       
+	       if (idDocumentoAdjunto == '' || idDocumentoAdjunto == 'null'){
+	 		   
+	     	  idDocumentoAdjunto ='';
+	 	   
+	       } else {
+	 		   
+	     	  idDocumentoAdjunto = arrayCadena[2];
+	 		   
+	 	  } 
+	       
+	       if (idDocumentoAlcanceAcredita == '' || idDocumentoAlcanceAcredita == 'null'){
+	 		   
+	     	  idDocumentoAlcanceAcredita ='' ;
+	 	   
+	       } else {
+	 		   
+	     	  idDocumentoAlcanceAcredita = arrayCadena[3];
+	 		   
+	 	  } 
+	       
+	       if (normaEvaluada == '' || normaEvaluada == 'null'){
+	 		   
+	     	  normaEvaluada = '';
+	 	   
+	       } else {
+	 		   
+	     	  normaEvaluada =arrayCadena[4];
+	 		   
+	 	  } 
+	       
+	       if (idOrganismoAcreditador == '' || idOrganismoAcreditador == 'null'){
+	 		   
+	     	  idOrganismoAcreditador = '';
+	 	   
+	       } else {
+	 		   
+	     	  idOrganismoAcreditador =arrayCadena[5];
+	 		   
+	 	  } 
+	       
+	       if (fechaIVigencia == '' || fechaIVigencia == 'null'){
+	 		   
+	     	  fechaIVigencia = '';
+	 	   
+	       } else {
+	 		   
+	     	  fechaIVigencia =arrayCadena[6];
+	 		   
+	 	  } 
+	       
+	       if (fechaUActualizacion == '' || fechaUActualizacion == 'null'){
+	 		   
+	     	  fechaUActualizacion ='' ;
+	 	   
+	       } else {
+	 		   
+	     	  fechaUActualizacion = arrayCadena[7];
+	 		   
+	 	  } 
+	       
+	       if (fechaAcreditacion == '' || fechaAcreditacion == 'null'){
+	 		   
+	     	  fechaAcreditacion = '';
+	 	   
+	       } else {
+	 		   
+	     	  fechaAcreditacion =arrayCadena[8];
+	 		   
+	 	  } 
+	       
+	       if (fechaVencimiento == '' || fechaVencimiento == 'null'){
+	 		   
+	     	  fechaVencimiento = '';
+	 	   
+	       } else {
+	 		   
+	     	  fechaVencimiento =arrayCadena[9];
+	 		   
+	 	  } 
+	       
+	       if (idTipoOrganismo == '' || idTipoOrganismo == 'null'){
+	 		   
+	     	  idTipoOrganismo ='';
+	 	   
+	       } else {
+	 		   
+	     	  idTipoOrganismo = arrayCadena[10];
+	 		   
+	 	  } 
+	       
+	       if (idTipoPrueba == '' || idTipoPrueba == 'null'){
+	 		   
+	     	  idTipoPrueba ='' ;
+	 	   
+	       } else {
+	 		   
+	     	  idTipoPrueba =arrayCadena[11];
+	 		   
+	 	  }
+	       
+	       if (estadoForm1){
+	 		   
+	     	  estadoForm1 = arrayCadena[12];
+	 	   
+	       } 
+	       
+	       if (idPrimerAlcanceAcreditacion == '' || idPrimerAlcanceAcreditacion == 'null'){
+	 		   
+	      	  idPrimerAlcanceAcreditacion ='' ;
+	  	   
+	        } else {
+	  		   
+	      	  idPrimerAlcanceAcreditacion = arrayCadena[14];
+	  		   
+	  	  } 
+	       idOrgAcredEA = $("#idOrgAcreditadorEA").val();
+	 	   abrirAuxAlcanceAcreditacion(idOrgAcredEA);
+	 	   cargarConsultarDatosAlcance(id,resolucionCedula,idDocumentoAdjunto,idDocumentoAlcanceAcredita,normaEvaluada,idOrganismoAcreditador,fechaIVigencia,fechaUActualizacion,fechaAcreditacion,fechaVencimiento,idTipoOrganismo,idTipoPrueba,estadoForm1,idEmpresaAcreditada,idPrimerAlcanceAcreditacion);
+	 	   
     });
 	
 	$('body').on('click', '.Suspender',function(){
@@ -312,7 +498,7 @@ function initInicioNuevaEmpresaAcreditada(){
 		estadoAux1 = "S";
 		estadoEmp = "ACTIVO";
     	abrirFrmEstadoAccion(id, estadoAux1, letraEstado,idEmpresaAcreditada,estadoEmp);
-    	$('#lblCedula').html("Adjuntar Cedula de Suspención:");
+    	$('#lblCedula').html("Adjuntar Cédula de Suspensión:");
     });
 	
 	$('body').on('click', '.Cancelar',function(){
@@ -321,10 +507,10 @@ function initInicioNuevaEmpresaAcreditada(){
 		var arrayCadena = cadena.split("%");
 		var id = arrayCadena[0];
 		var idEmpresaAcreditada = arrayCadena[1];
-		estadoEmp = "INACTIVO";
+		estadoEmp = "ACTIVO";
     	estadoAux1 = "C";
     	abrirFrmEstadoAccion(id, estadoAux1, letraEstado,idEmpresaAcreditada,estadoEmp);
-    	$('#lblCedula').html("Adjuntar Cedula de Cancelación:");
+    	$('#lblCedula').html("Adjuntar Cédula de Cancelación:");
     });
     
 	$('body').on('click', '.Habilitar',function(){
@@ -337,7 +523,7 @@ function initInicioNuevaEmpresaAcreditada(){
 		estadoEmp = "ACTIVO";
     	estadoAux1 = "A";
     	abrirFrmEstadoAccion(id, estadoAux1, letraEstado,idEmpresaAcreditada,estadoEmp);
-    	$('#lblCedula').html("Adjuntar Cedula de Habilitación:");
+    	$('#lblCedula').html("Adjuntar Cédula de Habilitación:");
     });
 	
 	/*$('#btnGuardar').click(function(){
@@ -380,6 +566,11 @@ function caracteresCorreoValido(email){
     }else{
         return true;
     }
+}
+
+function cargarOrganismoEA(idOrgAcred){
+	$("#idOrgAcreditadorEA").val(idOrgAcred);
+	cargarTipoPruebaEA();
 }
 
 function initDialogs() {
@@ -434,15 +625,44 @@ function validarDatosFormularioEA(){
 	return true;
 }
 
-function cargarDatosEmpresaAcreditada(id,ruc){
+function cargarDatosEmpresaAcreditada(id,ruc,msg){
 
 	$('#idEmpresaAcreditada').val(id);
 	$('#txtRUC').val(ruc);
+	mensj = msg;
 	cargarDatos();
+	$("#txtTelefono").removeAttr('disabled');
+	$("#txtEmail").removeAttr('disabled');
+	$("#txtWeb").removeAttr('disabled');
+	$("#txtRegistro").removeAttr('disabled');
+	activarBotonGuardar();
 	
 }
 
-function abrirEditarAlcanceAcreditacion(){ 
+function cargarTipoPruebaEA() {
+
+    $.ajax({
+        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/cargarComboTipoPruebaOrg",
+        type:'post',
+        async:false,
+        data:{
+        	idOrganismoAcreditador: $("#idOrgAcreditadorEA").val()
+        },
+        beforeSend:muestraLoading,
+        success:function(data){
+        	
+            ocultaLoading();
+            fill.combo(data.filas,'idTipoPrueba','descripcion','#cmbTipoPruebaEA');
+            
+        },
+        error:errorAjax
+    });
+    
+    //$("#cmbTipoPruebaEA").val('1467');
+    document.getElementById("cmbTipoPruebaEA").selectedIndex=1;
+}
+
+function abrirAuxAlcanceAcreditacion(idOrgAcredEA){ 
 	
 	var title="ALCANCE ACREDITACIÓN";
     $.ajax({
@@ -465,44 +685,11 @@ function abrirEditarAlcanceAcreditacion(){
                 title: title,
                 closeText: "Cerrar"
             });
+            //OrgAcreditadorEnAlcance(idOrgAcredEA);
         },
         error:errorAjax
     });
 }
-/*
-function abrirConsultarAlcanceAcreditacion(){ 
-    //alert("Abrir");
-    var title="ALCANCE ACREDITACIÓN";
-    $.ajax({
-        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/abrirNuevoAlcanceAcreditacion", 
-        type:'get',
-        async:false,
-        beforeSend:muestraLoading,
-        success:function(data){
-            ocultaLoading();
-            $("#dialogProcesoAcreditacion2").html(data);
-            $("#dialogProcesoAcreditacion2").dialog({
-                position: ['center', 'top+2'],
-                resizable: false,
-                draggable: true,
-                autoOpen: true,
-                height:"auto",
-                width: "1120",
-                modal: true,
-                dialogClass: 'dialog',
-                title: title,
-                closeText: "Cerrar",
-                open: function( event, ui ) {
-                    $('#idAlcanceAcreditacion').val( idAlAcredAux );
-                    //alert( "Open: " + idAlAcredAux);
-                    cargarDatosAlcanceCTRL();
-                    //$('#idAlcanceAcreditacion').val( idAlcanceAcreditacionAux );
-                }
-            });
-        },
-        error:errorAjax
-    });
-}*/
 
 function abrirFrmEstadoAccion(id, estadoAux, letraEstado,idEmpresaAcreditada,estadoEmp){  
 	
@@ -551,7 +738,7 @@ function abrirFrmEstadoAccion(id, estadoAux, letraEstado,idEmpresaAcreditada,est
     });
 }
 
-function abrirAlcanceAcreditacion(){ 
+function abrirAlcanceAcreditacion(idOrgAcredEA,idCbxPrueba){ 
 	
 	var title="ALCANCE ACREDITACIÓN";
     $.ajax({
@@ -574,6 +761,7 @@ function abrirAlcanceAcreditacion(){
                 title: title,
                 closeText: "Cerrar"
             });
+            OrgAcreditadorEnAlcance(idOrgAcredEA,idCbxPrueba);
         },
         error:errorAjax
     });
@@ -599,7 +787,7 @@ function listarProcesosAcreditacion(flg_load) {
     $("#gridContenedorProcesos").append(grid).append(pager);
 
 
-    var nombres = ['','','','','','','','','','','N°', 'TIPO DE PRUEBA', 'RESOLUCI&Oacute;N','REGISTRO','FECHA DE ULTIMA ACTUALIZACI&Oacute;N','FECHA DE ACREDITACI&Oacute;N','FECHA DE VENCIMIENTO','ESTADO','OPCION'];
+    var nombres = ['','','','','','','','','','','N°', 'TIPO DE PRUEBA', 'RESOLUCI&Oacute;N','REGISTRO','FECHA DE ULTIMA ACTUALIZACI&Oacute;N','FECHA DE ACREDITACI&Oacute;N','FECHA DE VENCIMIENTO','ESTADO','','OPCION'];
     var columnas = [
     	{name: "idDocumentoAdjunto",width: 30, sortable: false, hidden: true, align: "center"},
     	{name: "idDocumentoAlcanceAcredita",width: 30, sortable: true, hidden: true, align: "center"},
@@ -612,14 +800,15 @@ function listarProcesosAcreditacion(flg_load) {
         {name: "idEmpresaAcreditada", width: 20, sortable: false, hidden: true, align: "center"},
         {name: "idAlcanceAcreditacion", width: 20, sortable: false, hidden: true, align: "center"},
         {name: "NP", width: 20, sortable: false, hidden: false, align: "center", formatter:"NumeroFilasP"},
-        {name: "tipoPrueba", width: 140, sortable: false, hidden: false, align: "center"},
-        {name: "resolucionCedula", width: 125, sortable: false, hidden: false, align: "center"},
-        {name: "registro", width: 70, sortable: false, hidden: false, align: "center"},
-        {name: "fechaUActualizacion", width: 100, sortable: false, hidden: false, align: "center", formatter:"fmtFechaUA"},
-        {name: "fechaAcreditacion", width: 100, sortable: false, hidden: false, align: "center", formatter:"fmtFechaA"},
-        {name: "fechaVencimiento", width: 100, sortable: false, hidden: false, align: "center", formatter:"fmtFechaV"},
-        {name: "estadoAlcance", width: 65, sortable: false, hidden: false, align: "center", formatter: "fmtEstadoNewEmpAcred"},
-        {name: "opcion", width: 200, sortable: false, hidden: false, align: "center", formatter:"OpcionesEmpAcreditadas"}
+        {name: "tipoPrueba", width: 135, sortable: false, hidden: false, align: "left"},
+        {name: "resolucionCedula", width: 70, sortable: false, hidden: false, align: "left"},
+        {name: "registro", width: 70, sortable: false, hidden: false, align: "left"},
+        {name: "fechaUActualizacion", width: 100, sortable: false, hidden: false, align: "left", formatter:"fmtFechaUA"},
+        {name: "fechaAcreditacion", width: 93, sortable: false, hidden: false, align: "left", formatter:"fmtFechaA"},
+        {name: "fechaVencimiento", width: 93, sortable: false, hidden: false, align: "left", formatter:"fmtFechaV"},
+        {name: "estadoAlcance", width: 100, sortable: false, hidden: false, align: "left", formatter: "fmtEstadoNewEmpAcred"},
+        {name: "estadoAccion", width: 65, sortable: false, hidden: true, align: "center"},
+        {name: "opcion", width: 240, sortable: false, hidden: false, align: "center", formatter:"OpcionesEmpAcreditadas"}
     ];
     
     grid.jqGrid({
@@ -627,7 +816,10 @@ function listarProcesosAcreditacion(flg_load) {
         datatype: "json",
         postData: {
             flg_load: flg_load,
-            ruc: $("#txtRUC").val()
+            email: $("#txtEmail").val(),
+            idOrganismoAcreditador: $("#idOrgAcreditadorEA").val(),
+            ruc: $("#txtRUC").val(),
+            idTipoPrueba : $("#cmbTipoPruebaEA").val(),
         },
         hidegrid: false,
         rowNum: 4,
@@ -677,21 +869,21 @@ function listarProcesosAcreditacion(flg_load) {
             var sel = rowdata.estadoAlcance;
             var tex ='';
             if(sel=='A'){
-            	tex='VIGENTE';
+            	tex='VIGENTE ';
             }else{
             	if(sel=='I'){
-            		tex='NO VIGENTE';
+            		tex='NO VIGENTE ';
             	}else{
             		if(sel=='S'){
-            			tex='SUSPENDIDO';
+            			tex='SUSPENDIDO ';
             		}else{
             			if(sel=='C'){
-                			tex='CANCELADO';
+                			tex='CANCELADO ';
                 		}
             		}
             	}
             }
-            return tex;
+            return tex+"<img src=\"" + baseURL + "/../images/info2.png\" class='InformeE' id='"+ rowdata.idAlcanceAcreditacion +"%"+ rowdata.estadoAccion+"'style=\"cursor: pointer; width: 16px;\" title=\"Informe\"/>" ;
         }
     });
     
@@ -758,17 +950,19 @@ function listarProcesosAcreditacion(flg_load) {
     		var fVencimiento = dia4 + '/' + mes4 + '/' + d4.getFullYear();
             
             if(sel=='A'){
-           	 tex = "<a class='Consultar' id='"+ rowdata.idAlcanceAcreditacion +"%"+rowdata.resolucionCedula+"%"+ rowdata.registro +"%"+ rowdata.idDocumentoAdjunto +"%"+ rowdata.idDocumentoAlcanceAcredita +"%"+ rowdata.normaEvaluada +"%"+ rowdata.idOrganismoAcreditador +"%"+ fIVigencia +"%"+ fUActualizacion +"%"+ fAcreditacion +"%"+ fVencimiento +"%"+ rowdata.idTipoOrganismo +"%"+ rowdata.idTipoPrueba +"%"+estadoForm1+"%"+rowdata.idEmpresaAcreditada+"%"+rowdata.idPrimerAlcanceAcreditacion+"%"+rowdata.estadoAlcance+"' style='cursor: pointer;text-decoration:none;' ><u> Consultar </u></a>"+"\t"+
+           	 tex = "<a class='Editar' id='"+ rowdata.idAlcanceAcreditacion +"%"+rowdata.resolucionCedula+"%"+ rowdata.idDocumentoAdjunto +"%"+ rowdata.idDocumentoAlcanceAcredita +"%"+ rowdata.normaEvaluada +"%"+ rowdata.idOrganismoAcreditador +"%"+ fIVigencia +"%"+ fUActualizacion +"%"+ fAcreditacion +"%"+ fVencimiento +"%"+ rowdata.idTipoOrganismo +"%"+ rowdata.idTipoPrueba +"%"+estadoForm1+"%"+rowdata.idEmpresaAcreditada+"%"+rowdata.idPrimerAlcanceAcreditacion+"' style='cursor: pointer;text-decoration:none;' ><u> Editar </u></a>"+"\t"+
+           		   "<a class='Consultar' id='"+ rowdata.idAlcanceAcreditacion +"%"+rowdata.resolucionCedula+"%"+ rowdata.idDocumentoAdjunto +"%"+ rowdata.idDocumentoAlcanceAcredita +"%"+ rowdata.normaEvaluada +"%"+ rowdata.idOrganismoAcreditador +"%"+ fIVigencia +"%"+ fUActualizacion +"%"+ fAcreditacion +"%"+ fVencimiento +"%"+ rowdata.idTipoOrganismo +"%"+ rowdata.idTipoPrueba +"%"+estadoForm1+"%"+rowdata.idEmpresaAcreditada+"%"+rowdata.idPrimerAlcanceAcreditacion+"' style='cursor: pointer;text-decoration:none;' ><u> Consultar </u></a>"+"\t"+
            	 	   "<a class='Suspender' id='"+ rowdata.idAlcanceAcreditacion +"%"+ rowdata.idEmpresaAcreditada +"' style='cursor: pointer;text-decoration:none;' ><u> Suspender </u></a>"+"\t"+
            	 	   "<a class='Cancelar' id='"+ rowdata.idAlcanceAcreditacion +"%"+ rowdata.idEmpresaAcreditada +"' style='cursor: pointer;text-decoration:none;' ><u> Cancelar </u></a>";
            }
             if(sel=='S'){
-            	tex= "<a class='Consultar' id='"+ rowdata.idAlcanceAcreditacion +"%"+rowdata.resolucionCedula+"%"+ rowdata.registro +"%"+ rowdata.idDocumentoAdjunto +"%"+ rowdata.idDocumentoAlcanceAcredita +"%"+ rowdata.normaEvaluada +"%"+ rowdata.idOrganismoAcreditador +"%"+ fIVigencia +"%"+ fUActualizacion +"%"+ fAcreditacion +"%"+ fVencimiento +"%"+ rowdata.idTipoOrganismo +"%"+ rowdata.idTipoPrueba +"%"+estadoForm1+"%"+rowdata.idEmpresaAcreditada+"%"+rowdata.idPrimerAlcanceAcreditacion+"%"+rowdata.estadoAlcance+"' style='cursor: pointer;text-decoration:none;' ><u> Consultar </u></a>"+"\t"+
+            	tex= "<a class='Editar' id='"+ rowdata.idAlcanceAcreditacion +"%"+rowdata.resolucionCedula+"%"+ rowdata.idDocumentoAdjunto +"%"+ rowdata.idDocumentoAlcanceAcredita +"%"+ rowdata.normaEvaluada +"%"+ rowdata.idOrganismoAcreditador +"%"+ fIVigencia +"%"+ fUActualizacion +"%"+ fAcreditacion +"%"+ fVencimiento +"%"+ rowdata.idTipoOrganismo +"%"+ rowdata.idTipoPrueba +"%"+estadoForm1+"%"+rowdata.idEmpresaAcreditada+"%"+rowdata.idPrimerAlcanceAcreditacion+"' style='cursor: pointer;text-decoration:none;' ><u> Editar </u></a>"+"\t"+
+            		 "<a class='Consultar' id='"+ rowdata.idAlcanceAcreditacion +"%"+rowdata.resolucionCedula+"%"+ rowdata.idDocumentoAdjunto +"%"+ rowdata.idDocumentoAlcanceAcredita +"%"+ rowdata.normaEvaluada +"%"+ rowdata.idOrganismoAcreditador +"%"+ fIVigencia +"%"+ fUActualizacion +"%"+ fAcreditacion +"%"+ fVencimiento +"%"+ rowdata.idTipoOrganismo +"%"+ rowdata.idTipoPrueba +"%"+estadoForm1+"%"+rowdata.idEmpresaAcreditada+"%"+rowdata.idPrimerAlcanceAcreditacion+"' style='cursor: pointer;text-decoration:none;' ><u> Consultar </u></a>"+"\t"+
            	 	   	 "<a class='Habilitar' id='"+ rowdata.idAlcanceAcreditacion +"%"+ rowdata.idEmpresaAcreditada +"' style='cursor: pointer;text-decoration:none;' ><u> Habilitar </u></a>"+"\t"+
            	 	   	 "<a class='Cancelar' id='"+ rowdata.idAlcanceAcreditacion +"%"+ rowdata.idEmpresaAcreditada +"' style='cursor: pointer;text-decoration:none;' ><u> Cancelar </u></a>";
         	}
             if(sel=='I' || sel=='C'){
-            	tex= "<a class='Consultar' id='"+ rowdata.idAlcanceAcreditacion +"%"+rowdata.resolucionCedula+"%"+ rowdata.registro +"%"+ rowdata.idDocumentoAdjunto +"%"+ rowdata.idDocumentoAlcanceAcredita +"%"+ rowdata.normaEvaluada +"%"+ rowdata.idOrganismoAcreditador +"%"+ fIVigencia +"%"+ fUActualizacion +"%"+ fAcreditacion +"%"+ fVencimiento +"%"+ rowdata.idTipoOrganismo +"%"+ rowdata.idTipoPrueba +"%"+estadoForm1+"%"+rowdata.idEmpresaAcreditada+"%"+rowdata.idPrimerAlcanceAcreditacion+"%"+rowdata.estadoAlcance+"' style='cursor: pointer;text-decoration:none;' ><u> Consultar </u></a>";
+            	tex= "<a class='Consultar' id='"+ rowdata.idAlcanceAcreditacion +"%"+rowdata.resolucionCedula+"%"+ rowdata.idDocumentoAdjunto +"%"+ rowdata.idDocumentoAlcanceAcredita +"%"+ rowdata.normaEvaluada +"%"+ rowdata.idOrganismoAcreditador +"%"+ fIVigencia +"%"+ fUActualizacion +"%"+ fAcreditacion +"%"+ fVencimiento +"%"+ rowdata.idTipoOrganismo +"%"+ rowdata.idTipoPrueba +"%"+estadoForm1+"%"+rowdata.idEmpresaAcreditada+"%"+rowdata.idPrimerAlcanceAcreditacion+"' style='cursor: pointer;text-decoration:none;' ><u> Consultar </u></a>";
         	}
             return tex;
         }
@@ -909,8 +1103,11 @@ function cargarDatos() {
 	            	$("#txtTelefono").removeAttr('disabled');
 	            	$("#txtEmail").removeAttr('disabled');
 	            	$("#txtWeb").removeAttr('disabled');
+	            	$("#txtRegistro").removeAttr('disabled');
 	            	//-----
 	            	$("#MensajeGAA").hide();
+	            	$('#seccionTipoPrueba').show();
+	            	$('#cmbTipoPrueba').attr('disabled','disabled');
 	            	listarProcesosAcreditacion();
 	            	activarBotonGuardar();
 	            	return false;
@@ -934,10 +1131,18 @@ function cargarDatos() {
 	            	  $("#txtTelefono").val(value.telefono);
 	            	  $("#txtEmail").val(value.email);
 	            	  $("#txtWeb").val(value.web);
-	            	  
+	            	  //if($("#idEmpresaAcreditada").val()==''){
+	            	  $("#txtRegistro").val('');
+	            	  $("#txtRegistro").removeAttr('disabled');
+	            	  //}
+	            	  $('#seccionTipoPrueba').show();
 	            	  validarEmpresaAcreditada();
+	            	  listarProcesosAcreditacion();
+	            	  
+	            	  $('#cmbTipoPrueba').removeAttr('disabled');
+	            	  $('#cmbTipoPrueba').attr('style','width:210px;');
 	            	  $("#MensajeGAA").hide();
-          			  listarProcesosAcreditacion();
+          			  //listarProcesosAcreditacion();
 	            	  
 	            });
 	            
@@ -949,6 +1154,8 @@ function cargarDatos() {
 	            	 $("#txtTelefono").attr('disabled','disabled');
 	            	 $("#txtEmail").attr('disabled','disabled');
 	            	 $("#txtWeb").attr('disabled','disabled');
+	            	 $('#cmbTipoPrueba').attr('disabled','disabled');
+	            	 //$("#txtRegistro").attr('disabled','disabled');
 	            	 
 	            }
 	              
@@ -968,6 +1175,8 @@ function cargarDatos() {
 function validarEmpresaAcreditada() {
 	
 	var estadoProceso = "";
+	var letraAccion = "";
+	var org = "";
 	
 	    $.ajax({
 	        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/cargarIdEmpresaAcreditada",
@@ -982,25 +1191,62 @@ function validarEmpresaAcreditada() {
 	            ocultaLoading();
 	            $.each(data.filas, function( index, value ) {
 	            	$("#idEmpresaAcreditada").val(value.idEmpresaAcreditada);
-	            	estadoProceso = value.estado;
+	            	$("#txtRegistro").val(value.registro);
+	            	//$("#txtRegistro").removeAttr('disabled');
+	            	//$("#txtRegistro").attr('disabled','disabled');
+	            	//estadoProceso = value.estado;
 	            	//alert(estadoProceso);
 	            });
 	            
-	            if($("#idEmpresaAcreditada").val()!=""){
-	            	if(estadoProceso == "A"){
-			            $("#MensajeEA").show();
-			            $('#MensajeEA').html("ESTA EMPRESA CUENTA CON UN PROCESO DE ACREDITACION VIGENTE");
-			            desactivarBotonProceso();
-	            	}else{
-	            		$("#MensajeEA").show();
-			            $('#MensajeEA').html("ESTA EMPRESA YA PUEDE INICIAR UN PROCESO DE ACREDITACION");
-			            activarBotonProceso();
-	            	}
-	            desactivarBotonGuardar();
-	            }else{
-	            	$("#MensajeEA").hide();
-	            	activarBotonGuardar();
-	            }
+	            $.ajax({
+	                url:baseURL + "pages/mantenimientoEmpresasAcreditadas/cargarFechaUA",
+	                type:'post',
+	                async:false,
+	                data:{
+	                    idEmpresaAcreditada:$('#idEmpresaAcreditada').val(),
+	                    idOrganismoAcreditador:$("#idOrgAcreditadorEA").val(),
+	                    idTipoPrueba : $("#cmbTipoPruebaEA").val()
+	                },
+	                beforeSend:muestraLoading,
+	                success:function(data){
+	                	
+	                    ocultaLoading();
+	                    
+	                    if(data.filas!="[object Object]"){
+	                    	
+	                    	$("#MensajeEA").show();
+        		            $('#MensajeEA').html("ESTA EMPRESA YA PUEDE INICIAR UN PROCESO DE ACREDITACION");
+        		            activarBotonProceso();
+	            			
+	                    }else{
+	                    
+	                    $.each(data.filas, function( index, value ) {
+	                    	letraAccion = value.estadoAccion;
+	                    	org = value.idOrganismoAcreditador
+	                    	//alert("Letra de Estado Accion: "+letraAccion+" -- Id de Organismo: "+org);
+	                    }); 
+	                    
+	                    if($("#idEmpresaAcreditada").val()!=""){
+	                    	$("#txtRegistro").attr('disabled','disabled');
+	                    	if(letraAccion == "R" || letraAccion == "S" || letraAccion == "H"){
+	        		            $("#MensajeEA").show();
+	        		            $('#MensajeEA').html("ESTA EMPRESA CUENTA CON UN PROCESO DE ACREDITACION VIGENTE");
+	        		            desactivarBotonProceso();
+	                    	}else{
+	                    		$("#MensajeEA").show();
+	        		            $('#MensajeEA').html("ESTA EMPRESA YA PUEDE INICIAR UN PROCESO DE ACREDITACION");
+	        		            activarBotonProceso();
+	                    	}
+	                    desactivarBotonGuardar();
+	                    }else{
+	                    	$("#MensajeEA").hide();
+	                    	activarBotonGuardar();
+	                    }
+	                    
+	                    }
+	                },
+	                error:errorAjax
+	            });
 	        },
 	        error:errorAjax
 	    });
@@ -1079,24 +1325,30 @@ function btnGuardar(){
 	 
 	var rpta = $('#txtRPTA').val();
 	
-	if(rpta == 'NO'){
+	if(mensj=="EDIT"){
+		confirm.open("¿Confirma la actualización de datos?","modificacionGeneralEmpresaAcreditada()");
 		
-		if(validarDatosFormularioEA() == true){
-		confirm.open("¿Desea guardar el registro?","RegistrarPersonaJuridica()");
-		//validarEmpresaAcreditada();
-		}else{
-            $("#MensajeVal").show();
+	}else{
+	
+		if(rpta == 'NO'){
+			
+			if(validarDatosFormularioEA() == true){
+			confirm.open("¿Desea guardar el registro?","RegistrarPersonaJuridica()");
+			//validarEmpresaAcreditada();
+			}else{
+	            $("#MensajeVal").show();
+			}
+			
+		} else {
+			
+			if(validarDatosFormularioEA() == true){
+			confirm.open("¿Desea guardar el registro?","RegistrarEmpresaAcreditada()");
+			//validarEmpresaAcreditada();
+			}else{
+	            $("#MensajeVal").show();
+			}
+			 
 		}
-		
-	} else {
-		
-		if(validarDatosFormularioEA() == true){
-		confirm.open("¿Desea guardar el registro?","RegistrarEmpresaAcreditada()");
-		//validarEmpresaAcreditada();
-		}else{
-            $("#MensajeVal").show();
-		}
-		 
 	}
 	
 }
@@ -1110,12 +1362,15 @@ function RegistrarEmpresaAcreditada(){
         data:{
         	
         	idPersonaJuridica : $('#idPersonaJuridica').val(),
-        	estado: 'INACTIVO'
+        	estado: 'INACTIVO',
+        	registro : $('#txtRegistro').val().latinize().toUpperCase()
         },
         beforeSend:muestraLoading,
         success:function(data){
             ocultaLoading();
             validarEmpresaAcreditada();
+            $('#cmbTipoPrueba').removeAttr('disabled');
+            $('#cmbTipoPrueba').attr('style','width:210px;');
             if(data.resultado=="0"){
                 
                 //var idEmpresaAcreditada = data.idEmpresaAcreditada;
@@ -1166,16 +1421,30 @@ function RegistrarPersonaJuridica() {
                     data:{
                     	
                     	idPersonaJuridica : idPersonaJuridica,
-                    	estado: 'INACTIVO'
+                    	estado: 'INACTIVO',
+                    	registro : $('#txtRegistro').val().latinize().toUpperCase()
                     },
                     beforeSend:muestraLoading,
                     success:function(data){
                         ocultaLoading();
                         validarEmpresaAcreditada();
+                        $('#cmbTipoPrueba').removeAttr('disabled');
+                        $('#cmbTipoPrueba').attr('style','width:210px;');
                         if(data.resultado=="0"){
                         	mensajeGrowl("success", global.confirm.save, "");
                         	$("#MensajeGAA").hide();
                         	listarProcesosAcreditacion();
+                        	//Bloqueando Campos
+                        	$("#txtRazonSocial").attr('disabled','disabled');
+	       	            	$("#cmbDepartamento").attr('disabled','disabled');
+	       	            	$("#cmbProvincia").attr('disabled','disabled');
+	       	            	$("#cmbDistrito").attr('disabled','disabled');
+	       	            	$("#txtDireccion").attr('disabled','disabled');
+	       	            	$("#txtTelefono").attr('disabled','disabled');
+	       	            	$("#txtEmail").attr('disabled','disabled');
+	       	            	$("#txtWeb").attr('disabled','disabled');
+	       	            	$("#txtRegistro").attr('disabled','disabled');
+	       	            	
                         	$("#dialog-message-content").html('Se han registrado los datos principales de la empresa acreditada, para visualizar su información en la bandeja principal, debe ingresar el proceso de acreditación');
             				$("#dialog-message").dialog("open");
                         	
@@ -1212,4 +1481,86 @@ function traerId() {
 	        error:errorAjax
 	    });
 	}
+}
+
+function abrirInformacion2(){ 
+	
+	var title="INFORMACION - ESTADO DEL ALCANCE DE ACREDITACION";
+    $.ajax({
+        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/abrirInformacion", 
+        type:'get',
+        async:false,
+        beforeSend:muestraLoading,
+        success:function(data){
+            ocultaLoading();
+            $("#dialogInfo2").html(data);
+            $("#dialogInfo2").dialog({
+            	position: ['center', 'top+2'],
+            	resizable: false,
+                draggable: true,
+                autoOpen: true,
+                height:"auto",
+                width: "400",
+                modal: true,
+                dialogClass: 'dialog',
+                title: title,
+                closeText: "Cerrar"
+            });
+        },
+        error:errorAjax
+    });
+}
+
+function modificacionGeneralEmpresaAcreditada(){
+	modificarDatosPersonaJuridica();
+	modificarDatosEmpresaAcreditada();
+	$("#txtTelefono").attr('disabled','disabled');
+ 	$("#txtEmail").attr('disabled','disabled');
+ 	$("#txtWeb").attr('disabled','disabled');
+ 	$("#txtRegistro").attr('disabled','disabled');
+ 	desactivarBotonGuardar()
+	
+}
+
+function modificarDatosPersonaJuridica(){
+	
+    $.ajax({
+        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/modificarDatosPersonaJuridica",
+        type:'post',
+        async:false,
+        data:{
+            idPersonaJuridica :$("#idPersonaJuridica").val(),
+            telefono : $('#txtTelefono').val(),
+        	email : $('#txtEmail').val().latinize().toUpperCase(),
+        	web : $('#txtWeb').val().latinize().toUpperCase()
+        },
+        beforeSend:muestraLoading,
+        success:function(data){
+            ocultaLoading();
+            if(data.resultado=="0"){
+            }
+            
+        },
+        error:errorAjax
+    });     
+}
+
+function modificarDatosEmpresaAcreditada(){
+	
+    $.ajax({
+        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/modificarDatosEmpresaAcreditada",
+        type:'post',
+        async:false,
+        data:{
+            idEmpresaAcreditada :$("#idEmpresaAcreditada").val(),
+            registro : $('#txtRegistro').val().latinize().toUpperCase()
+        },
+        beforeSend:muestraLoading,
+        success:function(data){
+            ocultaLoading();
+            if(data.resultado=="0"){
+            }
+        },
+        error:errorAjax
+    });     
 }

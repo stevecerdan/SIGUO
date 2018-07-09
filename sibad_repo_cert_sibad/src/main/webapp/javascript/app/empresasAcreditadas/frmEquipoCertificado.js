@@ -12,10 +12,11 @@ $(function() {
     $("#txtFechaPC").datepicker();
     $("#txtFechaC").attr( "readonly" , "readonly" );
     $("#txtFechaPC").attr( "readonly" , "readonly" );
-    $("#cmbComponente").attr('disabled','disabled');
+    
     $("#cmbEstado").attr('disabled','disabled');
+    $("#cmbComponente").attr('disabled','disabled');
     $("#btnAgregar").attr('disabled','disabled');
-    $('#btnAgregar').attr('style','background-color:#60869a; width:100px;');
+    $("#btnAgregar").attr('style','background-color:#60869a; width:100px;');
 });
 
 //----------Funciones de Validaciones----------
@@ -53,8 +54,10 @@ function convertDateFormat(string) {
 function initInicioNuevoEquipoCertificado(){
 	confirm.start();
 	$('#MensajeValE').hide();
+	//$('#MensajeValC').hide();
 	cargarTipoEquipo();
 	cargarComponente();
+	
 	
 	$('#txtFechaC').change(function(){
 		var fc = $('#txtFechaC').val();
@@ -110,7 +113,7 @@ function initInicioNuevoEquipoCertificado(){
 	});
 	
 	$('#btnAgregar').click(function(){
-		$('#MensajeValC').hide();
+		//$('#MensajeValC').hide();
 		$('#MensajeValE').hide();
 		if ( $('#cmbComponente').val() !== "" && $('#cmbComponente').val() !== undefined ){
 			confirm.open("¿Desea agregar el componente?", "registrarEquipoComponente()");
@@ -148,6 +151,7 @@ function initInicioNuevoEquipoCertificado(){
 	
 	$('#btnGuardarEquipo').click(function(){
 		if(validarDatosFormularioEquipo() == true){
+			
 			if($("#respuestaE").val()=="registrado"){
 				$('#dialogEquipoCertificado').dialog('close');
                 listarEquipo();
@@ -160,6 +164,7 @@ function initInicioNuevoEquipoCertificado(){
 					}
 				}
 			}
+			
 		}else{$('#MensajeValE').show();}
     });
 	
@@ -177,14 +182,6 @@ function initInicioNuevoEquipoCertificado(){
 function IdAlcanceAEquipo(IAE=""){
 	//Id Alcance Acreditacion
 	$('#idAAEquipo').val(IAE);
-	
-	var tipP = $('#idpruebaHermeticidad').val();
-    if (tipP == "1467"){
-    	$('#MensajeValC').show();
-    	$('#MensajeValC').html("GUARDE LO DATOS DEL EQUIPO PARA PODER AGREGAR UN COMPONENTE");
-    }else{
-    	$('#MensajeValC').hide();
-    }
 	
 }
 
@@ -225,6 +222,7 @@ function cargarEquipoCertificado() {
 	
 	idEquipoCertificadoAux =  $('#idEquipoCertificado').val();
 	var pruebita = $('#idpruebaHermeticidad').val();
+	
     if (idEquipoCertificadoAux !== null && idEquipoCertificadoAux !== undefined){
     
         $.ajax({
@@ -267,6 +265,8 @@ function cargarEquipoCertificado() {
                 });
                 //var pruebita = $('#idpruebaHermeticidad').val();
                 if (pruebita == "1467"){
+                	//$('#MensajeValC').show();
+                	//$('#MensajeValC').html("Seleccionar los Componentes del STE a inspeccionar con este equipo");
                     $("#btnAgregar").removeAttr('disabled');
                     $("#btnAgregar").removeAttr('style');
                     $("#btnAgregar").attr('style','width:100px;');
@@ -367,24 +367,23 @@ function registrarEquipoCertificado(){
                 $('#txtFechaPC').attr('disabled','disabled');
                 //Desbloquear Componente
                 if (pruebita == "1467"){
-                	$('#MensajeValC').show();
-                	$('#MensajeValC').html("YA PUEDE AGREGAR UN COMPONENTE");
+                	//$('#MensajeValC').show();
+                	//$('#MensajeValC').html("Seleccionar los Componentes del STE a inspeccionar con este equipo");
                     $("#btnAgregar").removeAttr('disabled');
                     $("#btnAgregar").removeAttr('style');
                     $("#btnAgregar").attr('style','width:100px;');
                     $("#cmbComponente").removeAttr('disabled');
                     //listarComponentes();
+                }else{
+                	$('#dialogEquipoCertificado').dialog('close');
+                	listarEquipo();
                 }
                 //---------------------
-                //$('#dialogEquipoCertificado').dialog('close');
-                //listarEquipo();
+                if($('#aviso').val()=='update'){
+                	$('#dialogEquipoCertificado').dialog('close');
+                	listarEquipo();
+                }
                 
-                 //$('#cmbComponente').prop('disabled', false);
-                 //$('#btnAgregar').show();
-                //listarComponentes(0);
-                //-----------------------
-                //$('#dialogEquipoCertificado').dialog('close');
-            	//mensajeGrowl("success", global.confirm.save, "");
             }else
             	alert("NO PUDO SER REGISTRADO");
         },
@@ -418,7 +417,10 @@ function registrarEquipoComponente(){
             //alert("resultado: " + data.resultado);
             if(data.resultado=="0"){  
             	//alert("COMPONENTE REGISTRADO");
-                listarComponentes(0);       
+                listarComponentes(0);
+                cargarComponente(); 
+                LimpiarComponentesEncontrados();
+                
             }else
             	alert("COMPONENTE NO REGISTRADO");
         },
@@ -439,6 +441,8 @@ function eliminarComponente(idC){
             ocultaLoading();
             if(data.resultado=="0"){
             	listarComponentes(0);
+            	cargarComponente(); 
+                LimpiarComponentesEncontrados();
                 //mensajeGrowl("success", global.confirm.delete, "");
                 
             }else{
@@ -496,6 +500,40 @@ function cargarComponente() {
 	    });
 }
 
+//BUSCAR COMPONENTES PARA BORRARLOS DEL COMBO BOX
+function LimpiarComponentesEncontrados() {
+	
+	var idEC3;
+	
+	if($("#respuestaE").val()=="registrado"){
+		idEC3 = $('#idEquipoRegistrado').val();
+	}else{
+		idEC3 = $('#idEquipoCertificado').val();
+	}
+	
+	    $.ajax({
+	        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/buscarComponentes",
+	        type:'post',
+	        async:false,
+	        data:{
+	            idEquipoCertificado:idEC3
+	        },
+	        beforeSend:muestraLoading,
+	        success:function(data){
+	        	
+	            ocultaLoading();
+	            $.each(data.filas, function( index, value ) {
+	            	//alert(value.idComponenteTanque);
+	            	$("#cmbComponente").val(value.idComponenteTanque);
+	            	var cmbC = document.getElementById("cmbComponente");
+	            	cmbC.remove(document.getElementById("cmbComponente").selectedIndex);
+	            	
+	            });
+	        },
+	        error:errorAjax
+	    });
+}
+
 //Listar Componentes
 function listarComponentes(flg_load) {
 
@@ -516,9 +554,9 @@ function listarComponentes(flg_load) {
     $("#gridContenedorComponentes").append(grid).append(pager);
 
 
-    var nombres = ['N°', 'COMPONENTE DE USO EN TANQUE','OPCION'];
+    var nombres = ['', 'COMPONENTE DE USO EN TANQUE','OPCION'];
     var columnas = [
-        {name: "idEquipoComponente", width: 30, sortable: false, hidden: false, align: "center"},
+        {name: "idEquipoComponente", width: 30, sortable: false, hidden: true, align: "center"},
         {name: "componenteTanque", width: 300, sortable: false, hidden: false, align: "left"},
         {name: "opcion", width: 100, sortable: false, hidden: false, align: "center", formatter:"OpcionEliminar"}
     ]; 

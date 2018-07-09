@@ -74,4 +74,23 @@ public class EmpresaAcreditadaServiceImpl implements EmpresaAcreditadaService{
 	
 		return registro;
 	}
+    
+    @Override
+	public EmpresaAcreditadaDTO EditarEmpresaAcreditada(EmpresaAcreditadaDTO empresaAcreditadaDTO,UsuarioDTO usuarioDTO) {
+		
+		LOG.info("Iniciando envio de datos de Empresa Acreditada al DAO");
+ 		EmpresaAcreditadaDTO registro=null;
+		
+		try {
+			
+			registro = empacredDAO.update(empresaAcreditadaDTO,usuarioDTO);
+			LOG.info("(Se envio con exito los datos de Empresa Acreditada al DAO) registro: "+registro.toString());
+			 
+		} catch (EmpresaAcreditadaException e) {
+			
+			LOG.error("error enviar datos de Empresa Acreditada al DAO",e);
+		}
+	
+		return registro;
+	}
 }

@@ -13,6 +13,7 @@ import gob.osinergmin.sibad.filter.SedeAcreditacionFilter;
 import gob.osinergmin.sibad.service.dao.SedeAcreditacionDAO;
 import gob.osinergmin.sibad.service.dao.CrudDAO;
 import gob.osinergmin.sibad.service.exception.SedeAcreditacionException;
+
 import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.Query;
@@ -43,23 +44,6 @@ public class SedeAcreditacionDAOImpl implements SedeAcreditacionDAO {
         return listado;
     }
     
-    /*@Override
-    public AutoayudaDTO update(AutoayudaDTO autoayudaDTO,UsuarioDTO usuarioDTO) throws AutoayudaException{
-        AutoayudaDTO retorno = null;
-        try{
-            PghAutoayuda registroDAO = AutoayudaBuilder.getAutoayuda(autoayudaDTO);
-            registroDAO.setDatosAuditoria(usuarioDTO);
-            crud.update(registroDAO);
-            
-            retorno=AutoayudaBuilder.toAutoayudaDto(registroDAO);
-        }catch(Exception e){
-            LOG.error("Error al editar Requisito",e);
-            AutoayudaException e2 = new AutoayudaException("Error al editar Requisito",e);
-            throw e2;
-        }
-        return retorno;
-    }*/
-    
     private Query getFindQuery(SedeAcreditacionFilter filtro) {
         Query query=null;
         try{
@@ -70,27 +54,15 @@ public class SedeAcreditacionDAOImpl implements SedeAcreditacionDAO {
             }
             
             if(filtro.getIdSedeAcreditacion()==null){
-            	/*if(filtro.getIdAlcanceAcreditacion()!=null){
+            	if(filtro.getIdAlcanceAcreditacion()!=null){
                     query.setParameter("idAlcanceAcreditacion",filtro.getIdAlcanceAcreditacion());
                 }else{
                     query.setParameter("idAlcanceAcreditacion","");
-                }
-                if(filtro.getEstado()!=null && !filtro.getEstado().equals("")){
-                    query.setParameter("estado","%"+filtro.getEstado().toUpperCase()+"%");
-                }else{
-                    query.setParameter("estado","%");
-                }*/
-            	if(filtro.getIdAlcanceAcreditacion()!=null && filtro.getEstado()!=null){
-                    query.setParameter("idAlcanceAcreditacion",filtro.getIdAlcanceAcreditacion());
-                    query.setParameter("estado",filtro.getEstado());
-                }else{
-                    query.setParameter("idAlcanceAcreditacion","");
-                    query.setParameter("estado","");
                 }
             }else{
                 query.setParameter("idSedeAcreditacion",filtro.getIdSedeAcreditacion());
             }
-            //query.setParameter("idPersonal",filtro.getIdPersonal());
+            
         }catch(Exception e){
             LOG.error("Error getFindQuery: "+e.getMessage());
         }
@@ -130,6 +102,41 @@ public class SedeAcreditacionDAOImpl implements SedeAcreditacionDAO {
 			LOG.error("",ex);
         }
 		
+		
+		return retorno;
+	}
+	
+	@Override
+	public SedeAcreditacionDTO update(SedeAcreditacionDTO sedeAcreditacionDTO, UsuarioDTO usuarioDTO)throws SedeAcreditacionException {
+		
+	LOG.info("Iniciando actualizacion de Sede Acreditacion");
+		
+	SedeAcreditacionDTO retorno = null;
+		
+		try {
+			
+			PghSedeAcreditacion PghSedeAcreditacion = crud.find(sedeAcreditacionDTO.getIdSedeAcreditacion(), PghSedeAcreditacion.class);
+			
+			PghSedeAcreditacion.setIdSedeAcreditacion(sedeAcreditacionDTO.getIdSedeAcreditacion());
+			PghSedeAcreditacion.setIdDepartamento(sedeAcreditacionDTO.getIdDepartamento());
+			PghSedeAcreditacion.setIdProvincia(sedeAcreditacionDTO.getIdProvincia());
+			PghSedeAcreditacion.setIdDistrito(sedeAcreditacionDTO.getIdDistrito());
+			PghSedeAcreditacion.setDireccion(sedeAcreditacionDTO.getDireccion());
+			PghSedeAcreditacion.setDatosAuditoria(usuarioDTO);
+			
+			
+			LOG.info(" Datos:"+PghSedeAcreditacion.getIdSedeAcreditacion()+" - " +PghSedeAcreditacion.getIdDepartamento()+" - " +PghSedeAcreditacion.getIdProvincia()+" - " +PghSedeAcreditacion.getIdDistrito()+" - " +PghSedeAcreditacion.getDireccion());
+			
+			crud.update(PghSedeAcreditacion);
+			
+			retorno = SedeAcreditacionBuilder.toSedeAcredEditDto(PghSedeAcreditacion);
+			 
+			LOG.info("(Edicion exitosa) retorno: "+retorno.toString());
+			
+			
+		}catch(Exception ex){
+            LOG.error("",ex);
+        }
 		
 		return retorno;
 	}

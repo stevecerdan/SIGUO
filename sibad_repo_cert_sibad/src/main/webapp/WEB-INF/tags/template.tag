@@ -25,6 +25,7 @@
             <div class="fancytree-loading"><span class="fancytree-expander"></span></div>
         </div>
         <div id="notifynormal"></div>
+
         <div id="header">
             <div id="logoWrapper">
                 <img id="logo" alt="logo" src="<c:url value="/images/osinergminLogo.png"/>">
@@ -45,11 +46,34 @@
                 </table>
             </div>
         </div>
-
+        
         <div title="${scrollPanelTitle}" class="scrollPanel">
             <jsp:invoke fragment="bodyArea"/>
         </div>
     </body>
+    
+    <!-- ------------------------------------------------------------------------------------------- -->
+        <div id="dialog-message" title="" style="display:none;">
+			<p>
+				<span class="ui-icon ui-icon-circle-check" style="float:left;margin-left: 0px;">
+				<!-- margin:0 7px 50px 0; -->
+				</span>
+				<label id="dialog-message-content"></label>
+				
+			</p>	
+        </div>
+        
+        <div id="dialog-message_registroRV" style="display:none;" title="">
+			<p>
+				<span class="ui-icon ui-icon-circle-check" style="float:left;margin-left: 0px;">
+				<!-- margin:0 7px 50px 0; -->
+				</span>
+				<label id="dialog-message-content_registroRV"></label>
+				
+			</p>	
+        </div>
+        <!-- ------------------------------------------------------------------------------------------- -->
+    
     <footer>
     	<div class="container">
 	    	<div id="header" style="height:100px;"><br><br>

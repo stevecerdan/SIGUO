@@ -16,6 +16,7 @@ public class PersonaNaturalVFilter extends BasePaginatorFilter{
     
 	private Long idPersonaNatural;
     private String numeroDoc;
+    private Long cip;
 	
     public Long getIdPersonaNatural() {
 		return idPersonaNatural;
@@ -28,6 +29,12 @@ public class PersonaNaturalVFilter extends BasePaginatorFilter{
 	}
 	public void setNumeroDoc(String numeroDoc) {
 		this.numeroDoc = numeroDoc;
+	}
+	public Long getCip() {
+		return cip;
+	}
+	public void setCip(Long cip) {
+		this.cip = cip;
 	}
     
 }

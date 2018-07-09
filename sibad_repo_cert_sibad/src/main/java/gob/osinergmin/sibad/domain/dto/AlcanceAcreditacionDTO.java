@@ -19,7 +19,6 @@ public class AlcanceAcreditacionDTO {
     private Long idDocumentoAdjunto;
     private Long idDocumentoAlcanceAcreditada;
     private Long idTipoOrganismo;
-    private String registro;
     private String normaEvualada;
     private Date fechaUActualizacion;
     private Date fechaAcreditacion;
@@ -27,6 +26,7 @@ public class AlcanceAcreditacionDTO {
     private String estado;
     private String estadoAccion;
     private Long idOrganismoAcreditador;
+    
     private Date fechaUltimaActualizacion;
     private Date fechaInicioVigencia;
    
@@ -78,12 +78,6 @@ public class AlcanceAcreditacionDTO {
 	}
 	public void setIdTipoOrganismo(Long idTipoOrganismo) {
 		this.idTipoOrganismo = idTipoOrganismo;
-	}
-	public String getRegistro() {
-		return registro;
-	}
-	public void setRegistro(String registro) {
-		this.registro = registro;
 	}
 	public String getNormaEvualada() {
 		return normaEvualada;

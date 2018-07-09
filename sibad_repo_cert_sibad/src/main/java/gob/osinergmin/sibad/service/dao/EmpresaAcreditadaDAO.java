@@ -19,4 +19,5 @@ public interface EmpresaAcreditadaDAO {
     public List<EmpresaAcreditadaDTO> find(EmpresaAcreditadaFilter filtro) throws EmpresaAcreditadaException;
     public List<EmpresaAcreditadaDTO> find2(EmpresaAcreditadaFilter filtro2) throws EmpresaAcreditadaException;
     public EmpresaAcreditadaDTO create(EmpresaAcreditadaDTO empresaAcreditadaDTO,UsuarioDTO usuarioDTO) throws EmpresaAcreditadaException;
+    public EmpresaAcreditadaDTO update(EmpresaAcreditadaDTO empresaAcreditadaDTO,UsuarioDTO usuarioDTO) throws EmpresaAcreditadaException;
 }

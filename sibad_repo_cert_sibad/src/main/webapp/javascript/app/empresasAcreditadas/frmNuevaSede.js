@@ -7,6 +7,9 @@ var distrito;
 var tipoDoc;
 var idSedeAcreditacionAux;
 var ncbx;
+var IPN;
+var i;
+
 $(function() {
     initInicioNuevaSede(); 
     $('#btnGuardarSede').click(btnGuardarSede);
@@ -31,7 +34,7 @@ function initInicioNuevaSede(){
 	//alert($("#cmbSede").size());
 	$('#MensajeValS').hide();
 	$('#MensajeValP').hide();
-	$("#cmbSede").attr('disabled','disabled');
+	//$("#cmbSede").attr('disabled','disabled');
 	cargarDepartamento();
 	cargarTipoDocumento();
 	cargarCargo();
@@ -43,7 +46,7 @@ function initInicioNuevaSede(){
 	  $("#btnGuardarSede").attr('disabled','disabled');
 	  $('#btnGuardarSede').attr('style','background-color:#60869a');
 	
-	$('#SSede').click(function(){
+	/*$('#SSede').click(function(){
 		$('#MensajeValP').hide();
 		$("#cmbDepaSede").val(0);
 		$("#cmbDepaSede").attr('disabled','disabled');
@@ -70,11 +73,11 @@ function initInicioNuevaSede(){
 		$("#cmbDistSede").removeAttr('disabled');
 		$("#txtDirection").removeAttr('disabled');
 		$("#cmbSede").attr('disabled','disabled');
-	});
+	});*/
 	
-	$("#cmbSede").change(function(){
+	/*$("#cmbSede").change(function(){
        	idSedeAcreditacionAux = $(this).val();
-    });
+    });*/
 	
 	$("#cmbDocumento").change(function(){
         tipoDoc = $(this).val();
@@ -100,9 +103,9 @@ function initInicioNuevaSede(){
 	$('#txtDirection').click(function(){
 		$('#MensajeValP').hide();
 	});
-	$('#cmbSede').click(function(){
+	/*$('#cmbSede').click(function(){
 		$('#MensajeValP').hide();
-	});
+	});*/
 	$('#cmbDocumento').click(function(){
 		$('#MensajeValP').hide();
 	});
@@ -130,7 +133,10 @@ function initInicioNuevaSede(){
 		if($("#cmbDocumento").val() == "" || $("#cmbDocumento").val() == undefined){
 			$('#MensajeValP').show();
 			$('#MensajeValP').html("POR FAVOR SELECCIONE UN TIPO DE DOCUMENTO");
-		}else{validarPersonal();}
+		}else{
+			//validarPersonal();
+			ValidarSedePersonal2();
+		}
 	});
 	
 	$('#txtNumero').change(function(){
@@ -149,7 +155,7 @@ function initInicioNuevaSede(){
 	$("#cmbDepaSede").change(function(){
 	    DPTO =$(this).val();
 	    cargarProvincia();
-	    $("#cmbDistrito").val(0);
+	    $("#cmbDistSede").val(0);
 	});
 
 	$("#cmbProvSede").change(function(){
@@ -167,6 +173,7 @@ function initInicioNuevaSede(){
 	
 	$('#btnRegresarSede').click(function(){
 		$('#dialogNuevaSede').dialog('close');
+		listarSedes();
     });
     
 }
@@ -179,9 +186,9 @@ function IdAlcanceASede(IAS=""){
 
 function validarDatosFormularioSede(){
 	
-	var opcion1 = $('input:radio[name=NSede]:checked').val();
+	//var opcion1 = $('input:radio[name=NSede]:checked').val();
 	
-	if(opcion1 == 'AS'){
+	//if(opcion1 == 'AS'){
 		if($("#cmbDepaSede").val() == "" || $("#cmbDepaSede").val() == undefined){
 			$('#MensajeValP').html("POR FAVOR SELECCIONE UN DEPARTAMENTO");
 			return false;
@@ -226,57 +233,93 @@ function validarDatosFormularioSede(){
 			$('#MensajeValP').html("POR FAVOR SELECCIONE EL CARGO DEL PERSONAL AUTORIZADO");
 			return false;
 		}
-		if($("#txtCIP").val() =="" || $('#txtCIP').val() == undefined) {
-			$('#MensajeValP').html("POR FAVOR COLOQUE EL CIP DEL PERSONAL AUTORIZADO");
-	        return false;  
-	    }
-		return true
-	}
+		if($("#txtCIP").val() !="") { 
+			buscarCIP();
+	        if($("#txtCIP").val().length !== 6) {  
+	        	$('#MensajeValP').html("EL NRO DE CIP DEBE POSEER 6 DIGITOS");
+	            return false;  
+	            //$("#txtNumero").val(numeroDocumento);
+	        }else{ 
+	        	if ( $("#txtCIP").val() == i && $("#txtNumero").val() !== IPN ){
+	        	$('#MensajeValP').html("EL CIP QUE HA INGRESADO YA SE ENCUENTRA REGISTRADO");
+	            return false;            
+	            }
+	        }
+	    }else{
+	    	//guarda vacio
+	        return true;  
+	    } 
+	    return true;
+}
+
+function cargarDatosSede(id,direccion,idDepartamento,idProvincia,idDistrito,idTipoDocumento,numeroDocumento,idCargo,idSedeAcreditacion){
+	$("#clonSede").val(id);
+	$("#idDeSede").val(idSedeAcreditacion);
 	
-	if(opcion1 == 'SS'){
-		if($("#cmbSede").val() == "" || $("#cmbSede").val() == undefined){
-			if(ncbx!=""){
-				$('#MensajeValP').html("POR FAVOR SELECCIONE UNA SEDE");
-				return false;
-			}else{
-				$('#MensajeValP').html("USTED AUN NO AGREGA NINGUNA SEDE");
-				return false;
-			}
-		}
-		if(tipoDoc == "1278" && $("#txtNumero").val().length !== 8) {
-			$('#MensajeValP').html("EL NRO. DE DNI DEBE CONTENER 8 DÍGITOS");
-	        return false;  
-	    }
-		if(tipoDoc == "1279" && $("#txtNumero").val().length !== 12) {
-			$('#MensajeValP').html("EL NRO. DE CARNET DE EXTRANJ. DEBE CONTENER 12 DÍGITOS");
-	        return false;  
-	    }
-		if(tipoDoc == "1280" && $("#txtNumero").val().length !== 12) {
-			$('#MensajeValP').html("EL NRO. DE PASAPORTE DEBE CONTENER 12 DÍGITOS");
-	        return false;  
-	    }
-		if($("#txtNombre").val() =="" || $('#txtNombre').val() == undefined) {
-			$('#MensajeValP').html("POR FAVOR COLOQUE EL NOMBRE DEL PERSONAL AUTORIZADO");
-	        return false;  
-	    }
-		if($("#txtApellidoPaterno").val() =="" || $('#txtApellidoPaterno').val() == undefined) {
-			$('#MensajeValP').html("POR FAVOR COLOQUE EL APELLIDO PATERNO DEL PERSONAL AUTORIZADO");
-	        return false;  
-	    }
-		if($("#txtApellidoMaterno").val() =="" || $('#txtApellidoMaterno').val() == undefined) {
-			$('#MensajeValP').html("POR FAVOR COLOQUE EL APELLIDO MATERNO DEL PERSONAL AUTORIZADO");
-	        return false;  
-	    }
-		if($("#cmbCargo").val() == "" || $("#cmbCargo").val() == undefined){
-			$('#MensajeValP').html("POR FAVOR SELECCIONE EL CARGO DEL PERSONAL AUTORIZADO");
-			return false;
-		}
-		if($("#txtCIP").val() =="" || $('#txtCIP').val() == undefined) {
-			$('#MensajeValP').html("POR FAVOR COLOQUE EL CIP DEL PERSONAL AUTORIZADO");
-	        return false;  
-	    }
-		return true
-	}
+	$("#cmbDepaSede").val(idDepartamento);
+	cargarProvincia();
+	$("#cmbProvSede").val(idProvincia);
+	cargarDistrito();
+	$("#cmbDistSede").val(idDistrito);
+	
+	$("#txtDirection").val(direccion);
+	$("#cmbDocumento").val(idTipoDocumento);
+	
+	tipoDoc == idTipoDocumento;
+	
+    if (tipoDoc == "1278"){
+        $("#txtNumero").attr("maxlength", 8);
+    }
+    if (tipoDoc == "1279" || tipoDoc == "1280"){
+        $("#txtNumero").attr("maxlength", 12);
+    }
+	
+	$("#txtNumero").val(numeroDocumento);
+	$("#cmbCargo").val(idCargo);
+	
+	$.ajax({
+        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/validarPersonal",
+        type:'post',
+        async:false,
+        data:{
+            numeroDoc:numeroDocumento
+        },
+        beforeSend:muestraLoading,
+        success:function(data){
+        	
+            ocultaLoading();
+            
+            $.each(data.filas, function( index, value ) {
+            	
+            	var TD = value.idTipoDocumento;
+	            
+	            if(TD == idTipoDocumento){
+	            	
+	              $("#idPersonal").val(value.idPersonaNatural);
+            	  $("#txtNombre").val(value.nombre);
+            	  $("#txtApellidoPaterno").val(value.apellidoPaterno);
+            	  $("#txtApellidoMaterno").val(value.apellidoMaterno);
+            	  $("#txtCIP").val(value.cip);
+            	  
+	            }else{
+	            	$('#MensajeValP').show();
+	            	$('#MensajeValP').html("DOCUMENTO NO ENCONTRADO");
+	            }
+            });
+        },
+        error:errorAjax
+    });
+	$("#avisoEditarS").val('Editando');
+	$("#cmbDocumento").attr('disabled','disabled');
+	$("#txtNumero").attr('disabled','disabled');
+	$("#txtNombre").removeAttr('disabled');
+	$("#txtApellidoPaterno").removeAttr('disabled');
+	$("#txtApellidoMaterno").removeAttr('disabled');
+	$("#txtCIP").removeAttr('disabled');
+	$("#btnValidarP").attr('disabled','disabled');
+	$('#btnValidarP').attr('style','background-color:#60869a; width:80px;');
+	$("#btnGuardarSede").removeAttr('disabled');
+	$("#btnGuardarSede").removeAttr('Style');
 }
 
 //Cargar datos Persona Natural
@@ -335,10 +378,12 @@ function validarPersonal() {
 	            	  $("#txtApellidoMaterno").val(value.apellidoMaterno);
 	            	  $("#txtCIP").val(value.cip);
 	            	  
+	            	  $("#avisoEditarS").val('GuardarCIP');
+	            	  
 	            	  $("#txtNombre").attr('disabled','disabled');
 	            	  $("#txtApellidoPaterno").attr('disabled','disabled');
 	            	  $("#txtApellidoMaterno").attr('disabled','disabled');
-	            	  $("#txtCIP").attr('disabled','disabled');
+	            	  $("#txtCIP").removeAttr('disabled');
 	            	  $("#btnGuardarSede").removeAttr('disabled');
 	            	  $("#btnGuardarSede").removeAttr('Style');
 	            	  
@@ -364,6 +409,74 @@ function validarPersonal() {
 	}
 }
 //-------------------------------------------------------------------------
+
+//Validar Sede Personal
+function ValidarSedePersonal2() {
+
+	if ($("#txtNumero").val() !== "") {
+		
+	    $.ajax({
+	        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/validarSedePersonal",
+	        type:'post',
+	        async:false,
+	        data:{
+	        	idAlcanceAcreditacion: $('#idAASede').val(),
+	        	//flagPersonalAutorizado: 'S',
+	            numeroDocumento:$('#txtNumero').val()
+	        },
+	        beforeSend:muestraLoading,
+	        success:function(data){
+	        	
+	            ocultaLoading();
+	            
+	            //[object Object]
+	            if(data.filas!="[object Object]"){
+	            	
+	            	validarPersonal();
+	            	
+	            }else{
+	            	
+	            	$('#MensajeValP').show();
+	            	$('#MensajeValP').html("EL DNI PERTENECE A UN PERSONAL YA REGISTRADO");
+	            	
+	            	return false;
+	            }
+	            
+	        },
+	        error:errorAjax
+	    });
+	}else{
+		$('#MensajeValP').show();
+    	$('#MensajeValP').html("POR FAVOR COLOQUE EL NUMERO DE DOCUMENTO");
+	}
+}
+//-------------------------------------------------------------------------
+
+function buscarCIP(){
+    //var valor = 0;
+    $.ajax({
+        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/validarPersonal",
+        type:'post',
+        async:false,
+        data:{
+            cip : $("#txtCIP").val()
+        },
+        beforeSend:muestraLoading,
+        success:function(data){
+            ocultaLoading();
+            /*if (data.registros > 0){
+                return valor = 1;
+            }*/
+            $.each(data.filas, function( index, value ) {
+            	i = value.cip;
+            	IPN = value.numeroDoc;
+                //alert(IPN);
+            })
+        },
+        error:errorAjax
+    });
+    //return valor;
+}
 
 //Cargar Ubigeo (Departamento - Provincia - Distrito)
 function cargarDepartamento() {
@@ -398,7 +511,7 @@ function cargarProvincia() {
 	        type:'post',
 	        async:false,
 	        data:{
-	        	idDepartamento:DPTO,
+	        	idDepartamento:$("#cmbDepaSede").val(),
 	            idDistrito:ceros
 	        },
 	        beforeSend:muestraLoading,
@@ -419,8 +532,8 @@ function cargarDistrito() {
 	        type:'post',
 	        async:false,
 	        data:{
-	        	idDepartamento:DPTO,
-	            idProvincia:provincia
+	        	idDepartamento:$("#cmbDepaSede").val(),
+	            idProvincia:$("#cmbProvSede").val()
 	        },
 	        beforeSend:muestraLoading,
 	        success:function(data){
@@ -431,33 +544,6 @@ function cargarDistrito() {
 	        },
 	        error:errorAjax
 	    });
-}
-//Fin Cargar Ubigeo
-
-//----- CARGAR SEDE ACREDITACION ----------
-function cargarDireccionSede() {
-
-	var estadito = "A";
-	
-    $.ajax({
-        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/cargarDireccionSede",
-        type:'post',
-        async:false,
-        data:{
-        	estado:estadito,
-        	idAlcanceAcreditacion: $('#idAASede').val()
-        },
-        beforeSend:muestraLoading,
-        success:function(data){
-        	
-            ocultaLoading();
-            fill.combo(data.filas,'idSedeAcreditacion','direccion','#cmbSede');
-            
-            ncbx = data.filas;
-            
-        },
-        error:errorAjax
-    });
 }
 
 //----- CARGAR TIPO DOCUMENTO ----------
@@ -513,23 +599,24 @@ function cargarCargo() {
 //------------- PREVIA PARA EL REGISTRAR ----------------
 function btnGuardarSede(){
 	
-	var opcion = $('input:radio[name=NSede]:checked').val();
+	//var opcion = $('input:radio[name=NSede]:checked').val();
 	
-	if(validarDatosFormularioSede() == true){
+	if($("#avisoEditarS").val()=='Editando'){
 		
-	if(opcion == 'AS'){
+		if(validarDatosFormularioSede() == true){
+			
+			confirm.open("¿Confirma la actualización de datos?","modificacionGeneralSede()");
+			
+		}else{$('#MensajeValP').show();}
 		
+	}else{
+	
+		if(validarDatosFormularioSede() == true){
+			
 			confirm.open("¿Confirma el registro?","RegistrarSedeAcreditacion()");
-			//RegistrarSedeAcreditacion();
-	} else {
-		if ( $('#idPersonal').val() !== "" && $('#idPersonal').val() !== undefined ){
-			confirm.open("¿Confirma el registro?","RegistrarSedePersonalAutorizado()");
-		}else{
-			confirm.open("¿Confirma el registro?","registrarPersonaNatural()");}
-			//registrarPersonaNatural();
+		
+		}else{$('#MensajeValP').show();}
 	}
-	
-	}else{$('#MensajeValP').show();}
 }
 
 function RegistrarSedeAcreditacion(){
@@ -611,6 +698,11 @@ function registrarPersonaNatural(){
 
 function RegistrarSedePersonalAutorizado(){
 	//alert( "RegistrarSedePersonalAutorizado: " + $('#idPersonal').val());
+	
+	if($("#avisoEditarS").val()=='GuardarCIP'){
+		modificarDatosSedePersonal();
+	}
+	
 	$.ajax({
         url:baseURL + "pages/mantenimientoEmpresasAcreditadas/RegistrarSedePersonalAutorizado",
         type:'post',
@@ -634,4 +726,79 @@ function RegistrarSedePersonalAutorizado(){
         },
         error:errorAjax
 	});			
+}
+function modificacionGeneralSede(){
+	modificarDatosSede();
+	modificarDatosSedePersonal();
+	modificarCargoEsp();
+	$('#dialogNuevaSede').dialog('close');
+    listarSedes();
+    listarInspector();
+}
+
+function modificarDatosSedePersonal(){
+	
+    $.ajax({
+        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/modificarPersonaNatural",
+        type:'post',
+        async:false,
+        data:{
+            idPersonaNatural :$("#idPersonal").val(),
+            nombre :$("#txtNombre").val().latinize().toUpperCase(),
+            apellidoPaterno :$("#txtApellidoPaterno").val().latinize().toUpperCase(),
+            apellidoMaterno :$("#txtApellidoMaterno").val().latinize().toUpperCase(),
+            cip :$("#txtCIP").val()
+        },
+        beforeSend:muestraLoading,
+        success:function(data){
+            ocultaLoading();
+            if(data.resultado=="0"){
+            }
+        },
+        error:errorAjax
+    });     
+}
+
+function modificarCargoEsp(){
+	
+    $.ajax({
+        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/modificarSedeInspector",
+        type:'post',
+        async:false,
+        data:{
+            idSedePersonalAutorizado :$("#clonSede").val(),
+            idCargo :$('#cmbCargo').val(),
+            idEspecialidad :''
+        },
+        beforeSend:muestraLoading,
+        success:function(data){
+            ocultaLoading();
+            if(data.resultado=="0"){
+            }
+        },
+        error:errorAjax
+    });     
+}
+
+function modificarDatosSede(){
+	
+    $.ajax({
+        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/modificarSede",
+        type:'post',
+        async:false,
+        data:{
+            idSedeAcreditacion :$("#idDeSede").val(),
+            idDepartamento: $('#cmbDepaSede').val(),
+        	idProvincia: $('#cmbProvSede').val(),
+        	idDistrito: $('#cmbDistSede').val(),
+        	direccion : $('#txtDirection').val().latinize().toUpperCase(),
+        },
+        beforeSend:muestraLoading,
+        success:function(data){
+            ocultaLoading();
+            if(data.resultado=="0"){
+            }
+        },
+        error:errorAjax
+    });     
 }

@@ -12,6 +12,7 @@ public class ProgramacionDTO {
 	 private Date fechaProgramacion; 
 	 private Long idCompartimiento; 
 	 private String estado;
+    
 	 
 	public Long getIdProgramacion() {
 		return idProgramacion;
@@ -55,7 +56,5 @@ public class ProgramacionDTO {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
-	 
-	 
 
 }

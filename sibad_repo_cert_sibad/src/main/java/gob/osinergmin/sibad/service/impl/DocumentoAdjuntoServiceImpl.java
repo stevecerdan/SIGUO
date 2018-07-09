@@ -6,6 +6,7 @@ package gob.osinergmin.sibad.service.impl;
 
 import gob.osinergmin.sibad.domain.dto.AlcanceAcreditacionDTO;
 import gob.osinergmin.sibad.domain.dto.DocumentoAdjuntoDTO;
+import gob.osinergmin.sibad.domain.dto.ResultadoPruebaDocumentoDTO;
 import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
 import gob.osinergmin.sibad.filter.DocumentoAdjuntoFilter;
 import gob.osinergmin.sibad.service.DocumentoAdjuntoService;
@@ -78,6 +79,26 @@ public class DocumentoAdjuntoServiceImpl implements DocumentoAdjuntoService{
 			} catch (Exception e) {
 				
 				LOG.error("error enviar datos de  Documento Adjunto al DAO",e);
+			}
+		
+			return registro;
+	}
+
+	@Override
+	public DocumentoAdjuntoDTO EliminarDocumentoAdjunto(DocumentoAdjuntoDTO documentoAdjuntoDTO,UsuarioDTO usuarioDTO) {
+		
+		 LOG.info("Iniciando envio de datos al DAO");
+			
+		 DocumentoAdjuntoDTO registro=null;
+			
+			try {
+							
+				registro = documentoadjuntoDAO.delete(documentoAdjuntoDTO,usuarioDTO);
+				LOG.info("(Se envio con exito los datos al DAO) registro: "+registro.toString());
+				 
+			} catch (Exception e) {
+				
+				LOG.error("error enviar datos al DAO",e);
 			}
 		
 			return registro;

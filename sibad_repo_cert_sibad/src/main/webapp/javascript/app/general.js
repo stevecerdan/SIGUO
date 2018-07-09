@@ -12,6 +12,8 @@ var global = {
 		       save:"Se  &nbsp;registr&oacute;  satisfactoriamente.",
 		       edit:"Se  &nbsp;actualiz&oacute; el registro satisfactoriamente.",
 		       edit2:"Se han actualizado los datos del registro",
+		       cancel:"Se ha cancelado el registro",
+		       reprog:"Se ha reprogramado el registro",
 		       delete:"Se  &nbsp;elimin&oacute; el registro satisfactoriamente."
 		   },
 		   accion:{ /* OSINE_SFS-480 - RSIS09 - mdiosesf - Inicio */

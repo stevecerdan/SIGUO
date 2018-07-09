@@ -28,21 +28,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "MdiPersonaNaturalV.findByIdPersonaN", query = "SELECT n FROM MdiPersonaNaturalV n WHERE n.idPersonaNatural=:idPersonaNatural "),
-    @NamedQuery(name = "MdiPersonaNaturalV.findByFilter", query = "SELECT n FROM MdiPersonaNaturalV n WHERE upper(n.numeroDoc) like :numeroDoc")
+    @NamedQuery(name = "MdiPersonaNaturalV.findByFilter", query = "SELECT n FROM MdiPersonaNaturalV n WHERE upper(n.numeroDoc) like :numeroDoc"),
+    @NamedQuery(name = "MdiPersonaNaturalV.findByBuscaCIP", query = "SELECT n FROM MdiPersonaNaturalV n WHERE n.cip = :cip")
 
 })
 public class MdiPersonaNaturalV extends Auditoria{
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
-//  @NotNull
-//  @Basic(optional = false)
-  @SequenceGenerator(name = "SEQ_GENERATOR", sequenceName = "MDI_PERSONA_NATURAL_SEQ", allocationSize = 1)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_GENERATOR")
-  @Column(name = "ID_PERSONA_NATURAL")
-  private Long idPersonaNatural;
-  //@Size(max = 10)
+	@SequenceGenerator(name = "SEQ_GENERATOR", sequenceName = "MDI_PERSONA_NATURAL_SEQ", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_GENERATOR")
+	@Column(name = "ID_PERSONA_NATURAL")
+	private Long idPersonaNatural;
     
     @Column(name = "ID_TIPO_DOCUMENTO_IDENTIDAD")
     private Long idTipoDocumento;
@@ -67,6 +64,8 @@ public class MdiPersonaNaturalV extends Auditoria{
     @Column(name = "CIP")
     private Long cip;
     
+	@Column(name = "TELEFONO")
+    private String telefono;
     
     public MdiPersonaNaturalV() {
     }
@@ -136,6 +135,14 @@ public class MdiPersonaNaturalV extends Auditoria{
 
 	public void setCip(Long cip) {
 		this.cip = cip;
+	}
+	
+	public String getTelefono() {
+		return telefono;
+	}
+
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
 	}
 
 	@Override

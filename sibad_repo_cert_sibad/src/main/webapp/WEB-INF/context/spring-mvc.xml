@@ -12,7 +12,7 @@
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:p="http://www.springframework.org/schema/p"
-
+       
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
@@ -31,6 +31,8 @@
 
     <!-- Configures the @Controller programming model -->
     <mvc:annotation-driven />
+    
+    
 
     <!-- Saves a locale change using a cookie -->
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver" />
@@ -57,5 +59,4 @@
             </list>
         </property>
     </bean>
-
 </beans>

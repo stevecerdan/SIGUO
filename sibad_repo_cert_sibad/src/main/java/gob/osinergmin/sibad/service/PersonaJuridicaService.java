@@ -16,5 +16,5 @@ import java.util.List;
 public interface PersonaJuridicaService {
     public List<PersonaJuridicaDTO> listarPersonaJuridica(PersonaJuridicaFilter filtro);
     public PersonaJuridicaDTO RegistrarPersonaJuridica(PersonaJuridicaDTO personaJuridicaDTO,UsuarioDTO usuarioDTO);
-    //public AutoayudaDTO editarAutoayuda(AutoayudaDTO autoayudaDTO,UsuarioDTO usuarioDTO);
+    public PersonaJuridicaDTO EditarPersonaJuridica(PersonaJuridicaDTO personaJuridicaDTO,UsuarioDTO usuarioDTO);
 }

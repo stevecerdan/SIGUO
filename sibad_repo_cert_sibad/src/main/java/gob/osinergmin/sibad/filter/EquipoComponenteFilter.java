@@ -16,6 +16,8 @@ public class EquipoComponenteFilter extends BasePaginatorFilter{
 	
 	private Long idEquipoComponente;
     private Long idEquipoCertificado;
+    private Long idTipoEquipo;
+    private Long idEmpresaAcreditada;
     
 	public Long getIdEquipoComponente() {
 		return idEquipoComponente;
@@ -28,6 +30,18 @@ public class EquipoComponenteFilter extends BasePaginatorFilter{
 	}
 	public void setIdEquipoCertificado(Long idEquipoCertificado) {
 		this.idEquipoCertificado = idEquipoCertificado;
+	}
+	public Long getIdTipoEquipo() {
+		return idTipoEquipo;
+	}
+	public void setIdTipoEquipo(Long idTipoEquipo) {
+		this.idTipoEquipo = idTipoEquipo;
+	}
+	public Long getIdEmpresaAcreditada() {
+		return idEmpresaAcreditada;
+	}
+	public void setIdEmpresaAcreditada(Long idEmpresaAcreditada) {
+		this.idEmpresaAcreditada = idEmpresaAcreditada;
 	}
 	
 }

@@ -38,16 +38,23 @@ public class UnidadSupervisadaDAOImpl implements UnidadSupervisadaDAO{
 	private Query getFindQuery(UnidadSupervisadaFilter filtro) {
         Query query=null;
         try{
-            if(filtro.getCodigoOsinergmin()!=null){
-            	query = crud.getEm().createNamedQuery("MdiUnidadSupervisada.findByCodigoOsinergmin");
-            }
-         
-            if(filtro.getCodigoOsinergmin()==null){
-                query.setParameter("codigoOsinergmin","");
-            }else {
-            	query.setParameter("codigoOsinergmin",filtro.getCodigoOsinergmin());
-            }
-           
+        	if(filtro.getIdUnidadSupervisada()!=null){
+        			query = crud.getEm().createNamedQuery("MdiUnidadSupervisada.findAll");
+        	} else {	
+	            if(filtro.getCodigoOsinergmin()!=null){
+	            	query = crud.getEm().createNamedQuery("MdiUnidadSupervisada.findByCodigoOsinergmin");
+	            }
+        	}
+        	
+        	if(filtro.getIdUnidadSupervisada()==null){
+	            if(filtro.getCodigoOsinergmin()!=null){
+	                query.setParameter("codigoOsinergmin",filtro.getCodigoOsinergmin());
+	            }else {
+	            	query.setParameter("codigoOsinergmin","");
+	            }
+        	}else {
+        		query.setParameter("idUnidadSupervisada",filtro.getIdUnidadSupervisada());
+        	}
         }catch(Exception e){
         	
             LOG.error("Error getFindQuery: "+e.getMessage());

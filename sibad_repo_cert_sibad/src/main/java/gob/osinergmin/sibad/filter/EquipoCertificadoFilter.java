@@ -17,6 +17,8 @@ public class EquipoCertificadoFilter extends BasePaginatorFilter{
 	private Long idEquipoCertificado;
     private Long idAlcanceAcreditacion;
     private Date fechaProximaCalibracion;
+    private Long idEmpresaAcreditada;
+    private Long idTipoEquipo;
     
     public Long getIdEquipoCertificado() {
 		return idEquipoCertificado;
@@ -35,6 +37,18 @@ public class EquipoCertificadoFilter extends BasePaginatorFilter{
 	}
 	public void setFechaProximaCalibracion(Date fechaProximaCalibracion) {
 		this.fechaProximaCalibracion = fechaProximaCalibracion;
+	}
+	public Long getIdEmpresaAcreditada() {
+		return idEmpresaAcreditada;
+	}
+	public void setIdEmpresaAcreditada(Long idEmpresaAcreditada) {
+		this.idEmpresaAcreditada = idEmpresaAcreditada;
+	}
+	public Long getIdTipoEquipo() {
+		return idTipoEquipo;
+	}
+	public void setIdTipoEquipo(Long idTipoEquipo) {
+		this.idTipoEquipo = idTipoEquipo;
 	}
 	
 }

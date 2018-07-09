@@ -17,5 +17,5 @@ import java.util.List;
 public interface PersonaJuridicaDAO {
     public List<PersonaJuridicaDTO> find(PersonaJuridicaFilter filtro) throws PersonaJuridicaException;
     public PersonaJuridicaDTO create(PersonaJuridicaDTO personaJuridicaDTO, UsuarioDTO usuarioDTO) throws PersonaJuridicaException;
-    //public AutoayudaDTO update(AutoayudaDTO autoayudaDTO,UsuarioDTO usuarioDTO) throws AutoayudaException;
+    public PersonaJuridicaDTO update(PersonaJuridicaDTO personaJuridicaDTO, UsuarioDTO usuarioDTO) throws PersonaJuridicaException;
 }

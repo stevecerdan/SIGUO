@@ -40,10 +40,11 @@ public class EmpresaAcreditadaDTO {
     private String registro;
     private String estadoEmpresa;
     private String estadoAlcance;
+    private String estadoAccion;
     private String idDocumentoAdjunto;
     private String idDocumentoAlcanceAcredita;
     private String normaEvaluada;
-    private String idOrganismoAcreditador;
+    private Long idOrganismoAcreditador;
     private String idTipoOrganismo;
     private String idTipoPrueba;
 
@@ -238,6 +239,15 @@ public class EmpresaAcreditadaDTO {
 	public void setEstadoAlcance(String estadoAlcance) {
 		this.estadoAlcance = estadoAlcance;
 	}
+	
+	public String getEstadoAccion() {
+		return estadoAccion;
+	}
+
+	public void setEstadoAccion(String estadoAccion) {
+		this.estadoAccion = estadoAccion;
+	}
+
 	//---------------------------------------------------------------
 	public String getIdDocumentoAdjunto() {
 		return idDocumentoAdjunto;
@@ -263,11 +273,11 @@ public class EmpresaAcreditadaDTO {
 		this.normaEvaluada = normaEvaluada;
 	}
 
-	public String getIdOrganismoAcreditador() {
+	public Long getIdOrganismoAcreditador() {
 		return idOrganismoAcreditador;
 	}
 
-	public void setIdOrganismoAcreditador(String idOrganismoAcreditador) {
+	public void setIdOrganismoAcreditador(Long idOrganismoAcreditador) {
 		this.idOrganismoAcreditador = idOrganismoAcreditador;
 	}
 

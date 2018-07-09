@@ -43,6 +43,7 @@ public class PersonaNaturalVBuilder {
         registroDTO.setApellidoMaterno(registro.getApellidoMaterno());
         registroDTO.setNombre(registro.getNombre());
         registroDTO.setCip(registro.getCip());
+        registroDTO.setTelefono(registro.getTelefono());
         
         return registroDTO;
     }
@@ -58,6 +59,7 @@ public class PersonaNaturalVBuilder {
             registro.setApellidoMaterno(registroDTO.getApellidoMaterno());
             registro.setNombre(registroDTO.getNombre());
             registro.setCip(registroDTO.getCip());
+            registro.setTelefono(registroDTO.getTelefono());
         }
         return registro;
     }
@@ -74,9 +76,26 @@ public class PersonaNaturalVBuilder {
 				mdiPersonaNaturalV.setApellidoMaterno(personaNaturalDTO.getApellidoMaterno());
 				mdiPersonaNaturalV.setApellidoPaterno(personaNaturalDTO.getApellidoPaterno());
 				mdiPersonaNaturalV.setCip(personaNaturalDTO.getCip());
+				mdiPersonaNaturalV.setTelefono(personaNaturalDTO.getTelefono());
 			
 		}
 		LOG.info("FIN BUILDER PN: " + mdiPersonaNaturalV.getIdPersonaNatural() +" - " + mdiPersonaNaturalV.getIdTipoDocumento() +" - " + mdiPersonaNaturalV.getNumeroDoc());
 		return mdiPersonaNaturalV;
 	}
+    
+    public static List<PersonaNaturalVDTO> toListTablaPersonaNaturalDto(Long idPersonaNatural, String numeroDoc, String apellidoPaterno, String apellidoMaterno,String nombre) {
+    	
+    	PersonaNaturalVDTO registroDTO = new PersonaNaturalVDTO();
+        List<PersonaNaturalVDTO> retorno = new ArrayList<PersonaNaturalVDTO>();
+        
+        registroDTO.setIdPersonaNatural(idPersonaNatural);
+        registroDTO.setNumeroDoc(numeroDoc);
+        registroDTO.setNombre(nombre);
+        registroDTO.setApellidoMaterno(apellidoMaterno);
+        registroDTO.setApellidoPaterno(apellidoPaterno);
+
+        retorno.add(registroDTO);
+        
+        return retorno;
+    }
 }

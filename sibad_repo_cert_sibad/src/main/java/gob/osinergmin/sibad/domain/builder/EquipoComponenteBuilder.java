@@ -36,7 +36,16 @@ import org.slf4j.LoggerFactory;
     	EquipoComponenteDTO registroDTO = new EquipoComponenteDTO();
         
         registroDTO.setIdEquipoComponente(registro.getIdEquipoComponente());
+        registroDTO.setIdComponenteTanque(registro.getIdComponenteTanque());
         registroDTO.setComponenteTanque(registro.getComponenteTanque());
+        
+        registroDTO.setIdEmpresaAcreditada(registro.getIdEmpresaAcreditada());
+        registroDTO.setIdEquipoCertificado(registro.getIdEquipoCertificado());
+        registroDTO.setIdTipoPrueba(registro.getIdTipoPrueba());
+        registroDTO.setEstadoAlcance(registro.getEstadoAlcance());
+        registroDTO.setEstadoEquipo(registro.getEstadoEquipo());
+        registroDTO.setTipoEquipo(registro.getTipoEquipo());
+        registroDTO.setDescripcionEquipo(registro.getDescripcionEquipo());
         
         return registroDTO;
     }
@@ -56,7 +65,16 @@ import org.slf4j.LoggerFactory;
         if(registroDTO!=null){
             registro=new PghEquipoComponenteV();
             registro.setIdEquipoComponente(registroDTO.getIdEquipoComponente());
+            registro.setIdComponenteTanque(registroDTO.getIdComponenteTanque());
             registro.setComponenteTanque(registroDTO.getComponenteTanque());
+            
+            registro.setIdEmpresaAcreditada(registroDTO.getIdEmpresaAcreditada());
+            registro.setIdEquipoCertificado(registroDTO.getIdEquipoCertificado());
+            registro.setIdTipoPrueba(registroDTO.getIdTipoPrueba());
+            registro.setEstadoAlcance(registroDTO.getEstadoAlcance());
+            registro.setEstadoEquipo(registroDTO.getEstadoEquipo());
+            registro.setTipoEquipo(registroDTO.getTipoEquipo());
+            registro.setDescripcionEquipo(registroDTO.getDescripcionEquipo());
         }
         return registro;
 

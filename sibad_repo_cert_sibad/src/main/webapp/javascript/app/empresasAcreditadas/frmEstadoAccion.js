@@ -12,19 +12,9 @@ $('#uploadfileC').change(function() {
 	$('#MensajeValEstado').hide();
     var filename = $('#uploadfileC')[0].files[0]
     $('#nombreArchivoC').text(filename.name);
-});
-
-$('#btnSubirArchivo').click(function(){
-	
-	//$('#nombreArchivo').text("Subir Archivo, Click Aquí");
-	if($('#nombreArchivoC').text()=="Subir Archivo, Click Aquí"){
-		$('#MensajeValEstado').show();
-		$('#MensajeValEstado').html("POR FAVOR SUBA UN ARCHIVO ANTES DE GUARDAR");
-	}else{
-	//confirm.open("¿Desea guardar el archivo adjunto?","registrarDocumento()");
-	registrarDocumentoEstado();
-	//listarDocumentoAdjuntoAA(0);
-	}
+    if($('#nombreArchivoC').text()!=="Subir Archivo, Click Aquí"){
+	    registrarDocumentoEstado();
+    }
 });
 
 $('body').on('click', '.EliminarArchivoE',function(){
@@ -157,8 +147,8 @@ function registrarEstado(){
             ocultaLoading();
             if(data.resultado=="0"){
                 $('#dialogFrmEstadoAccion').dialog('close');
-                listarProcesosAcreditacion();
-                validarEmpresaAcreditada();
+                //listarProcesosAcreditacion();
+                cargarDatos();
               
             }
         },

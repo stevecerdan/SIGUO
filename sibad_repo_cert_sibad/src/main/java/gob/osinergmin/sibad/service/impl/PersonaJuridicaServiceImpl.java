@@ -49,9 +49,28 @@ public class PersonaJuridicaServiceImpl implements PersonaJuridicaService{
 		
 		try {
 			
-			
 			registro = personajuridicaDAO.create(personaJuridicaDTO,usuarioDTO);
 			LOG.info("(Se envio con exito los datos de Persona Juridica al DAO) registro: "+registro.getIdPersonaJuridica());
+			 
+		} catch (Exception e) {
+			
+			LOG.error("error enviar datos de Persona Juridica al DAO",e);
+		}
+	
+		return registro;
+	}
+    
+    @Override
+	public PersonaJuridicaDTO EditarPersonaJuridica(PersonaJuridicaDTO personaJuridicaDTO, UsuarioDTO usuarioDTO) {
+		
+    LOG.info("Iniciando envio de datos de Persona Juridica al DAO");
+		
+    PersonaJuridicaDTO registro=null;
+		
+		try {
+			
+			registro = personajuridicaDAO.update(personaJuridicaDTO,usuarioDTO);
+			LOG.info("(Se envio con exito los datos de Persona Juridica al DAO) registro: "+registro.toString());
 			 
 		} catch (Exception e) {
 			

@@ -40,16 +40,20 @@ public class PghEmpresaAcreditada  extends Auditoria{
 	 @Basic(optional = false)
 	 @Column(name = "ESTADO")
 	 private String estado;
+	 
+	 @Column(name = "REGISTRO")
+	 private String registro;
 
 	public PghEmpresaAcreditada() {
 		super();
 	}
 
-	public PghEmpresaAcreditada(Long idEmpresaAcreditada, Long idPersonaJuridica, String estado) {
+	public PghEmpresaAcreditada(Long idEmpresaAcreditada, Long idPersonaJuridica, String estado, String registro) {
 		super();
 		this.idEmpresaAcreditada = idEmpresaAcreditada;
 		this.idPersonaJuridica = idPersonaJuridica;
 		this.estado = estado;
+		this.registro = registro;
 	}
 
 	public PghEmpresaAcreditada(Long idEmpresaAcreditada, String usuarioCreacion, Date fechaCreacion, String terminalCreacion) {
@@ -83,8 +87,15 @@ public class PghEmpresaAcreditada  extends Auditoria{
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
-	 
 	
+	public String getRegistro() {
+		return registro;
+	}
+
+	public void setRegistro(String registro) {
+		this.registro = registro;
+	}
+
 	@Override
     public int hashCode() {
         int hash = 0;

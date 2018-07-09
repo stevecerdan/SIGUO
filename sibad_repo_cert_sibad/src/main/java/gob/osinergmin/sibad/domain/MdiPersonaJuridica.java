@@ -72,24 +72,6 @@ public class MdiPersonaJuridica extends Auditoria{
     private String web;
     @Size(max = 256)
     
-    //@Column(name = "RESOLUCION_CEDULA")
-    //private String resolucionCedula;
-    //@Size(max = 64)
-    
-    //@Column(name = "FECHA_INICIO_VIGENCIA")
-    //private Date fechaIVigencia;
-    
-    //@Column(name = "ID_TIPO_ORGANISMO")
-    //private Long tipoOrganismo;
-    //@Size(max = 10)
-    
-    //@Column(name = "REGISTRO")
-    //private String Nregistro;
-    //@Size(max = 64)
-    
-    //@Column(name = "ESTADO")
-    //private String estado;
-    
     public MdiPersonaJuridica() {
     }
 

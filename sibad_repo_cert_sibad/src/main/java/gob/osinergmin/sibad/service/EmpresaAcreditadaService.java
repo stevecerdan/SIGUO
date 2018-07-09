@@ -15,8 +15,9 @@ import java.util.List;
  */
 
 public interface EmpresaAcreditadaService {
+	
     public List<EmpresaAcreditadaDTO> listarEmpAcred(EmpresaAcreditadaFilter filtro);
     public List<EmpresaAcreditadaDTO> listarEmpAcred2(EmpresaAcreditadaFilter filtro2);
     public EmpresaAcreditadaDTO RegistrarEmpresaAcreditada(EmpresaAcreditadaDTO EmpresaAcreditadaDTO,UsuarioDTO usuarioDTO);
-    //public AutoayudaDTO editarAutoayuda(AutoayudaDTO autoayudaDTO,UsuarioDTO usuarioDTO);
+    public EmpresaAcreditadaDTO EditarEmpresaAcreditada(EmpresaAcreditadaDTO EmpresaAcreditadaDTO,UsuarioDTO usuarioDTO);
 }

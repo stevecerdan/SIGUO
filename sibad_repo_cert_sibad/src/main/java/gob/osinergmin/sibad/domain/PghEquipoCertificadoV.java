@@ -19,21 +19,29 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
+/*
  * @author jpiro
  */
+
 @Entity
 @Table(name = "VIEW_EQUIPO_CERTIFICADO")
 @XmlRootElement
 @NamedQueries({
+	
     @NamedQuery(name = "PghEquipoCertificadoV.findByEquipo", query = "SELECT eq FROM PghEquipoCertificadoV eq WHERE eq.idEquipoCertificado = :idEquipoCertificado"),
     @NamedQuery(name = "PghEquipoCertificadoV.findByFilterA", query = "SELECT eq FROM PghEquipoCertificadoV eq WHERE eq.idAlcanceAcreditacion = :idAlcanceAcreditacion"),
-    @NamedQuery(name = "PghEquipoCertificadoV.findByFechaPC", query ="SELECT eq FROM PghEquipoCertificadoV eq WHERE TO_DATE(eq.fechaProximaCalibracion,'DD/MM/YY') = :fechaProximaCalibracion")
+    @NamedQuery(name = "PghEquipoCertificadoV.findByFechaPC", query ="SELECT eq FROM PghEquipoCertificadoV eq WHERE TO_DATE(eq.fechaProximaCalibracion,'DD/MM/YY') <= :fechaProximaCalibracion"),
+    @NamedQuery(name = "PghEquipoCertificadoV.findBycbxResultadoEquipo", query = "SELECT eq FROM PghEquipoCertificadoV eq WHERE eq.idEmpresaAcreditada = :idEmpresaAcreditada and"+
+																														    " eq.idTipoEquipo = :idTipoEquipo and" +
+																															" eq.idTipoPrueba = '1467' and" +
+																															" eq.estado = 'A' and" +
+																															" (upper(eq.estadoAlcance) = 'A' or" + 
+																															" upper(eq.estadoAlcance) = 'S')")
    
 })
 
 public class PghEquipoCertificadoV extends Auditoria{
+	
 	@Id
     @Basic(optional = false)
     @NotNull
@@ -42,6 +50,15 @@ public class PghEquipoCertificadoV extends Auditoria{
     
     @Column(name = "ID_ALCANCE_ACREDITACION")
     private Long idAlcanceAcreditacion;
+    
+    @Column(name = "ID_EMPRESA_ACREDITADA")
+    private Long idEmpresaAcreditada;
+    
+    @Column(name = "ID_TIPO_PRUEBA")
+    private Long idTipoPrueba;
+        
+    @Column(name = "ESTADO_ALCANCE")
+    private String estadoAlcance;
     
     @Column(name = "ID_TIPO_EQUIPO")
     private Long idTipoEquipo;
@@ -76,7 +93,7 @@ public class PghEquipoCertificadoV extends Auditoria{
     @Column(name = "FECHA_PROXIMA_CALIBRACION")
     private Date fechaProximaCalibracion;
     
-    @Column(name = "ESTADO")
+    @Column(name = "ESTADO_EQUIPO")
     private String estado;
     @Size(max = 1)
     
@@ -211,6 +228,32 @@ public class PghEquipoCertificadoV extends Auditoria{
 
 	public void setObservacion(String observacion) {
 		this.observacion = observacion;
+	}
+	
+	//-------------
+
+	public Long getIdEmpresaAcreditada() {
+		return idEmpresaAcreditada;
+	}
+
+	public void setIdEmpresaAcreditada(Long idEmpresaAcreditada) {
+		this.idEmpresaAcreditada = idEmpresaAcreditada;
+	}
+
+	public Long getIdTipoPrueba() {
+		return idTipoPrueba;
+	}
+
+	public void setIdTipoPrueba(Long idTipoPrueba) {
+		this.idTipoPrueba = idTipoPrueba;
+	}
+
+	public String getEstadoAlcance() {
+		return estadoAlcance;
+	}
+
+	public void setEstadoAlcance(String estadoAlcance) {
+		this.estadoAlcance = estadoAlcance;
 	}
 
 	@Override

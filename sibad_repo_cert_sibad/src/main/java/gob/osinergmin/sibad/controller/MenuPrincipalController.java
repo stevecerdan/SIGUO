@@ -44,6 +44,14 @@ public class MenuPrincipalController {
         model.addAttribute("usuario", ConstantesWeb.getUSUARIO(request));
         return ConstantesWeb.Navegacion.PAGE_MENU_PRINCIPAL;
 	}
+	@RequestMapping(value = "/menuUnidadOperativa")
+    public String mantenimiento (Model model,HttpServletRequest request) {
+        model.addAttribute("fecha", ConstantesWeb.getFECHA());
+        model.addAttribute("usuario", ConstantesWeb.getUSUARIO(request));
+	return ConstantesWeb.Navegacion.PAGE_MENU_UNIDAD_OPERATIVA;
+                
+    }
+	
 	
 }
 

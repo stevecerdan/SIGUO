@@ -4,6 +4,8 @@ package gob.osinergmin.sibad.domain;
 
 
 
+import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,9 +22,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "PGH_COMPARTIMIENTO")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "PghCompartimiento.findByIdAlmacenamiento", query = "SELECT t FROM PghCompartimiento t WHERE t.idAlmacenamiento = :idAlmacenamiento"),   
+    @NamedQuery(name = "PghCompartimiento.findByIdAlmacenamiento", query = "SELECT t FROM PghCompartimiento t WHERE t.idAlmacenamiento = :idAlmacenamiento"),
+    @NamedQuery(name = "PghCompartimiento.findByIdCompartimiento", query = "SELECT t FROM PghCompartimiento t WHERE t.idCompartimiento = :idCompartimiento"),
 })
-public class PghCompartimiento{
+public class PghCompartimiento extends Auditoria{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -46,7 +49,9 @@ public class PghCompartimiento{
 	 @Column(name = "CAPACIDAD")
 	 private Long capacidad;
 	 
-
+	 @Column(name = "FECHA_PROXIMA_PRUEBA") 
+	 private Date fechaProximaPrueba;
+	 
 	public PghCompartimiento() {
 		
 	}
@@ -56,14 +61,15 @@ public class PghCompartimiento{
 		this.idCompartimiento = idCompartimiento;
 	}
 
-	public PghCompartimiento(Long idCompartimiento, String estado, Long numero, Long idAlmacenamiento,Long capacidad) {
-		//super();
+	public PghCompartimiento(Long idCompartimiento, String estado, Long numero, Long idAlmacenamiento, Long capacidad,
+			Date fechaProximaPrueba) {
+		
 		this.idCompartimiento = idCompartimiento;
 		this.estado = estado;
 		this.numero = numero;
 		this.idAlmacenamiento = idAlmacenamiento;
 		this.capacidad = capacidad;
-		
+		this.fechaProximaPrueba = fechaProximaPrueba;
 	}
 
 	public Long getIdCompartimiento() {
@@ -104,6 +110,14 @@ public class PghCompartimiento{
 
 	public void setIdAlmacenamiento(Long idAlmacenamiento) {
 		this.idAlmacenamiento = idAlmacenamiento;
+	}
+	
+	public Date getFechaProximaPrueba() {
+		return fechaProximaPrueba;
+	}
+
+	public void setFechaProximaPrueba(Date fechaProximaPrueba) {
+		this.fechaProximaPrueba = fechaProximaPrueba;
 	}
 
 	@Override

@@ -18,6 +18,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 /**
  *
  * @author DSR
@@ -34,6 +36,7 @@ public class Auditoria implements Serializable{
     @Basic(optional = false)
     @Column(name = "FECHA_CREACION", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern="MM-dd-yyyy HH:mm")
     protected Date fechaCreacion;
 
     @Basic(optional = false)
@@ -47,6 +50,7 @@ public class Auditoria implements Serializable{
 
     @Column(name = "FECHA_ACTUALIZACION", insertable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern="MM-dd-yyyy HH:mm")
     protected Date fechaActualizacion;
 
     @Size(max = 38)

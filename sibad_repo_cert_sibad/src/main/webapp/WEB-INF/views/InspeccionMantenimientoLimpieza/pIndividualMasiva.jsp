@@ -5,45 +5,10 @@
     
     <head>
         <script type="text/javascript" src='<c:url value="/javascript/app/InspeccionMantenimientoLimpieza/pIndividualMasiva.js" />' charset="utf-8"></script>       
+        <script type="text/javascript" src='<c:url value="/javascript/app/InspeccionMantenimientoLimpieza/xlsx.full.min.js"/>' charset="utf-8"></script> 
     </head>
     <style>
-      
-       /*.custom-file{  
-       
-         background-color: #EEE;
-         width:400px;
-         border: 1px solid #CCC;
-         height:30px;
-         position: relative;
-         z-index:1
-       }
-       
-       .custom-file input[type="file"]{  
-        width:100%;
-        height:100%;
-        opacity:0;
-        position: absolute;
-        left:0;
-        top:0;
-        z-index:3;
-       }
-       
-       .custom-file:after{  
-        content:"Examinar";
-        background-color: #F00;
-        color: #FFF;
-        width:100px;
-        height:30px;
-        position: absolute;
-        top:0;
-        right:0;
-        line-height:30px;
-        text-align:center;
-        font-family:Tahoma, Arial;
-        z-index5;
         
-       }*/
-       
        .customfile {
        
 		    position: relative;
@@ -104,8 +69,10 @@
     	<fieldset>
     	    <input type="hidden" id="idAlmacenamientoCompartimiento" name="idAlmacenamientoCompartimiento" class="ipt-medium-large" />
     	    <input type="hidden" id="codOsinergmin"  name="codOsinergmin" class="ipt-medium-large"/>
-    	    
-    	    
+    	    <input type="hidden" id="ultimoNumProgramacion"  name="ultimoNumProgramacion" class="ipt-medium-large"/>
+    	    <input type="hidden" id="idUnidSupervisada"  name="idUnidSupervisada" class="ipt-medium-large"/>
+    	    <input type="hidden" id="fecCreacion"  name="fecCreacion" class="ipt-medium-large"/>
+
 	        <form id="frmIndivualMasiva" class="tac">  
 	            
 	            <div id="divMensajeValidaIndivualMasiva" class="errorMensaje" tabindex='1' style="display: none" ></div>
@@ -114,10 +81,10 @@
 
 	                <div class="filaForm">
 	                    <div class="ipt-small vam" style="">
-	                       <input type="radio" id="pIndividual" name="pIndividual" value="I" checked> Programaci&oacute;n Individual
+	                       <input type="radio"  class="radio_buttons" id="pIndividual" name="pIndividual" value="I" checked> Programaci&oacute;n Individual
 	                    </div>
                         <div class="ipt-small vam" style="margin-left: 40px;"></div>
-                        <input type="radio" id="pMasiva" name="pMasiva" value="M"> Programaci&oacute;n Masiva<br>
+                        <input type="radio"  class="radio_buttons" id="pMasiva" name="pMasiva" value="M"> Programaci&oacute;n Masiva<br>
                         <div class="ipt-small vam" style="margin-left: 700px;"> </div>
 	                </div>
 	                <div class="ipt-small vam" style="margin-top: 13px;"> </div>
@@ -125,7 +92,7 @@
 	             <div id="Individual"> 
 	             
 	                <div class="filaForm">
-                        <div class="ipt-small vam" style="margin-right: 20px;"><label>Tipo:</label> </div>
+                        <div class="ipt-small vam" style="margin-right: 20px;"><label>Tipo (*):</label> </div>
                         <div>
                             <select id="cmbTipo" name="cmbTipo" class="ipt-medium-small">
                                     <option value="">--Seleccione--</option>
@@ -137,14 +104,14 @@
 				   </div> 
 				   <div class="ipt-small vam" style="margin-top: 15px;"> </div>  
 	                <div class="filaForm">
-                        <div class="ipt-small vam" style="margin-right: 15px;"><label>Fecha:</label> </div>
+                        <div class="ipt-small vam" style="margin-right: 15px;"><label>Fecha (*):</label> </div>
                         <div>
-                             <input type="text" class="ipt-medium-large" id="txtFecha"  name="txtFecha"  style="text-transform:uppercase; width:138px;"/>    
+                             <input type="text" class="ipt-medium-large" id="txtFecha"  name="txtFecha"  maxlength="0" style="text-transform:uppercase; width:138px;"/>    
                         </div>
 				   </div>   
 				   <div class="ipt-small vam" style="margin-top: 15px;"> </div>
 	               <div class="filaForm">
-                        <div class="ipt-small vam" style="margin-right: 20px;"><label>Unidad de Almacenamiento:</label> </div>
+                        <div class="ipt-small vam" style="margin-right: 20px;"><label>Unidad de Almacenamiento (*):</label> </div>
                         <div>
                             <select id="cmbUnidadAlmacenamiento" name="cmbUnidadAlmacenamiento" class="ipt-medium-small">
                                     <option value="">--Seleccione--</option>
@@ -191,7 +158,13 @@
 	                
 				   <div class="gridMargin" style="margin-right:230px;">
 				       <div id="gridContenedorProgMasiva"></div>
-				   </div>                                                                    
+				   </div> 
+
+				   <div style="margin:10px;">
+		             	<table id= "tablitaMasiva" border="1" style="display:none;"> 
+		              	</table>
+		           </div> 
+						
 	            </div> 
 				                                                                     
 	            </div>          
@@ -205,3 +178,4 @@
         </div>
     </body>
 </html>
+

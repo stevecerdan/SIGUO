@@ -5,6 +5,7 @@
 package gob.osinergmin.sibad.service.impl;
 
 import gob.osinergmin.sibad.util.Constantes;
+import gob.osinergmin.sibad.domain.dto.DocumentoAdjuntoDTO;
 import gob.osinergmin.sibad.domain.dto.SedeAcreditacionDTO;
 import gob.osinergmin.sibad.domain.dto.SedePersonalAutorizadoDTO;
 import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
@@ -46,6 +47,26 @@ public class SedePersonalAutorizadoServiceImpl implements SedePersonalAutorizado
         }
         return retorno;
     }
+    
+    @Override
+	public SedePersonalAutorizadoDTO EditarSedePersonalAutorizado(SedePersonalAutorizadoDTO sedePersonalAutorizadoDTO,UsuarioDTO usuarioDTO) {
+		
+		 LOG.info("Iniciando envio de datos de SedePersonalAutorizado al DAO");
+			
+		 SedePersonalAutorizadoDTO registro=null;
+				
+			try {
+				
+				registro = sedepersonalautorizadoDAO.update(sedePersonalAutorizadoDTO, usuarioDTO);
+				LOG.info("(Se envio con exito los datos de SedePersonalAutorizado al DAO) registro: "+registro.toString());
+				 
+			} catch (Exception e) {
+				
+				LOG.error("error enviar datos de  SedePersonalAutorizado al DAO",e);
+			}
+		
+			return registro;
+	}
 
 	@Override
 	public SedePersonalAutorizadoDTO RegistrarSedePersonalAutorizado(SedePersonalAutorizadoDTO sedePersonalAutorizadoDTO, UsuarioDTO usuarioDTO) {

@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PghSedePersonalAutorizadoV.findBySede", query = "SELECT pa FROM PghSedePersonalAutorizadoV pa WHERE pa.idSedePersonalAutorizado = :idSedePersonalAutorizado"),
-    @NamedQuery(name = "PghSedePersonalAutorizadoV.findByFilter", query = "SELECT pa FROM PghSedePersonalAutorizadoV pa WHERE pa.idAlcanceAcreditacion = :idAlcanceAcreditacion and upper(pa.flagPersonalAutorizado) = :flagPersonalAutorizado")
+    @NamedQuery(name = "PghSedePersonalAutorizadoV.findByFilter", query = "SELECT pa FROM PghSedePersonalAutorizadoV pa WHERE pa.idAlcanceAcreditacion like :idAlcanceAcreditacion and upper(pa.flagPersonalAutorizado) like :flagPersonalAutorizado and pa.numeroDocumento like :numeroDocumento")
    
     
 })
@@ -45,9 +45,25 @@ public class PghSedePersonalAutorizadoV extends Auditoria{
     private Long idAlcanceAcreditacion;
     @Size(max = 10)
     
+    @Column(name = "ID_SEDE_ACREDITACION")
+    private Long idSedeAcreditacion;
+    @Size(max = 10)
+    
     @Column(name = "DIRECCION")
     private String direccion;
     @Size(max = 512)
+    
+    @Column(name = "ID_DEPARTAMENTO")
+    private String idDepartamento;
+    @Size(max = 2)
+    
+    @Column(name = "ID_PROVINCIA")
+    private String idProvincia;
+    @Size(max = 2)
+    
+    @Column(name = "ID_DISTRITO")
+    private String idDistrito;
+    @Size(max = 2)
     
     @Column(name = "DEPARTAMENTO")
     private String departamento;
@@ -64,6 +80,9 @@ public class PghSedePersonalAutorizadoV extends Auditoria{
     @Column(name = "FLAG_SEDE_PERSONAL_AUTORIZADO")
     private String flagPersonalAutorizado;
     @Size(max = 1)
+    
+    @Column(name = "ID_TIPO_DOCUMENTO_IDENTIDAD")
+    private Long idTipoDocumento;
     
     @Column(name = "TIPO_DOCUMENTO")
     private String tipoDocumento;
@@ -129,6 +148,14 @@ public class PghSedePersonalAutorizadoV extends Auditoria{
 	public void setIdAlcanceAcreditacion(Long idAlcanceAcreditacion) {
 		this.idAlcanceAcreditacion = idAlcanceAcreditacion;
 	}
+	
+	public Long getIdSedeAcreditacion() {
+		return idSedeAcreditacion;
+	}
+
+	public void setIdSedeAcreditacion(Long idSedeAcreditacion) {
+		this.idSedeAcreditacion = idSedeAcreditacion;
+	}
 
 	public String getDireccion() {
 		return direccion;
@@ -136,6 +163,30 @@ public class PghSedePersonalAutorizadoV extends Auditoria{
 
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
+	}
+	
+	public String getIdDepartamento() {
+		return idDepartamento;
+	}
+
+	public void setIdDepartamento(String idDepartamento) {
+		this.idDepartamento = idDepartamento;
+	}
+
+	public String getIdProvincia() {
+		return idProvincia;
+	}
+
+	public void setIdProvincia(String idProvincia) {
+		this.idProvincia = idProvincia;
+	}
+
+	public String getIdDistrito() {
+		return idDistrito;
+	}
+
+	public void setIdDistrito(String idDistrito) {
+		this.idDistrito = idDistrito;
 	}
 
 	public String getDepartamento() {
@@ -168,6 +219,14 @@ public class PghSedePersonalAutorizadoV extends Auditoria{
 
 	public void setFlagPersonalAutorizado(String flagPersonalAutorizado) {
 		this.flagPersonalAutorizado = flagPersonalAutorizado;
+	}
+	
+	public Long getIdTipoDocumento() {
+		return idTipoDocumento;
+	}
+
+	public void setIdTipoDocumento(Long idTipoDocumento) {
+		this.idTipoDocumento = idTipoDocumento;
 	}
 
 	public String getTipoDocumento() {

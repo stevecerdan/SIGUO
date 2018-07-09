@@ -10,8 +10,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import gob.osinergmin.sibad.domain.PghAlmacenamiento;
+import gob.osinergmin.sibad.domain.PghCilindroGnv;
 import gob.osinergmin.sibad.domain.builder.AlmacenamientoBuilder;
+import gob.osinergmin.sibad.domain.builder.CilindroBuilder;
 import gob.osinergmin.sibad.domain.dto.AlmacenamientoDTO;
+import gob.osinergmin.sibad.domain.dto.CilindroGNVDTO;
+import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
 import gob.osinergmin.sibad.filter.AlmacenamientoFilter;
 import gob.osinergmin.sibad.service.dao.AlmacenamientoDAO;
 import gob.osinergmin.sibad.service.dao.CrudDAO;
@@ -64,5 +69,45 @@ public class AlmacenamientoDAOImpl implements AlmacenamientoDAO {
         }
         return query;
     }
+
+	@Override
+	public AlmacenamientoDTO create(AlmacenamientoDTO almacenamientoDTO, UsuarioDTO usuarioDTO) {
+		LOG.info("Iniciando registro de Almacenamiento");
+		LOG.info("ServiceDAOImpl: "+ almacenamientoDTO.getIdAlmacenamiento() + " - " + almacenamientoDTO.getEstado());
+		AlmacenamientoDTO retorno=null;
+		
+		PghAlmacenamiento pghAlmacenamiento =  new PghAlmacenamiento();
+		
+		try {
+			if(almacenamientoDTO.getIdAlmacenamiento() == null) {
+				pghAlmacenamiento.setEstado(almacenamientoDTO.getEstado());
+				pghAlmacenamiento.setIdAlmacenamiento(almacenamientoDTO.getIdAlmacenamiento());
+				pghAlmacenamiento.setNumero(almacenamientoDTO.getNumero());
+				pghAlmacenamiento.setNumeroSerie(almacenamientoDTO.getNumeroserie());
+								
+				LOG.info("CREATE");
+				crud.create(pghAlmacenamiento);
+			}else {
+				LOG.info("UPDATE");
+				LOG.info("DAOIMPL: "+ almacenamientoDTO.getIdAlmacenamiento() + " - " + almacenamientoDTO.getEstado());
+				
+				pghAlmacenamiento =  crud.find(almacenamientoDTO.getIdAlmacenamiento(), PghAlmacenamiento.class);
+
+				LOG.info("DAOIMPL: "+ pghAlmacenamiento.getIdAlmacenamiento() + " - " + pghAlmacenamiento.getEstado());
+				pghAlmacenamiento.setEstado(almacenamientoDTO.getEstado());
+				
+				crud.update(pghAlmacenamiento);
+			}
+			retorno = AlmacenamientoBuilder.toAlmacenamientoDto(pghAlmacenamiento);
+			 
+			LOG.info("Registro exitoso retorno DAOIMPL: "+retorno.getIdAlmacenamiento());
+			
+		} catch (Exception e) {
+            LOG.error("A partir de aqui error: ",e);
+		}
+		
+		
+		return retorno;
+	}
 
 }

@@ -48,17 +48,23 @@ public class PersonaNaturalVDAOImpl implements PersonaNaturalVDAO {
         try{
             if(filtro.getIdPersonaNatural()!=null){
                 query = crud.getEm().createNamedQuery("MdiPersonaNaturalV.findByIdPersonaN");
-            }else{
+            }else{ 
+            	if(filtro.getNumeroDoc()!=null){
                 query = crud.getEm().createNamedQuery("MdiPersonaNaturalV.findByFilter");
+                } else {
+                query = crud.getEm().createNamedQuery("MdiPersonaNaturalV.findByBuscaCIP");
+                }
             }
             
             if(filtro.getIdPersonaNatural()==null){
             	
                 if(filtro.getNumeroDoc()!=null && !filtro.getNumeroDoc().equals("")){
-                    query.setParameter("numeroDoc","%"+filtro.getNumeroDoc().toUpperCase()+"%");
+                    query.setParameter("numeroDoc",filtro.getNumeroDoc().toUpperCase());
                 }else{
-                    query.setParameter("numeroDoc","%");
-                }
+                	if(filtro.getCip()!=null){
+                        query.setParameter("cip",filtro.getCip());
+                    }
+                } 
             }else{
                 query.setParameter("idPersonaNatural",filtro.getIdPersonaNatural());
             }
@@ -82,5 +88,51 @@ public class PersonaNaturalVDAOImpl implements PersonaNaturalVDAO {
 		LOG.info("despues del create: DAOIMPL: "+ mdiPersonaNatural.getIdPersonaNatural() + " - " +  mdiPersonaNatural.getApellidoPaterno() + " - " + mdiPersonaNatural.getApellidoMaterno() + " - " + mdiPersonaNatural.getNombre() + " - " + mdiPersonaNatural.getCip());
 		personaNaturalDTO.setIdPersonaNatural(mdiPersonaNatural.getIdPersonaNatural());
 		return personaNaturalDTO;
+	}
+    
+    @Override
+	public PersonaNaturalVDTO update (PersonaNaturalVDTO personaNaturalDTO, UsuarioDTO usuarioDTO) throws PersonaNaturalVException {
+		
+	LOG.info("Iniciando actualizacion de Persona Natural");
+		
+	PersonaNaturalVDTO retorno = null;
+		
+		try {
+			
+			MdiPersonaNaturalV MdiPersonaNaturalV = crud.find(personaNaturalDTO.getIdPersonaNatural(), MdiPersonaNaturalV.class);
+			
+			MdiPersonaNaturalV.setIdPersonaNatural(personaNaturalDTO.getIdPersonaNatural());
+			MdiPersonaNaturalV.setNombre(personaNaturalDTO.getNombre());
+			MdiPersonaNaturalV.setApellidoPaterno(personaNaturalDTO.getApellidoPaterno());
+			MdiPersonaNaturalV.setApellidoMaterno(personaNaturalDTO.getApellidoMaterno());
+			MdiPersonaNaturalV.setCip(personaNaturalDTO.getCip());
+			MdiPersonaNaturalV.setTelefono(personaNaturalDTO.getTelefono());
+			MdiPersonaNaturalV.setDatosAuditoria(usuarioDTO);
+			
+			
+			//LOG.info(" Datos:"+PghDocumentoAdjunto.getIdDocumentoAdjunto()+" - " +PghDocumentoAdjunto.getEstadoDocumento());
+			
+			crud.update(MdiPersonaNaturalV);
+			
+			retorno = PersonaNaturalVBuilder.toPersonaNaturalDto(MdiPersonaNaturalV);
+			 
+			LOG.info("(Registro exitoso) retorno: "+retorno.toString());
+			
+			
+		}catch(Exception ex){
+            LOG.error("",ex);
+        }
+		
+		return retorno;
+	}
+    
+    @Override
+	public List<PersonaNaturalVDTO> llenarTablaPersonaNatural(Long idPersonaNatural, String numeroDoc,String apellidoPaterno, String apellidoMaterno, String nombre) throws PersonaNaturalVException {
+		
+        List<PersonaNaturalVDTO> listado;
+        
+        listado = PersonaNaturalVBuilder.toListTablaPersonaNaturalDto(idPersonaNatural, numeroDoc, apellidoPaterno, apellidoMaterno, nombre);
+
+        return listado;
 	}
 }

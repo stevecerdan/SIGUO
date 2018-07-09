@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import gob.osinergmin.sibad.domain.dto.AlmacenamientoDTO;
+import gob.osinergmin.sibad.domain.dto.CilindroGNVDTO;
+import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
 import gob.osinergmin.sibad.filter.AlmacenamientoFilter;
 import gob.osinergmin.sibad.service.AlmacenamientoService;
 import gob.osinergmin.sibad.service.dao.AlmacenamientoDAO;
@@ -33,6 +35,23 @@ public class AlmacenamientoServiceImpl implements AlmacenamientoService{
 	            LOG.error("Error en listar Almacenamiento",ex);
 	        }
 	        return retorno;
+	}
+
+	@Override
+	public AlmacenamientoDTO RegistrarAlmacenamiento(AlmacenamientoDTO almacenamientoDTO, UsuarioDTO usuarioDTO) {
+		AlmacenamientoDTO registro=null;
+		
+		try {
+			LOG.info("ServiceImpl: "+ almacenamientoDTO.getIdAlmacenamiento() + " - " + almacenamientoDTO.getEstado());
+			registro = almacenamientoDAO.create(almacenamientoDTO,usuarioDTO);
+			LOG.info("Se envio con exito los datos de RegistrarCilindro al DAO registro: "+registro.getIdAlmacenamiento());
+			 
+		} catch (Exception e) {
+			
+			LOG.error("error enviar datos de RegistrarCilindro al DAO",e);
+		}
+	
+		return registro;
 	} 
 
 }

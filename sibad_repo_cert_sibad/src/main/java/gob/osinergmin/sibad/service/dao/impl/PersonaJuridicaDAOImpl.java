@@ -6,14 +6,19 @@ package gob.osinergmin.sibad.service.dao.impl;
 
 import gob.osinergmin.sibad.domain.MdiPersonaJuridica;
 import gob.osinergmin.sibad.domain.MdiPersonaJuridica1;
+import gob.osinergmin.sibad.domain.PghSedeAcreditacion;
 import gob.osinergmin.sibad.domain.builder.PersonaJuridicaBuilder;
+import gob.osinergmin.sibad.domain.builder.SedeAcreditacionBuilder;
 import gob.osinergmin.sibad.domain.dto.PersonaJuridicaDTO;
+import gob.osinergmin.sibad.domain.dto.SedeAcreditacionDTO;
 import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
 import gob.osinergmin.sibad.filter.PersonaJuridicaFilter;
 import gob.osinergmin.sibad.service.dao.PersonaJuridicaDAO;
 import gob.osinergmin.sibad.service.dao.CrudDAO;
 //import gob.osinergmin.sibad.service.dao.RequisitoDAO;
 import gob.osinergmin.sibad.service.exception.PersonaJuridicaException;
+import gob.osinergmin.sibad.service.exception.SedeAcreditacionException;
+
 import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.Query;
@@ -44,23 +49,6 @@ public class PersonaJuridicaDAOImpl implements PersonaJuridicaDAO {
         return listado;
     }
     
-    /*@Override
-    public AutoayudaDTO update(AutoayudaDTO autoayudaDTO,UsuarioDTO usuarioDTO) throws AutoayudaException{
-        AutoayudaDTO retorno = null;
-        try{
-            PghAutoayuda registroDAO = AutoayudaBuilder.getAutoayuda(autoayudaDTO);
-            registroDAO.setDatosAuditoria(usuarioDTO);
-            crud.update(registroDAO);
-            
-            retorno=AutoayudaBuilder.toAutoayudaDto(registroDAO);
-        }catch(Exception e){
-            LOG.error("Error al editar Requisito",e);
-            AutoayudaException e2 = new AutoayudaException("Error al editar Requisito",e);
-            throw e2;
-        }
-        return retorno;
-    }*/
-    
     private Query getFindQuery(PersonaJuridicaFilter filtro) {
         Query query=null;
         try{
@@ -72,7 +60,7 @@ public class PersonaJuridicaDAOImpl implements PersonaJuridicaDAO {
             
             if(filtro.getIdPersonaJuridica()==null){
                 if(filtro.getRuc()!=null && !filtro.getRuc().equals("")){
-                    query.setParameter("ruc","%"+filtro.getRuc().toUpperCase()+"%");
+                    query.setParameter("ruc",filtro.getRuc().toUpperCase());
                 }else{
                     query.setParameter("ruc","%");
                 }
@@ -92,7 +80,6 @@ public class PersonaJuridicaDAOImpl implements PersonaJuridicaDAO {
 		LOG.info("Iniciando registro de Empresa Acreditada");
 		
 		PersonaJuridicaDTO retorno = null;
-		
 		
 		try {
 			
@@ -118,6 +105,40 @@ public class PersonaJuridicaDAOImpl implements PersonaJuridicaDAO {
 			retorno = PersonaJuridicaBuilder.toPersonaJuridicaDto1(mdiPersonaJuridica1);
 			 
 			LOG.info("(Registro exitoso) retorno: "+retorno.toString());
+			
+			
+		}catch(Exception ex){
+            LOG.error("",ex);
+        }
+		
+		return retorno;
+	}
+    
+    @Override
+	public PersonaJuridicaDTO update(PersonaJuridicaDTO personaJuridicaDTO, UsuarioDTO usuarioDTO)throws PersonaJuridicaException {
+		
+	LOG.info("Iniciando actualizacion de Persona Juridica");
+		
+	PersonaJuridicaDTO retorno = null;
+		
+		try {
+			
+			MdiPersonaJuridica1 MdiPersonaJuridica1 = crud.find(personaJuridicaDTO.getIdPersonaJuridica(), MdiPersonaJuridica1.class);
+			
+			MdiPersonaJuridica1.setIdPersonaJuridica(personaJuridicaDTO.getIdPersonaJuridica());
+			MdiPersonaJuridica1.setTelefono(personaJuridicaDTO.getTelefono());
+			MdiPersonaJuridica1.setEmail(personaJuridicaDTO.getEmail());
+			MdiPersonaJuridica1.setWeb(personaJuridicaDTO.getWeb());
+			MdiPersonaJuridica1.setDatosAuditoria(usuarioDTO);
+			
+			
+			LOG.info(" Datos:"+MdiPersonaJuridica1.getIdPersonaJuridica()+" - " +MdiPersonaJuridica1.getTelefono()+" - " +MdiPersonaJuridica1.getEmail()+" - " +MdiPersonaJuridica1.getWeb());
+			
+			crud.update(MdiPersonaJuridica1);
+			
+			retorno = PersonaJuridicaBuilder.toPersonaJ1Dto(MdiPersonaJuridica1);
+			 
+			LOG.info("(Edicion exitosa) retorno: "+retorno.toString());
 			
 			
 		}catch(Exception ex){

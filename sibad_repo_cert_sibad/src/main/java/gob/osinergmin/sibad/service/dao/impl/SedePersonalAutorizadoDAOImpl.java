@@ -4,17 +4,21 @@
  */
 package gob.osinergmin.sibad.service.dao.impl;
 
+import gob.osinergmin.sibad.domain.PghDocumentoAdjunto;
 import gob.osinergmin.sibad.domain.PghSedeAcreditacion;
 import gob.osinergmin.sibad.domain.PghSedePersonalAutorizado;
 import gob.osinergmin.sibad.domain.PghSedePersonalAutorizadoV;
+import gob.osinergmin.sibad.domain.builder.DocumentoAdjuntoBuilder;
 import gob.osinergmin.sibad.domain.builder.SedeAcreditacionBuilder;
 import gob.osinergmin.sibad.domain.builder.SedePersonalAutorizadoBuilder;
+import gob.osinergmin.sibad.domain.dto.DocumentoAdjuntoDTO;
 import gob.osinergmin.sibad.domain.dto.SedeAcreditacionDTO;
 import gob.osinergmin.sibad.domain.dto.SedePersonalAutorizadoDTO;
 import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
 import gob.osinergmin.sibad.filter.SedePersonalAutorizadoFilter;
 import gob.osinergmin.sibad.service.dao.SedePersonalAutorizadoDAO;
 import gob.osinergmin.sibad.service.dao.CrudDAO;
+import gob.osinergmin.sibad.service.exception.DocumentoAdjuntoException;
 import gob.osinergmin.sibad.service.exception.SedePersonalAutorizadoException;
 
 import java.util.Map;
@@ -51,22 +55,38 @@ public class SedePersonalAutorizadoDAOImpl implements SedePersonalAutorizadoDAO 
         return listado;
     }
     
-    /*@Override
-    public AutoayudaDTO update(AutoayudaDTO autoayudaDTO,UsuarioDTO usuarioDTO) throws AutoayudaException{
-        AutoayudaDTO retorno = null;
-        try{
-            PghAutoayuda registroDAO = AutoayudaBuilder.getAutoayuda(autoayudaDTO);
-            registroDAO.setDatosAuditoria(usuarioDTO);
-            crud.update(registroDAO);
-            
-            retorno=AutoayudaBuilder.toAutoayudaDto(registroDAO);
-        }catch(Exception e){
-            LOG.error("Error al editar Requisito",e);
-            AutoayudaException e2 = new AutoayudaException("Error al editar Requisito",e);
-            throw e2;
+    @Override
+	public SedePersonalAutorizadoDTO update(SedePersonalAutorizadoDTO sedePersonalAutorizadoDTO, UsuarioDTO usuarioDTO)throws SedePersonalAutorizadoException {
+		
+	LOG.info("Iniciando actualizacion de SedePersonalAutorizado");
+		
+	SedePersonalAutorizadoDTO retorno = null;
+		
+		try {
+			
+			PghSedePersonalAutorizado PghSedePersonalAutorizado = crud.find(sedePersonalAutorizadoDTO.getIdSedePersonalAutorizado(), PghSedePersonalAutorizado.class);
+			
+			PghSedePersonalAutorizado.setIdSedePersonalAutorizado(sedePersonalAutorizadoDTO.getIdSedePersonalAutorizado());
+			PghSedePersonalAutorizado.setIdCargo(sedePersonalAutorizadoDTO.getIdCargo());
+			PghSedePersonalAutorizado.setIdEspecialidad(sedePersonalAutorizadoDTO.getIdEspecialidad());
+			PghSedePersonalAutorizado.setDatosAuditoria(usuarioDTO);
+			
+			
+			LOG.info(" Datos:"+PghSedePersonalAutorizado.getIdSedePersonalAutorizado()+" - " +PghSedePersonalAutorizado.getIdCargo()+" - " +PghSedePersonalAutorizado.getIdEspecialidad());
+			
+			crud.update(PghSedePersonalAutorizado);
+			
+			retorno = SedePersonalAutorizadoBuilder.toSedePersonalADTO(PghSedePersonalAutorizado);
+			 
+			LOG.info("(Edicion exitosa) retorno: "+retorno.toString());
+			
+			
+		}catch(Exception ex){
+            LOG.error("",ex);
         }
-        return retorno;
-    }*/
+		
+		return retorno;
+	}
     
     private Query getFindQuery(SedePersonalAutorizadoFilter filtro) {
         Query query=null;
@@ -79,14 +99,23 @@ public class SedePersonalAutorizadoDAOImpl implements SedePersonalAutorizadoDAO 
             
             if(filtro.getIdSedePersonalAutorizado()==null){
             	
-            	if(filtro.getIdAlcanceAcreditacion()!=null && filtro.getFlagPersonalAutorizado()!=null){
+            	if(filtro.getIdAlcanceAcreditacion()!=null && filtro.getIdAlcanceAcreditacion()!=null){
                     query.setParameter("idAlcanceAcreditacion",filtro.getIdAlcanceAcreditacion());
-                    query.setParameter("flagPersonalAutorizado",filtro.getFlagPersonalAutorizado());
                 }else{
-                    query.setParameter("idAlcanceAcreditacion","");
-                    query.setParameter("flagPersonalAutorizado","");
+                    query.setParameter("idAlcanceAcreditacion","%");
                 }
             	
+            	if(filtro.getFlagPersonalAutorizado()!=null && filtro.getFlagPersonalAutorizado()!=null){
+                    query.setParameter("flagPersonalAutorizado",filtro.getFlagPersonalAutorizado());
+                }else{
+                    query.setParameter("flagPersonalAutorizado","%");
+                }
+            	
+            	if(filtro.getNumeroDocumento()!=null && filtro.getNumeroDocumento()!=null){
+                    query.setParameter("numeroDocumento",filtro.getNumeroDocumento());
+                }else{
+                    query.setParameter("numeroDocumento","%");
+                }
             	/*if(filtro.getFlagPersonalAutorizado()!=null && !filtro.getFlagPersonalAutorizado().equals("")){
                     
                 }else{

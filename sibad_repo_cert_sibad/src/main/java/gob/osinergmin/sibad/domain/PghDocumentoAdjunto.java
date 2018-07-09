@@ -4,6 +4,7 @@
  */
 package gob.osinergmin.sibad.domain;
 
+import java.sql.Blob;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
@@ -41,7 +43,10 @@ public class PghDocumentoAdjunto extends Auditoria{
     @Column(name = "ID_DOCUMENTO_ADJUNTO")
     private Long idDocumentoAdjunto;
     
-    @Column(name = "NOMBRE_DOCUMENTO")
+	@Column(name = "DESCRIPCION_DOCUMENTO")
+    private String descripcionDocumento;
+	
+	@Column(name = "NOMBRE_DOCUMENTO")
     private String nombreDocumento;
     
     @Column(name = "ARCHIVO_ADJUNTO")
@@ -85,7 +90,7 @@ public class PghDocumentoAdjunto extends Auditoria{
 	public void setNombreDocumento(String nombreDocumento) {
 		this.nombreDocumento = nombreDocumento;
 	}
-
+	
 	public byte[] getArchivoAdjunto() {
 		return archivoAdjunto;
 	}
@@ -100,6 +105,14 @@ public class PghDocumentoAdjunto extends Auditoria{
 
 	public void setEstadoDocumento(String estadoDocumento) {
 		this.estadoDocumento = estadoDocumento;
+	}
+	
+	public String getDescripcionDocumento() {
+		return descripcionDocumento;
+	}
+
+	public void setDescripcionDocumento(String descripcionDocumento) {
+		this.descripcionDocumento = descripcionDocumento;
 	}
 
 	@Override

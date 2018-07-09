@@ -44,7 +44,6 @@ public class AlcanceAcreditacionBuilder {
 		registroDTO.setIdDocumentoAdjunto(registro.getIdDocumentoAdjunto());
 		registroDTO.setIdDocumentoAlcanceAcreditada(registro.getIdDocumentoAlcanceAcreditada());
 		registroDTO.setIdTipoOrganismo(registro.getIdTipoOrganismo());
-		registroDTO.setRegistro(registro.getRegistro());
 		registroDTO.setNormaEvualada(registro.getNormaEvualada());
 		registroDTO.setFechaAcreditacion(registro.getFechaAcreditacion());
 		registroDTO.setFechaUltimaActualizacion(registro.getFechaUltimaActualizacion());
@@ -69,7 +68,6 @@ public class AlcanceAcreditacionBuilder {
            registro.setIdDocumentoAdjunto(registroDTO.getIdDocumentoAdjunto());
            registro.setIdDocumentoAlcanceAcreditada(registroDTO.getIdDocumentoAlcanceAcreditada());
            registro.setIdTipoOrganismo(registroDTO.getIdTipoOrganismo());
-           registro.setRegistro(registroDTO.getRegistro());
            registro.setNormaEvualada(registroDTO.getNormaEvualada());
            registro.setFechaUltimaActualizacion(registroDTO.getFechaUltimaActualizacion());
            registro.setFechaAcreditacion(registroDTO.getFechaAcreditacion());

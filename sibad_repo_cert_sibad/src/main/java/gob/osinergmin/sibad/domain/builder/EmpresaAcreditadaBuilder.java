@@ -68,6 +68,7 @@ import org.slf4j.LoggerFactory;
         registroDTO.setRegistro(registro.getRegistro());
         registroDTO.setEstadoEmpresa(registro.getEstadoEmpresa());
         registroDTO.setEstadoAlcance(registro.getEstadoAlcance());
+        registroDTO.setEstadoAccion(registro.getEstadoAccion());
         registroDTO.setIdOrganismoAcreditador(registro.getIdOrganismoAcreditador());
         registroDTO.setIdTipoPrueba(registro.getIdTipoPrueba());
         registroDTO.setIdTipoOrganismo(registro.getIdTipoOrganismo());
@@ -105,6 +106,7 @@ import org.slf4j.LoggerFactory;
             registro.setRegistro(registroDTO.getRegistro());
             registro.setEstadoEmpresa(registroDTO.getEstadoEmpresa());
             registro.setEstadoAlcance(registroDTO.getEstadoAlcance());
+            registro.setEstadoAccion(registroDTO.getEstadoAccion());
             registro.setIdTipoPrueba(registroDTO.getIdTipoPrueba());
             registro.setIdTipoOrganismo(registroDTO.getIdTipoOrganismo());
             registro.setIdDocumentoAdjunto(registroDTO.getIdDocumentoAdjunto());
@@ -124,9 +126,9 @@ import org.slf4j.LoggerFactory;
      registroDTO.setIdEmpresaAcreditada(registro.getIdEmpresaAcreditada());
      registroDTO.setIdPersonaJuridica(registro.getIdPersonaJuridica());
      registroDTO.setEstado(registro.getEstado());
+     registroDTO.setRegistro(registro.getRegistro());
 
      return registroDTO;
-		
 		
 	}
   	//--------------------------------------
@@ -138,8 +140,22 @@ import org.slf4j.LoggerFactory;
             registro.setIdEmpresaAcreditada(registroDTO.getIdEmpresaAcreditada());
             registro.setIdPersonaJuridica(registroDTO.getIdPersonaJuridica());
             registro.setEstado(registroDTO.getEstado());
+            registro.setRegistro(registroDTO.getRegistro());
         }
         return registro;
 
     }
+    
+  //Utilizado para Edicion
+  	public static EmpresaAcreditadaDTO toEmpresaAcreditadaRegDTO(PghEmpresaAcreditada registro){
+		
+	 EmpresaAcreditadaDTO registroDTO = new EmpresaAcreditadaDTO();
+     
+     registroDTO.setIdEmpresaAcreditada(registro.getIdEmpresaAcreditada());
+     registroDTO.setRegistro(registro.getRegistro());
+
+     return registroDTO;
+		
+	}
+  	//--------------------------------------
 }

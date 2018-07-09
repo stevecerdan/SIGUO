@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
 	@NamedQuery(name = "PghSedeAcreditacionV.findByIdSede", query = "SELECT s FROM PghSedeAcreditacionV s WHERE s.idSedeAcreditacion=:idSedeAcreditacion "),
-    @NamedQuery(name = "PghSedeAcreditacionV.findByFilter", query = "SELECT s FROM PghSedeAcreditacionV s WHERE s.idAlcanceAcreditacion = :idAlcanceAcreditacion and upper(s.estado) = :estado")
+    @NamedQuery(name = "PghSedeAcreditacionV.findByFilter", query = "SELECT s FROM PghSedeAcreditacionV s WHERE s.idAlcanceAcreditacion = :idAlcanceAcreditacion and s.estado = 'A'")
 	
 })
 public class PghSedeAcreditacionV extends Auditoria{

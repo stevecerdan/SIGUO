@@ -19,4 +19,5 @@ public interface SedePersonalAutorizadoService {
     public List<SedePersonalAutorizadoDTO> listarSedePersonalAutorizado(SedePersonalAutorizadoFilter filtro);
     public SedePersonalAutorizadoDTO RegistrarSedePersonalAutorizado(SedePersonalAutorizadoDTO sedePersonalAutorizadoDTO,UsuarioDTO usuarioDTO);
     public SedePersonalAutorizadoDTO eliminarPersonal(SedePersonalAutorizadoDTO personalAutorizadoDTO) throws SedePersonalAutorizadoException;
+    public SedePersonalAutorizadoDTO EditarSedePersonalAutorizado(SedePersonalAutorizadoDTO sedePersonalAutorizadoDTO,UsuarioDTO usuarioDTO);
 }

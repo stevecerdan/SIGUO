@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
 	@NamedQuery(name = "MdiMaestroColumnaTipo.findByIdMaster", query = "SELECT c FROM MdiMaestroColumnaTipo c WHERE c.idMaestroColumna=:idMaestroColumna "),
-    @NamedQuery(name = "MdiMaestroColumnaTipo.findByFilter", query = "SELECT c FROM MdiMaestroColumnaTipo c WHERE upper(c.dominio) like :dominio and upper(c.aplicacion) like :aplicacion")
+    @NamedQuery(name = "MdiMaestroColumnaTipo.findByFilter", query = "SELECT c FROM MdiMaestroColumnaTipo c WHERE upper(c.dominio) = :dominio and upper(c.aplicacion) like :aplicacion")
 	
 })
 public class MdiMaestroColumnaTipo extends Auditoria{

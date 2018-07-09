@@ -4,7 +4,7 @@
 <html>
     <head>
         <script type="text/javascript" src='<c:url value="/javascript/app/empresasAcreditadas/frmInactivarEquipoAutorizado.js" />' charset="utf-8"></script>
-        <script type="text/javascript" src='<c:url value="/javascript/app/empresasAcreditadas/latinize.js"/>' charset="utf-8"></script>
+        <script type="text/javascript" src='<c:url value="/javascript/third-party/latinize.js"/>' charset="utf-8"></script>
     </head>
     <body>
     	<fieldset>

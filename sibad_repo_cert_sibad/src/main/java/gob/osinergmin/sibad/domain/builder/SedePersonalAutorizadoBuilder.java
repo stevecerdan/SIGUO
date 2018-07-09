@@ -53,11 +53,16 @@ import org.slf4j.LoggerFactory;
         
         registroDTO.setIdSedePersonalAutorizado(registro.getIdSedePersonalAutorizado());
         registroDTO.setIdAlcanceAcreditacion(registro.getIdAlcanceAcreditacion());
+        registroDTO.setIdSedeAcreditacion(registro.getIdSedeAcreditacion());
         registroDTO.setDireccion(registro.getDireccion());
+        registroDTO.setIdDepartamento(registro.getIdDepartamento());
+        registroDTO.setIdProvincia(registro.getIdProvincia());
+        registroDTO.setIdDistrito(registro.getIdDistrito());
         registroDTO.setDepartamento(registro.getDepartamento());
         registroDTO.setProvincia(registro.getProvincia());
         registroDTO.setDistrito(registro.getDistrito());
         registroDTO.setFlagPersonalAutorizado(registro.getFlagPersonalAutorizado());
+        registroDTO.setIdTipoDocumento(registro.getIdTipoDocumento());
         registroDTO.setTipoDocumento(registro.getTipoDocumento());
         registroDTO.setNumeroDocumento(registro.getNumeroDocumento());
         registroDTO.setNombre(registro.getNombre());
@@ -77,11 +82,16 @@ import org.slf4j.LoggerFactory;
             registro=new PghSedePersonalAutorizadoV();
             registro.setIdSedePersonalAutorizado(registroDTO.getIdSedePersonalAutorizado());
             registro.setIdAlcanceAcreditacion(registroDTO.getIdAlcanceAcreditacion());
+            registro.setIdSedeAcreditacion(registroDTO.getIdSedeAcreditacion());
             registro.setDireccion(registroDTO.getDireccion());
+            registro.setIdDepartamento(registroDTO.getIdDepartamento());
+            registro.setIdProvincia(registroDTO.getIdProvincia());
+            registro.setIdDistrito(registroDTO.getIdDistrito());
             registro.setDepartamento(registroDTO.getDepartamento());
             registro.setProvincia(registroDTO.getProvincia());
             registro.setDistrito(registroDTO.getDistrito());
             registro.setFlagPersonalAutorizado(registroDTO.getFlagPersonalAutorizado());
+            registro.setIdTipoDocumento(registroDTO.getIdTipoDocumento());
             registro.setTipoDocumento(registroDTO.getTipoDocumento());
             registro.setNumeroDocumento(registroDTO.getNumeroDocumento());
             registro.setNombre(registroDTO.getNombre());
@@ -109,4 +119,17 @@ import org.slf4j.LoggerFactory;
         
         return registroDTO;
     }
+    
+    //Usados para EDITAR
+    public static SedePersonalAutorizadoDTO toSedePersonalADTO(PghSedePersonalAutorizado registro) {
+    	
+    	SedePersonalAutorizadoDTO registroDTO = new SedePersonalAutorizadoDTO();
+        
+        registroDTO.setIdSedePersonalAutorizado(registro.getIdSedePersonalAutorizado());
+        registroDTO.setIdCargo(registro.getIdCargo());
+        registroDTO.setIdEspecialidad(registro.getIdEspecialidad());
+        
+        return registroDTO;
+    }
+    //-------------------------------------------
 }

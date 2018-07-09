@@ -4,11 +4,6 @@
  */
 package gob.osinergmin.sibad.domain.dto;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.validation.constraints.Size;
-
 /**
  *
  * @author jpiro
@@ -21,6 +16,7 @@ public class PersonaNaturalVDTO {
     private String apellidoMaterno;
     private String nombre;
     private Long cip;
+    private String telefono;
     
 	public Long getIdPersonaNatural() {
 		return idPersonaNatural;
@@ -63,6 +59,12 @@ public class PersonaNaturalVDTO {
 	}
 	public void setCip(Long cip) {
 		this.cip = cip;
+	}
+	public String getTelefono() {
+		return telefono;
+	}
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
 	}
     
 }

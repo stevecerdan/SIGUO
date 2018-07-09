@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -15,10 +17,14 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 @Entity
 @Table(name = "PGH_TRAZ_ALCANCE_ACRED")
 @XmlRootElement
-
+@NamedQueries({
+	@NamedQuery(name = "PghTrazAlcanceAcred.findByTraz", query = "SELECT t FROM PghTrazAlcanceAcred t WHERE t.idTrazAlcanceAcred = (SELECT max(t.idTrazAlcanceAcred) FROM PghTrazAlcanceAcred t WHERE t.idAlcanceAcreditacion = :idAlcanceAcreditacion and t.estadoAccion = :estadoAccion)")
+})
 
 public class PghTrazAlcanceAcred {
 	
@@ -54,6 +60,7 @@ public class PghTrazAlcanceAcred {
 	@Basic(optional = false)
 	@Column(name = "FECHA_ULTIMO_ESTADO", updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern="MM-dd-yyyy HH:mm")
 	private Date fechaUltimoEstado;
 
 	@Column(name = "OBSERVACION")

@@ -4,34 +4,29 @@
  */
 package gob.osinergmin.sibad.service.dao.impl;
 
-import gob.osinergmin.sibad.domain.PghAlcanceAcreditacion;
 import gob.osinergmin.sibad.domain.PghDocumentoAdjunto;
-import gob.osinergmin.sibad.domain.builder.AlcanceAcreditacionBuilder;
 import gob.osinergmin.sibad.domain.builder.DocumentoAdjuntoBuilder;
-import gob.osinergmin.sibad.domain.dto.AlcanceAcreditacionDTO;
 import gob.osinergmin.sibad.domain.dto.DocumentoAdjuntoDTO;
 import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
 import gob.osinergmin.sibad.filter.DocumentoAdjuntoFilter;
 import gob.osinergmin.sibad.service.dao.CrudDAO;
 import gob.osinergmin.sibad.service.dao.DocumentoAdjuntoDAO;
-import gob.osinergmin.sibad.service.exception.AlcanceAcreditacionException;
 import gob.osinergmin.sibad.service.exception.DocumentoAdjuntoException;
+
 import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.Query;
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- *
- */
-//@Service("documentoadjuntoDAO")
+
 @Repository("DocumentoAdjuntoDAO")
 @Transactional
-public class DocumentoAdjuntoDAOImpl implements DocumentoAdjuntoDAO {
+public class DocumentoAdjuntoDAOImpl implements DocumentoAdjuntoDAO{
     private static final Logger LOG = LoggerFactory.getLogger(DocumentoAdjuntoDAOImpl.class);
     @Inject
     private CrudDAO crud;
@@ -76,6 +71,7 @@ public class DocumentoAdjuntoDAOImpl implements DocumentoAdjuntoDAO {
  			
  			pghDocumentoAdjunto.setIdDocumentoAdjunto(documentoAdjuntoDTO.getIdDocumentoAdjunto());
  			pghDocumentoAdjunto.setNombreDocumento(documentoAdjuntoDTO.getNombreDocumento());
+ 			pghDocumentoAdjunto.setDescripcionDocumento(documentoAdjuntoDTO.getDescripcionDocumento());
  			pghDocumentoAdjunto.setArchivoAdjunto(documentoAdjuntoDTO.getArchivoAdjunto());
  			pghDocumentoAdjunto.setEstadoDocumento(documentoAdjuntoDTO.getEstadoDocumento());
  			pghDocumentoAdjunto.setDatosAuditoria(usuarioDTO);
@@ -126,4 +122,57 @@ public class DocumentoAdjuntoDAOImpl implements DocumentoAdjuntoDAO {
 		
 		return retorno;
 	}
+
+	@Override
+	public DocumentoAdjuntoDTO delete(DocumentoAdjuntoDTO documentoAdjuntoDTO, UsuarioDTO usuarioDTO)throws DocumentoAdjuntoException {
+		
+		LOG.info("eliminarDocumentoAdjunto DAO IMPL- ID = "+ documentoAdjuntoDTO.getIdDocumentoAdjunto());
+		DocumentoAdjuntoDTO retorno = null;
+		
+		try {
+			LOG.info("ingreso al try catch- ID = "+ documentoAdjuntoDTO.getIdDocumentoAdjunto());
+			
+			PghDocumentoAdjunto registroDTO = crud.find(documentoAdjuntoDTO.getIdDocumentoAdjunto(), PghDocumentoAdjunto.class);
+			
+			LOG.info("llena registroDTO= "+ documentoAdjuntoDTO.getIdDocumentoAdjunto());
+			
+			crud.delete(registroDTO);
+
+			retorno = DocumentoAdjuntoBuilder.toDocumentoAdjuntoDto(registroDTO);
+		
+		} catch (Exception ex) {
+			 LOG.error("error eliminar = ",ex);
+		}
+		return retorno;
+	}
+   
+    /*String query = null;
+    
+    public Files find(int id) {
+    	
+    	query = "select * from Pgh_Documento_Adjunto where idDocumentoAdjunto = ?";
+ 
+        try {
+            Files file = (Files) getJdbcTemplate().queryForObject(query, new Object[] {id},
+            		
+                new RowMapper() {
+                    Files fl;
+                    public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        fl = new Files();
+                        fl.setIdDocumentoAdjunto(rs.getLong(1));
+                        fl.setNombreDocumento(rs.getString(2));
+                        fl.setArchivoAdjunto(rs.getBytes(3));
+ 
+                        return fl;
+                    }
+            });
+ 
+            return file;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+ 
+        return null;
+    }*/
+    
 }

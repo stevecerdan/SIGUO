@@ -34,27 +34,14 @@ import org.slf4j.LoggerFactory;
         return retorno;
     } 
     
-  //Utilizado para el Registro
-  	/*public static EmpresaAcreditadaDTO toEmpresaAcreditadaDTO(PghEmpresaAcreditada registro){
-		
-	   EmpresaAcreditadaDTO registroDTO = new EmpresaAcreditadaDTO();
-     
-     registroDTO.setIdEmpresaAcreditada(registro.getIdEmpresaAcreditada());
-     registroDTO.setIdPersonaJuridica(registro.getIdPersonaJuridica());
-     registroDTO.setEstado(registro.getEstado());
-
-
-     return registroDTO;
-		
-		
-	}*/
-  	//--------------------------------------
   
     public static EquipoCertificadoDTO toEquipoCertificadoDto(PghEquipoCertificadoV registro) {
     	EquipoCertificadoDTO registroDTO = new EquipoCertificadoDTO();
         
     	registroDTO.setIdEquipoCertificado(registro.getIdEquipoCertificado());
         registroDTO.setIdAlcanceAcreditacion(registro.getIdAlcanceAcreditacion());
+        registroDTO.setIdEmpresaAcreditada(registro.getIdEmpresaAcreditada());
+        registroDTO.setIdTipoPrueba(registro.getIdTipoPrueba());
         registroDTO.setIdTipoEquipo(registro.getIdTipoEquipo());
         registroDTO.setTipoEquipo(registro.getTipoEquipo());
         registroDTO.setDescripcionEquipo(registro.getDescripcionEquipo());
@@ -65,6 +52,7 @@ import org.slf4j.LoggerFactory;
         registroDTO.setFechaCalibracion(registro.getFechaCalibracion());
         registroDTO.setFechaProximaCalibracion(registro.getFechaProximaCalibracion());
         registroDTO.setEstado(registro.getEstado());
+        registroDTO.setEstadoAlcance(registro.getEstadoAlcance());
         registroDTO.setIdTipoMotivo(registro.getIdTipoMotivo());
         registroDTO.setObservacion(registro.getObservacion());
         
@@ -111,6 +99,8 @@ import org.slf4j.LoggerFactory;
             registro=new PghEquipoCertificadoV();
             registro.setIdEquipoCertificado(registroDTO.getIdEquipoCertificado());
             registro.setIdAlcanceAcreditacion(registroDTO.getIdAlcanceAcreditacion());
+            registro.setIdEmpresaAcreditada(registroDTO.getIdEmpresaAcreditada());
+            registro.setIdTipoPrueba(registroDTO.getIdTipoPrueba());
             registro.setIdTipoEquipo(registroDTO.getIdTipoEquipo());
             registro.setTipoEquipo(registroDTO.getTipoEquipo());
             registro.setDescripcionEquipo(registroDTO.getDescripcionEquipo());
@@ -121,6 +111,7 @@ import org.slf4j.LoggerFactory;
             registro.setFechaCalibracion(registroDTO.getFechaCalibracion());
             registro.setFechaProximaCalibracion(registroDTO.getFechaProximaCalibracion());
             registro.setEstado(registroDTO.getEstado());
+            registro.setEstadoAlcance(registroDTO.getEstadoAlcance());
             registro.setIdTipoMotivo(registroDTO.getIdTipoMotivo());
             registro.setObservacion(registroDTO.getObservacion());
         }

@@ -19,5 +19,5 @@ import java.util.List;
 public interface SedeAcreditacionDAO {
     public List<SedeAcreditacionDTO> find(SedeAcreditacionFilter filtro) throws SedeAcreditacionException;
     public SedeAcreditacionDTO create(SedeAcreditacionDTO sedeAcreditacionDTO,UsuarioDTO usuarioDTO)throws SedeAcreditacionException;
-    //public AutoayudaDTO update(AutoayudaDTO autoayudaDTO,UsuarioDTO usuarioDTO) throws AutoayudaException;
+    public SedeAcreditacionDTO update(SedeAcreditacionDTO sedeAcreditacionDTO,UsuarioDTO usuarioDTO)throws SedeAcreditacionException;
 }

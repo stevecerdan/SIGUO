@@ -15,6 +15,8 @@ public class EquipoCertificadoDTO {
 	
 	private Long idEquipoCertificado;
     private Long idAlcanceAcreditacion;
+    private Long idEmpresaAcreditada;
+    private Long idTipoPrueba;
     private Long idTipoEquipo;
     private String tipoEquipo;
     private String descripcionEquipo;
@@ -25,6 +27,7 @@ public class EquipoCertificadoDTO {
     private Date fechaCalibracion;
     private Date fechaProximaCalibracion;
     private String estado;
+    private String estadoAlcance;
     private Long idTipoMotivo;
     private String observacion;
     
@@ -111,5 +114,25 @@ public class EquipoCertificadoDTO {
 	}
 	public void setObservacion(String observacion) {
 		this.observacion = observacion;
+	}
+	//--------------
+	public Long getIdEmpresaAcreditada() {
+		return idEmpresaAcreditada;
+	}
+	public void setIdEmpresaAcreditada(Long idEmpresaAcreditada) {
+		this.idEmpresaAcreditada = idEmpresaAcreditada;
+	}
+	public Long getIdTipoPrueba() {
+		return idTipoPrueba;
+	}
+	public void setIdTipoPrueba(Long idTipoPrueba) {
+		this.idTipoPrueba = idTipoPrueba;
+	}
+	public String getEstadoAlcance() {
+		return estadoAlcance;
+	}
+	public void setEstadoAlcance(String estadoAlcance) {
+		this.estadoAlcance = estadoAlcance;
 	} 
+	
 }

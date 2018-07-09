@@ -4,7 +4,7 @@
 <html>
     <head>
         <script type="text/javascript" src='<c:url value="/javascript/app/empresasAcreditadas/frmEquipoCertificado.js"/>' charset="utf-8"></script>
-        <script type="text/javascript" src='<c:url value="/javascript/app/empresasAcreditadas/latinize.js"/>' charset="utf-8"></script>
+        <script type="text/javascript" src='<c:url value="/javascript/third-party/latinize.js"/>' charset="utf-8"></script>
     </head>
     <body>
         <div id="form_registro">
@@ -16,7 +16,7 @@
                                 <div class="form" style="width:auto; float:left; margin: 0px 0px 0px 10px;">
                                 
                                     <div class="filaForm" >
-                                        <div class="lble" style="width:97px;"><label for="cmbTipoEquipo">Tipo de Equipo:</label></div>
+                                        <div class="lble" style="width:110px;"><label for="cmbTipoEquipo">Tipo de Equipo (*):</label></div>
                                         <div class="slcta">
                                             <select id="cmbTipoEquipo" style="width:260px;">
                                                 <option value="">--Seleccione--</option>
@@ -40,45 +40,57 @@
                                     <input type="hidden" id="observa"/>  
                                     
                                     <div class="filaForm">
-                                        <div class="lble" style="width:97px;"><label for="lblDescripcion">Descripci&oacute;n:</label></div>
+                                        <div class="lble" style="width:110px;"><label for="lblDescripcion">Descripci&oacute;n (*):</label></div>
                                         <input id="txtDescripcion" class="ipt-large" name="orden" type="text" maxlength="128" style="text-transform:uppercase;width: 400px;"/>
                                     </div>
                                     
                                  	
                                  	<div class="filaForm">
-                                        <div class="lble" style="width:97px;"><label for="lblMarca">Marca:</label></div>
+                                        <div class="lble" style="width:110px;"><label for="lblMarca">Marca (*):</label></div>
                                         <input id="txtMarca" class="ipt-large" name="orden" type="text" maxlength="36" style="text-transform:uppercase;width: 236px;"/>
                                     </div>
                                     
                                     <div class="filaForm">
-                                        <div class="lble" style="width:97px;"><label for="lblModelo">Modelo:</label></div>
+                                        <div class="lble" style="width:110px;"><label for="lblModelo">Modelo (*):</label></div>
                                         <input id="txtModelo" class="ipt-large" name="orden" type="text" maxlength="36" style="text-transform:uppercase;width: 236px;"/>
                                     </div>
                                     
                                     <div class="filaForm">
-                                        <div class="lble" style="width:97px;"><label for="lblSerie">Serie:</label></div>
+                                        <div class="lble" style="width:110px;"><label for="lblSerie">Serie (*):</label></div>
                                         <input id="txtSerie" class="ipt-large" name="orden" type="text" maxlength="128" style="text-transform:uppercase;width: 236px;"/>
                                     </div>
                                     
                                     <div class="filaForm">
-                                        <div class="lble" style="width:97px;"><label for="lblOdatos">Otros datos:</label></div>
+                                        <div class="lble" style="width:110px;"><label for="lblOdatos">Otros datos:</label></div>
                                         <input id="txtOdatos" class="ipt-large" name="orden" type="text" maxlength="128" style="text-transform:uppercase;width: 400px;"/>
                                     </div>
                                     
                                     <div class="filaForm">
-                                        <div class="lble" style="width:97px;"><label for="lblFechaC">Fecha de Calibr.:</label></div>
+                                        <div class="lble" style="width:110px;"><label for="lblFechaC">Fecha de Calibr. (*):</label></div>
                                         <input id="txtFechaC" class="ipt-medium" name="orden" type="text" maxlength="0" style="text-transform:uppercase; width:110px;"/>
                                     </div>
                                     
                                     <div class="filaForm">
-                                        <div class="lble" style="width:97px;"><label for="lblFechaPC">Fecha Prox. Calibr.:</label></div>
+                                        <div class="lble" style="width:110px;"><label for="lblFechaPC">Fecha Prox. Calibr (*):</label></div>
                                         <input id="txtFechaPC" class="ipt-medium" name="orden" type="text" maxlength="0" style="text-transform:uppercase; width:110px;"/>
                                     </div>
                                     
-                                    <span class="ui-panel-title" style="margin-left:10px;font-size:12px;color: #008cd9;" id="MensajeFECHAC">*COLOCAR UNA FECHA VALIDA Y CORRECTA</span>
+                                    <span class="ui-panel-title" style="font-size:12px;color: #008cd9;" id="MensajeFECHAC">*COLOCAR UNA FECHA VALIDA Y CORRECTA</span>
                                     
                                     <div class="filaForm">
-                                        <div class="lble" style="width:97px;"><label for="lblComponente">Componente:</label></div>
+                                        <div class="lble" style="width:110px;"><label for="cmbEstado">Estado:</label></div>
+                                        <div class="slcta">
+                                            <select id="cmbEstado" style="width:132px;">
+                                                <option value="0">ACTIVO</option>
+                                                <option value="1">INACTIVO</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <span class="ui-panel-title" style="font-size:14px;color: #008cd9;" id="MensajeValC">Seleccionar los Componentes del STE a inspeccionar con este equipo</span>
+                                    
+                                    <div class="filaForm">
+                                        <div class="lble" style="width:110px;"><label for="lblComponente">Componente:</label></div>
                                         <div class="slcta" style="width:320px;">
                                             <select id="cmbComponente" style="width:320px;">
                                                 <option value="0">--Seleccione--</option>
@@ -87,21 +99,9 @@
                                         <input type="button" id="btnAgregar" title="Agregar" class="btnSimple" value="Agregar" style="width:100px;">
                                     </div>
                                     
-                                    <span class="ui-panel-title" style="font-size:13px;color: #008cd9;" id="MensajeValC"></span>
-                                    
                                     <div class="gridMargin">
 						                 <div id="gridContenedorComponentes"></div>
 						            </div>
-                                    
-                                    <div class="filaForm">
-                                        <div class="lble" style="width:50px;"><label for="cmbEstado">Estado:</label></div>
-                                        <div class="slcta">
-                                            <select id="cmbEstado" style="width:132px;">
-                                                <option value="0">ACTIVO</option>
-                                                <option value="1">INACTIVO</option>
-                                            </select>
-                                        </div>
-                                    </div>
                                     
                                 </div>
                             </form>  

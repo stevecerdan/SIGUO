@@ -18,5 +18,5 @@ import java.util.List;
 public interface SedeAcreditacionService {
     public List<SedeAcreditacionDTO> listarSedeAcreditacion (SedeAcreditacionFilter filtro);
     public SedeAcreditacionDTO RegistrarSedeAcreditacion(SedeAcreditacionDTO sedeAcreditacionDTO,UsuarioDTO usuarioDTO);
-    //public AutoayudaDTO editarAutoayuda(AutoayudaDTO autoayudaDTO,UsuarioDTO usuarioDTO);
+    public SedeAcreditacionDTO EditarSedeAcreditacion(SedeAcreditacionDTO sedeAcreditacionDTO,UsuarioDTO usuarioDTO);
 }

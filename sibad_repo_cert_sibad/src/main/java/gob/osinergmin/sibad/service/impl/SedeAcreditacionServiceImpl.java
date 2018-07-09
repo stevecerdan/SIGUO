@@ -63,17 +63,23 @@ public class SedeAcreditacionServiceImpl implements SedeAcreditacionService{
 			return registro;
 	}
     
-   /* @Override
-    @Transactional
-    public AutoayudaDTO editarAutoayuda(AutoayudaDTO autoayudaDTO,UsuarioDTO usuarioDTO){
-        LOG.info("editarAutoayuda");
-        AutoayudaDTO registro=null;
-        try{
-            registro=autoayudaDAO.update(autoayudaDTO,usuarioDTO);
-            LOG.info("(Actualizar Base Legal ServiceNegImpl) registro: "+registro.toString());
-        }catch(Exception ex){
-            LOG.error("error editarAutoayuda",ex);
-        }
-        return registro;
-    }*/
+	@Override
+	public SedeAcreditacionDTO EditarSedeAcreditacion(SedeAcreditacionDTO sedeAcreditacionDTO,UsuarioDTO usuarioDTO) {
+		 
+		LOG.info("Iniciando envio de datos de Sede Acreditacion al DAO");
+			
+		SedeAcreditacionDTO registro=null;
+				
+			try {
+				
+				registro = sedeacreditacionDAO.update(sedeAcreditacionDTO,usuarioDTO);
+				LOG.info("(Se envio con exito los datos de Sede Acreditacion al DAO) registro: "+registro.toString());
+				 
+			} catch (Exception e) {
+				
+				LOG.error("error al enviar los datos de Sede Acreditacion al DAO",e);
+			}
+		
+			return registro;
+	}
 }
