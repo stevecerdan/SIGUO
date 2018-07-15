@@ -1,7 +1,6 @@
 //Funciones Generales --
 var baseURL;
 var id;
-
 var caracteres = "abcdefghijklmn�opqrstuvwxyzABCDEFGHIJKLMN�OPQRSTUVWXYZ";
 var numeros = "0123456789";
 var numeros_caracteres = numeros + caracteres;
