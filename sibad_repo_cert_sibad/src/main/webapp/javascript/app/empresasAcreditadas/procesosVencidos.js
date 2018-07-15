@@ -2,15 +2,211 @@ var idEmpresa = "";
 var idAlcance = "";
 var nRegistros = "";
 var est = "";
+var parametroDias = 0;
+//---Notificaciones---
+var cuerpoPlantilla = "";
+var asuntoPlantilla = "";
+var destinoOsinergmin  = "";
+var nombrePersonal = "";
+var cuerpoPlantillaD = "";
+var asuntoPlantillaD = "";
+//----Correo Alcances por vencer----
+var idOrganismo = "";
+var empresa = "";
+var correo = "";
+var organismo = "";
+var correoOrg = "";
+var IDTipoPrueba = "";
+var tipoPrueba = "";
+var NResCed = "";
+var FVigencia = "";
+var FVencimiento = "";
+
+
 $(function() {
 	buscarAlcanceVencido();  
-	buscarFechaProximaCalibracion();
-	BuscarSolicitudXFecha();
-	buscarCompartimiento();
+	//buscarFechaProximaCalibracion();
+	//BuscarSolicitudXFecha();
+	//buscarCompartimiento();
 });
+
+//---- Formato Fecha ------------
+
+function convertDateFormat(string) {
+	var info = string.split('/');
+	return info[1] + '/' + info[0] + '/' + info[2];	
+}
+
+function convertirFecha(f){
+
+    var dateVar = f;
+    var d=new Date(dateVar);
+            
+    if(dateVar != null){
+            
+        if(d.getDate() < 10){
+            var dia = '0' + d.getDate();
+        }else{
+            var dia = d.getDate();
+        }
+               
+        if((d.getMonth()+1) < 10){
+            var mes = '0' + (d.getMonth() + 1);
+        }else{
+            var mes = d.getMonth() + 1;
+        }
+                
+        var fecha = dia + '/' + mes + '/' + d.getFullYear();
+                
+    }else{
+        var fecha = '--/--/----';
+    }
+  
+    return fecha;
+} 
+
+//-------------------------------
+
+function BuscarPlantillaNotificacionVCD(){
+	
+	$.ajax({
+        url:baseURL + "pages/VerificarProcesosVencidos/traerPlantillaMsj",
+        type:'post',
+        async:false,
+        data:{
+       	 idCorreo : '22'
+        },
+        beforeSend:muestraLoading,
+        success:function(data){
+        	
+            ocultaLoading();
+            
+            $.each(data.filas, function( index, value ) {
+            	//Cuerpo de Mensaje Plantilla
+                cuerpoPlantilla = value.mensaje
+            	//Asunto de Mensaje Plantilla
+            	asuntoPlantilla = value.asunto;
+            });
+            
+        },
+        error:errorAjax
+    });
+	
+    //cuerpoPlantilla = "Buen dia estimado.<br>Representante de la empresa {nombre_empresa}<br><br>Se informa que el Proceso de Acreditacion de Tipo {tipo_prueba} con Nro Resolucion / Nro Cedula {resolucion_cedula}, esta a punto de vencer.<br><br>Fecha Inicio de Vigencia : {fecha_vigencia}<br>Fecha Vencimiento : {fecha_vencimiento}<br><br>Saludos cordiales,<br>Nueva Plataforma de Supervision.";
+	//asuntoPlantilla = "VENCIMIENTO DE PROCESO DE ACREDITACION - {tipo_prueba}";
+}
+
+function BuscarPlantillaDestinatario(){
+	
+	$.ajax({
+        url:baseURL + "pages/VerificarProcesosVencidos/traerPlantillaPersonal",
+        type:'post',
+        async:false,
+        data:{
+       	 idCorreo : '30',
+       	 idPersonal : '156'
+        },
+        beforeSend:muestraLoading,
+        success:function(data){
+        	
+            ocultaLoading();
+            
+            $.each(data.filas, function( index, value ) {
+            	//Correo de Usuario Osinergmin
+            	//destinoOsinergmin  = value.correoElectronico;
+                destinoOsinergmin  = "asenjochristian@gmail.com";
+                //Nombre de Personal
+                nombrePersonal = value.nombreCompleto;
+            	//Cuerpo de Mensaje Plantilla
+                cuerpoPlantillaD = value.mensaje;
+            	//Asunto de Mensaje Plantilla
+            	asuntoPlantillaD = value.asunto;
+            });
+            
+        },
+        error:errorAjax
+    });
+	
+    //destinoOsinergmin  = "asenjochristian@gmail.com"
+    //cuerpoPlantillaD = "Personal Autorizado OSINERGMIN.<br>{nombre_personal}<br><br>Se confirma el envio de notificacion a la empresa {nombre_empresa}<br><br>Informando que el Proceso de Acreditacion de Tipo {tipo_prueba} con Nro Resolucion / Nro Cedula {resolucion_cedula}, esta a punto de vencer.<br><br>Fecha Inicio de Vigencia : {fecha_vigencia}<br>Fecha Vencimiento : {fecha_vencimiento}<br><br>Saludos cordiales,<br>Nueva Plataforma de Supervision.";
+	//asuntoPlantillaD = "PERSONAL AUTORIZADO OSINERMGIN - NOTIFICANDO VENCIMIENTO DE PROCESO DE ACREDITACION - {tipo_prueba}";
+}
+
+function EnviarCorreoVCD(correo, empresa, tipoPrueba, NResCed, FVigencia, FVencimiento){
+	
+	BuscarPlantillaNotificacionVCD();
+	
+	var asuntoFinal = asuntoPlantilla.replace(/{tipo_prueba}/g, tipoPrueba);
+	
+	var mensajeFinal = cuerpoPlantilla.replace(/<br>/g, '\n').
+									   replace(/{nombre_empresa}/g, empresa).
+									   replace(/{tipo_prueba}/g, tipoPrueba).
+									   replace(/{resolucion_cedula}/g, NResCed).
+									   replace(/{fecha_vigencia}/g, FVigencia).
+									   replace(/{fecha_vencimiento}/g, FVencimiento);
+	
+	BuscarPlantillaDestinatario();
+	
+	var destinatario = destinoOsinergmin;
+	
+	var asuntoFinDest = asuntoPlantillaD.replace(/{tipo_prueba}/g, tipoPrueba);
+	
+	var mensajeFinDest = cuerpoPlantillaD.replace(/<br>/g, '\n').
+										  replace(/{nombre_personal}/g, nombrePersonal).
+										  replace(/{nombre_empresa}/g, empresa).
+										  replace(/{tipo_prueba}/g, tipoPrueba).
+										  replace(/{resolucion_cedula}/g, NResCed).
+										  replace(/{fecha_vigencia}/g, FVigencia).
+										  replace(/{fecha_vencimiento}/g, FVencimiento);
+	
+	$.ajax({
+	    url: baseURL + "pages/VerificarProcesosVencidos/sendEmail",
+	    type: "get",
+	    async: false,
+	    data:{
+		   destino : correo,
+		   mensaje : mensajeFinal,
+		   asunto : asuntoFinal
+	    },
+	    beforeSend:muestraLoading,
+	    success: function (data) {
+	    	ocultaLoading();
+	    	//alert("SE LE ENVIARA UNA NOTIFICACION A LA EMPRESA PARA CONFIRMAR SU SOLICITUD");
+	    },
+	 	error:errorAjax
+	});
+	
+	EnviarNotificacionDestinatarioVCD(destinatario, mensajeFinDest, asuntoFinDest);
+}
+
+function EnviarNotificacionDestinatarioVCD(destinatario,mensajeDest,asuntoDest){
+	
+	$.ajax({
+	    url: baseURL + "pages/VerificarProcesosVencidos/sendEmail",
+	    type: "get",
+	    async: false,
+	    data:{
+		   destino : destinatario,
+		   mensaje : mensajeDest,
+		   asunto : asuntoDest
+	    },
+	    beforeSend:muestraLoading,
+	    success: function (data) {
+	    	ocultaLoading();
+	    	//alert("NOTIFICACION LLEGO A DESTINATARIO CON EXITO");
+	    },
+	 	error:errorAjax
+	});
+}
 
 //BUSCAR ALCANCES VENCIDOS
 function buscarAlcanceVencido() {
+	
+	//---
+	cargarTipo('1573');
+	var info = tipoPrueba.split('=');
+	parametroDias = parseInt(info[1]);	
+	//---
 	
 	var d = new Date();
     let month = String(d.getMonth() + 1);
@@ -22,6 +218,61 @@ function buscarAlcanceVencido() {
     var anio = year.toString().substring(2);
 
     var fx = `${month}/${day}/${anio}`;
+    
+    let diaNew = parseInt(day) + parametroDias;
+    if (diaNew.length < 2) diaNew = '0' + diaNew
+
+    var fechaCercana = `${month}/${diaNew}/${anio}`;
+    
+    //-------- BUSCAR PROCESOS A PUNTO DE VENCER Y NOTIFICAR ----------
+    //alert(fechaCercana);
+	
+	$.ajax({
+        url:baseURL + "pages/VerificarProcesosVencidos/BuscarAlcance",
+        type:'post',
+        async:false,
+        data:{
+        	estadoAccion : 'S',
+            fechaVencimiento: fechaCercana
+        },
+        beforeSend:muestraLoading,
+        success:function(data){
+        	
+        	if(data.filas){
+        	
+	            ocultaLoading();
+	            $.each(data.filas, function( index, value ) {
+	            	
+	            	idEmpresa = value.idEmpresaAcreditada;
+	            	IDTipoPrueba = value.idTipoPrueba;
+	            	NResCed = value.resolucionCedula;
+	            	FVigencia = convertirFecha(value.fechaInicioVigencia);
+	            	FVencimiento = convertirFecha(value.fechaVencimiento);
+	            	idOrganismo = value.idOrganismoAcreditador;
+	            	
+	            	traerDatosEmpresaAcreditada(idEmpresa);
+	            	cargarTipo(IDTipoPrueba);
+	            	traerDatosOrganismoAcreditador(idOrganismo);
+	            	
+	            	//alert("EMPRESA: "+ empresa + " EMAIL: " + correo +" TIPO PRUEBA: " + tipoPrueba + " RESOLUCION - CEDULA: " + NResCed + " FECHA DE VIGENCIA: " + FVigencia);
+	            	
+	            	EnviarCorreoVCD("asenjochristian@gmail.com", empresa, tipoPrueba, NResCed, FVigencia, FVencimiento);
+	            	EnviarCorreoVCD("asenjochristian@gmail.com", organismo, tipoPrueba, NResCed, FVigencia, FVencimiento);
+	
+	            });
+	            
+	            alert("=> CONFIRMANDO NOTIFICACIONES =>");
+	            $('#MensajeNotificacion').html("SE ENVIARON LAS NOTIFICACIONES CON EXITO...");
+	            
+            }else{
+            	$('#MensajeNotificacion').html("NO SE ENCONTRARON REGISTROS POR VENCER, VERIFICADOS CON EXITO...");
+            }
+        },
+        error:errorAjax
+    });
+    
+    /*
+    //--------------- FIN BUSCAR PROCESOS A PUNTO DE VENCER Y NOTIFICAR -------------------
 	
 	    $.ajax({
 	        url:baseURL + "pages/VerificarProcesosVencidos/BuscarAlcance",
@@ -34,6 +285,7 @@ function buscarAlcanceVencido() {
 	        success:function(data){
 	        	
 	            ocultaLoading();
+	            
 	            $.each(data.filas, function( index, value ) {
 	            	
 	            	idEmpresa = value.idEmpresaAcreditada;
@@ -68,7 +320,81 @@ function buscarAlcanceVencido() {
 	            });
 	        },
 	        error:errorAjax
-	    });
+	    });*/
+}
+
+//----- TRAER DATOS DE EMPRESA ACREDITADA ----------
+function traerDatosEmpresaAcreditada(idEmpresaAcreditada) {
+
+    $.ajax({
+        url:baseURL + "pages/VerificarProcesosVencidos/traerDatosEmpresa",
+        type:'post',
+        async:false,
+        data:{
+       	 idEmpresaAcreditada : idEmpresaAcreditada
+        },
+        beforeSend:muestraLoading,
+        success:function(data){
+        	
+            ocultaLoading();
+            
+            $.each(data.filas, function( index, value ) {
+            	correo = value.email;
+            	empresa = value.razonSocial;
+            });
+            
+        },
+        error:errorAjax
+    });
+}
+
+//----- TRAER DATOS DE ORGANISMO ACREDITADOR ----------
+function traerDatosOrganismoAcreditador(idOrganismo) {
+
+    $.ajax({
+        url:baseURL + "pages/VerificarProcesosVencidos/datosOrganismoAcreditador",
+        type:'post',
+        async:false,
+        data:{
+       	 idOrganismoAcreditador : idOrganismo
+        },
+        beforeSend:muestraLoading,
+        success:function(data){
+        	
+            ocultaLoading();
+            
+            $.each(data.filas, function( index, value ) {
+            	correoOrg = value.email;
+            	organismo = value.nombreOrgAcreditador;
+            });
+            
+        },
+        error:errorAjax
+    });
+}
+
+//Buscar Tipo Prueba en Maestro Columna
+function cargarTipo(IdMaestro) {
+
+    $.ajax({
+        url:baseURL + "pages/VerificarProcesosVencidos/cargarComboTipo",
+        type:'post',
+        async:false,
+        data:{
+        	idMaestroColumna : IdMaestro
+        },
+        beforeSend:muestraLoading,
+        success:function(data){
+        	
+        	$.each(data.filas, function( index, value ) {
+            	
+        		tipoPrueba = value.descripcion;
+        		
+            });
+            
+        },
+        error:errorAjax
+    });
 }
 
 //BUSCAR ALCANCES VENCIDOS

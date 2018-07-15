@@ -13,8 +13,6 @@
                     <div class="pui-panel-content ui-widget-content">
                     
                     <input type="text"   id="txtSetFocus" class="ipt-medium" name="txtSetFocus" style="background-color: transparent;color:#EFEFEF;border-style:none;height:0px;"/>
-                    <p id="msjasunto" style="display:none;">${asuntito}</p>
-                    <p id="msjcuerpo" style="display:none;"></p>
                     
                         <fieldset>
                         	<!-- <span class="ui-panel-title"> DATOS DE LA EMPRESA ACREDITADA </span> -->

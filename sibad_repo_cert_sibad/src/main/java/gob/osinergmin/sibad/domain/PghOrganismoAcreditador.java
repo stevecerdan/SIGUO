@@ -75,14 +75,14 @@ public class PghOrganismoAcreditador{
 	 private String web;
 	 //@Size(max = 200)
 	 
-	 @Column(name = "TIPO_PRUEBA")
+	/* @Column(name = "TIPO_PRUEBA")
 	 private String tipoPrueba;
 	 @Size(max = 200)
 	 	 
 	 @Basic(optional = false)
 	 @NotNull
 	 @Column(name = "ID_TIPO_PRUEBA")
-	 private Long idTipoPrueba;
+	 private Long idTipoPrueba;*/
 	 
 	 @Basic(optional = false)
 	 @NotNull
@@ -146,14 +146,6 @@ public class PghOrganismoAcreditador{
 		return direccion;
 	}
 	 
-	 public String getTipoPrueba() {
-		return tipoPrueba;
-	}
-	 
-	 public void setTipoPrueba(String tipoPrueba) {
-		this.tipoPrueba = tipoPrueba;
-	}
-	 
 	 public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
@@ -164,12 +156,6 @@ public class PghOrganismoAcreditador{
 	 
 	 public void setEmail(String email) {
 		this.email = email;
-	}
-	 public Long getIdTipoPrueba() {
-		return idTipoPrueba;
-	}
-	 public void setIdTipoPrueba(Long idTipoPrueba) {
-		this.idTipoPrueba = idTipoPrueba;
 	}
 	 
 	 public String getTelefono() {

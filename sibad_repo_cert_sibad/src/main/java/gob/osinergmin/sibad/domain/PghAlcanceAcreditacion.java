@@ -33,7 +33,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 																														" upper(a.estadoAccion) = 'S')"),
   //Traer ID Primer Alcance
     @NamedQuery(name = "PghAlcanceAcreditacion.findByPrimerAlcance", query = "SELECT a FROM PghAlcanceAcreditacion a WHERE a.idAlcanceAcreditacion = (SELECT min(a.idAlcanceAcreditacion) FROM PghAlcanceAcreditacion a WHERE a.idEmpresaAcreditada = :idEmpresaAcreditada)"),
-    @NamedQuery(name = "PghAlcanceAcreditacion.findByFechaV", query ="SELECT a FROM PghAlcanceAcreditacion a WHERE TO_DATE(a.fechaVencimiento,'DD/MM/YY') <= :fechaVencimiento and (upper(a.estado) = 'A' or upper(a.estadoAccion) = 'S')")
+  //Buscar Fechas de Vencimiento Iguales o Menores a la Actual
+    @NamedQuery(name = "PghAlcanceAcreditacion.findByFechaV", query ="SELECT a FROM PghAlcanceAcreditacion a WHERE TO_DATE(a.fechaVencimiento,'DD/MM/YY') <= :fechaVencimiento and (upper(a.estado) = 'A' or upper(a.estadoAccion) = 'S')"),
+  //Buscar Fechas de Vencimiento Iguales
+    @NamedQuery(name = "PghAlcanceAcreditacion.findByFechIguales", query ="SELECT a FROM PghAlcanceAcreditacion a WHERE TO_DATE(a.fechaVencimiento,'DD/MM/YY') = :fechaVencimiento and (upper(a.estado) = 'A' or upper(a.estadoAccion) = :estadoAccion)")
 })
 public class PghAlcanceAcreditacion extends Auditoria{
     

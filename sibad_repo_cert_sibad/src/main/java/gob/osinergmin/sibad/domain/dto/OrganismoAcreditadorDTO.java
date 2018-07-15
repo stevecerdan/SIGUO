@@ -5,7 +5,7 @@ import java.util.Date;
 public class OrganismoAcreditadorDTO {
 	
 	private Long idOrganismoAcreditador;
-	private Long idTipoPrueba;
+	//private Long idTipoPrueba;
 	private String ruc;
 	private String nombreOrgAcreditador;
 	private String direccion;
@@ -16,7 +16,7 @@ public class OrganismoAcreditadorDTO {
 	private String email;
 	private String web;
 	private Long idPersonaJuridica;
-	private String tipoPrueba;
+	//private String tipoPrueba;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private String estado;
@@ -61,12 +61,6 @@ public class OrganismoAcreditadorDTO {
 	public String getDepartamento() {
 		return departamento;
 	}
-	public Long getIdTipoPrueba() {
-		return idTipoPrueba;
-	}
-	public void setIdTipoPrueba(Long idTipoPrueba) {
-		this.idTipoPrueba = idTipoPrueba;
-	}
 	public void setDepartamento(String departamento) {
 		this.departamento = departamento;
 	}
@@ -106,12 +100,6 @@ public class OrganismoAcreditadorDTO {
 	}
 	public void setWeb(String web) {
 		this.web = web;
-	}
-	public String getTipoPrueba() {
-		return tipoPrueba;
-	}
-	public void setTipoPrueba(String tipoPrueba) {
-		this.tipoPrueba = tipoPrueba;
 	}
 	public String getEstado() {
 		return estado;

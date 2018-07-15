@@ -11,11 +11,15 @@ var IdEmpresaAcreditada = "";
 var FechaSolicitud = "";
 var NroSolicitudUnidadSupervisa = "";
 var CodOsinergmin = "";
-//---
+//------
 var correo = "";
+var nombreEmp = "";
 var nroTanque = "";
 var nroCompartimiento = "";
 var Tprueba = "";
+var destinoOsinergmin  = "";
+var cuerpoPlantilla = "";
+var asuntoPlantilla = "";
 
 $(function() {
 	//listarSTEinspeccionar(0);
@@ -119,40 +123,55 @@ function initInicioFrmPruebaHermeticidad(){
     
  }
 
-function EnviarCorreoPrueba(correo, nombreEmp, Tprueba, NroSolicitudUnidadSupervisa, FechaSolicitud, nroTanque, nroCompartimiento){
+function BuscarPlantillaDestinatario(){
 	
-	//Cuerpo de Mensaje Plantilla
-	var cuerpoPlantilla = "Buen dia estimado.\nRepresentante de la empresa -\n\nSe informa que fue confirmado la solicitud de -, Nro - para el Compartimiento Nro - del Modulo Nro -.\nPor favor proceder con la atencion de la solicitud asignada.\n\nFecha Programada : -\n\nSaludos cordiales,\nNueva Plataforma de Supervision.";
-	//Asunto de Mensaje Plantilla
-	var asuntoPlantilla = "CONFIRMACION DE TIPO DE PRUEBA - SOLICITUD NRO. ";
+	$.ajax({
+        url:baseURL + "pages/solicitudPruebasHermeticidad/traerPlantillaPersonal",
+        type:'post',
+        async:false,
+        data:{
+       	 idCorreo : '19',
+       	 idPersonal : '156'
+        },
+        beforeSend:muestraLoading,
+        success:function(data){
+        	
+            ocultaLoading();
+            
+            $.each(data.filas, function( index, value ) {
+            	//Correo de Usuario Osinergmin
+            	//destinoOsinergmin  = value.correoElectronico;
+                destinoOsinergmin  = "asenjochristian@gmail.com";
+            	//Cuerpo de Mensaje Plantilla
+                cuerpoPlantilla = value.mensaje
+            	//Asunto de Mensaje Plantilla
+            	asuntoPlantilla = value.asunto;
+            });
+            
+        },
+        error:errorAjax
+    });
+
+    //destinoOsinergmin  = "asenjochristian@gmail.com"
+    //cuerpoPlantilla = "Buen dia estimado.\nRepresentante de la empresa {nombre_empresa}\n\nSe informa que fue confirmado la solicitud de {tipo_prueba}, Nro {nro_solicitud} para el Compartimiento Nro {nro_compartimiento} del Tanque Nro {nro_tanque}.\nPor favor proceder con la atencion de la solicitud asignada.\n\nFecha Programada : {fecha_solicitud}\n\nSaludos cordiales,\nNueva Plataforma de Supervision.";
+	//asuntoPlantilla = "CONFIRMACION DE TIPO DE PRUEBA - SOLICITUD NRO. {nro_solicitud}";
+}
+
+function EnviarCorreoPruebaH(correo, nombreEmp, Tprueba, NroSolicitudUnidadSupervisa, FechaSolicitud, nroTanque, nroCompartimiento){
 	
-	var CMP = cuerpoPlantilla.split('-');
-	var mensajeFinal = CMP[0] +nombreEmp+ CMP[1] +Tprueba+ CMP[2] +NroSolicitudUnidadSupervisa+ CMP[3] +nroCompartimiento+ CMP[4] +nroTanque+ CMP[5] +convertDateFormat(FechaSolicitud)+ CMP[6];	
+	BuscarPlantillaDestinatario();
+    
+    var destinatario = destinoOsinergmin;	
 	
-	var asuntoFinal = asuntoPlantilla+NroSolicitudUnidadSupervisa;
+	var asuntoFinal = asuntoPlantilla.replace(/{nro_solicitud}/g, NroSolicitudUnidadSupervisa);
 	
-	var msj = "Buen dia estimado."+
-		"\nRepresentante de la empresa "+nombreEmp+
-		"\n\nSe informa que fue confirmado la solicitud de "+Tprueba+", Nro "+NroSolicitudUnidadSupervisa+" para el Compartimiento Nro "+nroCompartimiento+" del Modulo Nro "+nroTanque+"."+
-		"\nPor favor proceder con la atencion de la solicitud asignada."+
-		"\n\nFecha Programada : "+convertDateFormat(FechaSolicitud)+
-		"\n\nSaludos cordiales,"+
-		"\nNueva Plataforma de Supervision.";
-	
-	/*var asuntito = document.getElementById("msjasunto");
-	asuntito.innerHTML = "CONFIRMACION DE TIPO DE PRUEBA - SOLICITUD NRO {NroSolicitudUnidadSupervisa}";
-	
-	var emp = nombreEmp;
-	
-	var mensajito = document.getElementById("msjcuerpo");
-	mensajito.innerHTML = "Buen d\u00eda estimado.<br />"+
-						  "Representante de la empresa {emp}<br>"+
-						  "Se informa que fue confirmado la solicitud de ${Tprueba}, Nro {NroSolicitudUnidadSupervisa} para el Compartimiento Nro ${nroCompartimiento} del Modulo Nro ${nroTanque}. <br>"+
-						  "Por favor proceder con la atenci\u00f3n de la solicitud asignada.<br />"+
-						  "Saludos cordiales,"+
-						  "Nueva Plataforma de Supervisi\u00f3n.";*/
-	
-	//$('#msjasunto').innerHTML = "CONFIRMACION DE TIPO DE PRUEBA - SOLICITUD NRO {NroSolicitudUnidadSupervisa}";
+	var mensajeFinal = cuerpoPlantilla.replace(/<br>/g, '\n').
+									   replace(/{nombre_empresa}/g, nombreEmp).
+									   replace(/{tipo_prueba}/g, Tprueba).
+									   replace(/{nro_solicitud}/g, NroSolicitudUnidadSupervisa).
+									   replace(/{nro_compartimiento}/g, nroCompartimiento).
+									   replace(/{nro_tanque}/g, nroTanque).
+									   replace(/{fecha_solicitud}/g, convertDateFormat(FechaSolicitud));
 	
 	$.ajax({
 	    url: baseURL + "pages/solicitudPruebasHermeticidad/sendEmail",
@@ -166,7 +185,29 @@ function EnviarCorreoPrueba(correo, nombreEmp, Tprueba, NroSolicitudUnidadSuperv
 	    beforeSend:muestraLoading,
 	    success: function (data) {
 	    	ocultaLoading();
-	    	alert("NOTIFICACION ENVIADA CON EXITO");
+	    	alert("SE LE ENVIARÁ UNA NOTIFICACION A LA EMPRESA PARA CONFIRMAR SU SOLICITUD");
+	    },
+	 	error:errorAjax
+	});
+	
+	EnviarNotificacionDestinatarioPH(destinatario, mensajeFinal, asuntoFinal);
+}
+
+function EnviarNotificacionDestinatarioPH(destinatario,mensajeDest,asuntoDest){
+	
+	$.ajax({
+	    url: baseURL + "pages/solicitudPruebasHermeticidad/sendEmail",
+	    type: "get",
+	    async: false,
+	    data:{
+		   destino : destinatario,
+		   mensaje : mensajeDest,
+		   asunto : asuntoDest
+	    },
+	    beforeSend:muestraLoading,
+	    success: function (data) {
+	    	ocultaLoading();
+	    	alert("NOTIFICACION LLEGO A DESTINATARIO CON EXITO");
 	    },
 	 	error:errorAjax
 	});
@@ -246,7 +287,6 @@ function btnGuardarPruebaHermet(){
 	if(validarDatosFormularioPH() == true){
 	
 		confirm.open("¿Desea generar y enviar la solicitud a la empresa asignada?","RegistrarSolicitudPruebaHermeticidad()");
-		//alert("Ya puede registrar");
 
 	}else{
 		
@@ -301,12 +341,16 @@ function RegistrarSolicitudPruebaHermeticidad(){
 	        		
 	            	var idSolicitudPruebaReprueba = data.idSolicitudPruebaReprueba;
 	            	
+	            	//---ENVIO DE NOTIFICACION---
+	            	/*
 	            	traerDatosEmpresaAcreditada(IdEmpresaAcreditada);
 	            	//alert("Empresa: "+ nombreEmp + " correo: " +correo);
 	            	BuscarSolicitudPH(IdTipoPrueba);
 	            	//alert("Prueba: "+Tprueba+" Tanque Nro: "+nroTanque+" Comp. Nro: "+nroCompartimiento);
 	            	//asenjochristian@gmail.com
-	            	EnviarCorreoPrueba("syctel@gmail.com", nombreEmp, Tprueba, NroSolicitudUnidadSupervisa, FechaSolicitud, nroTanque, nroCompartimiento);
+	            	EnviarCorreoPruebaH("asenjochristian@gmail.com", nombreEmp, Tprueba, NroSolicitudUnidadSupervisa, FechaSolicitud, nroTanque, nroCompartimiento);
+	            	*/
+	            	//--------------------------------
 	            	
 	            	//Registrar Trazabilidad
 	            	$.ajax({

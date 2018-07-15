@@ -3,6 +3,7 @@ package gob.osinergmin.sibad.controller;
 import gob.osinergmin.sibad.service.AlmacenaCompartiProdService;
 import gob.osinergmin.sibad.service.AlmacenamientoService;
 import gob.osinergmin.sibad.service.CompartimientoService;
+import gob.osinergmin.sibad.service.DestinatarioCorreoService;
 import gob.osinergmin.sibad.service.DocumentoAdjuntoService;
 import gob.osinergmin.sibad.service.EmpresaAcreditadaService;
 import gob.osinergmin.sibad.service.InformeIndiceRiesgoService;
@@ -20,6 +21,7 @@ import gob.osinergmin.sibad.service.TrazSolicitudService;
 import gob.osinergmin.sibad.service.UnidadSupervisadaService;
 import gob.osinergmin.sibad.domain.dto.AlmacenaCompartiProdDTO;
 import gob.osinergmin.sibad.domain.dto.CompartimientoDTO;
+import gob.osinergmin.sibad.domain.dto.DestinatarioCorreoDTO;
 import gob.osinergmin.sibad.domain.dto.DocumentoAdjuntoDTO;
 import gob.osinergmin.sibad.domain.dto.EmpresaAcreditadaDTO;
 import gob.osinergmin.sibad.domain.dto.InformeIndiceRiesgoDTO;
@@ -40,6 +42,7 @@ import gob.osinergmin.sibad.domain.dto.TrazSolicitudDTO;
 import gob.osinergmin.sibad.domain.dto.UnidadSupervisadaDTO;
 import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
 import gob.osinergmin.sibad.filter.AlmacenaCompartiProdFilter;
+import gob.osinergmin.sibad.filter.DestinatarioCorreoFilter;
 import gob.osinergmin.sibad.filter.DocumentoAdjuntoFilter;
 import gob.osinergmin.sibad.filter.EmpresaAcreditadaFilter;
 import gob.osinergmin.sibad.filter.InformeIndiceRiesgoFilter;
@@ -125,6 +128,8 @@ public class BandejaSolicitudesPruebasHermeticidadController {
 	private PersonaJuridicaService personajuridicaService; 
 	@Inject
 	private ResultadoPersonaNaturalService resultadoPersonalService;
+	@Inject
+	private DestinatarioCorreoService destinatarioCorreoService;
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public String inicio(Model model, HttpSession session, HttpServletRequest request){
@@ -1320,6 +1325,22 @@ public class BandejaSolicitudesPruebasHermeticidadController {
 		        return retorno;
 		    }
 	   //------------------------ FIN ENCONTRAR EMPRESA ACREDITADA -----------------------------
+			
+	   //-------------------------- ENCONTRAR PLANTILLA DE CORREO + PERSONAL DESTINATARIO -----------------------------
+			@RequestMapping(value="/traerPlantillaPersonal",method=RequestMethod.POST)
+		    public @ResponseBody Map<String,Object> traerPlantillaPersonal(DestinatarioCorreoFilter filtro){
+		        LOG.info("procesando traerPlantillaPersonal");
+		        Map<String,Object> retorno=new HashMap<String,Object>();
+		        try{
+		            List<DestinatarioCorreoDTO> listado;
+		            listado= destinatarioCorreoService.listarDestinatarioCorreo(filtro);
+		            retorno.put("filas", listado);
+		        }catch(Exception ex){
+		            LOG.error("",ex);
+		        }
+		        return retorno;
+		    }
+	   //------------------------ FIN ENCONTRAR PLANTILLA DE CORREO + PERSONAL DESTINATARIO -----------------------------
 	     
 	   //--------------------------
 			
@@ -1333,6 +1354,8 @@ public class BandejaSolicitudesPruebasHermeticidadController {
 
 			mailSenderObj.send(new MimeMessagePreparator() {
 				public void prepare(MimeMessage mimeMessage) throws Exception {
+					
+					//mimeMessage.setHeader ("Content-Type", "text/html"); 
 
 					MimeMessageHelper mimeMsgHelperObj = new MimeMessageHelper(mimeMessage, true, "UTF-8");				
 					mimeMsgHelperObj.setTo(destino);

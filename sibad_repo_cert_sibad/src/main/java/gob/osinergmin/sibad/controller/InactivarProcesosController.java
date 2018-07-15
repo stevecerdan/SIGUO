@@ -1,48 +1,41 @@
 package gob.osinergmin.sibad.controller;
 
 import gob.osinergmin.sibad.service.AlcanceAcreditacionService;
+import gob.osinergmin.sibad.service.CorreoService;
+import gob.osinergmin.sibad.service.DestinatarioCorreoService;
 import gob.osinergmin.sibad.service.EmpresaAcreditadaService;
 import gob.osinergmin.sibad.service.EquipoCertificadoService;
 import gob.osinergmin.sibad.service.EquipoComponenteService;
 import gob.osinergmin.sibad.service.MaestroColumnaTipoService;
-import gob.osinergmin.sibad.service.PersonaJuridicaService;
-import gob.osinergmin.sibad.service.PersonaNaturalVService;
-import gob.osinergmin.sibad.service.SedeAcreditacionService;
-import gob.osinergmin.sibad.service.SedePersonalAutorizadoService;
+import gob.osinergmin.sibad.service.OrganismoAcreditadorService;
 import gob.osinergmin.sibad.service.TrazAlcanceAcredService;
-import gob.osinergmin.sibad.service.UbigeoDPDService;
-import gob.osinergmin.sibad.domain.dto.UbigeodpdDTO;
-import gob.osinergmin.sibad.filter.UbigeoDPDFilter;
 import gob.osinergmin.sibad.domain.dto.MaestroColumnaTipoDTO;
+import gob.osinergmin.sibad.domain.dto.OrganismoAcreditadorDTO;
 import gob.osinergmin.sibad.filter.MaestroColumnaTipoFilter;
-import gob.osinergmin.sibad.domain.dto.PersonaNaturalVDTO;
-import gob.osinergmin.sibad.domain.dto.SedeAcreditacionDTO;
-import gob.osinergmin.sibad.filter.PersonaNaturalVFilter;
-import gob.osinergmin.sibad.filter.SedeAcreditacionFilter;
+import gob.osinergmin.sibad.filter.OrganismoAcreditadorFilter;
 import gob.osinergmin.sibad.domain.dto.AlcanceAcreditacionDTO;
+import gob.osinergmin.sibad.domain.dto.CorreoDTO;
+import gob.osinergmin.sibad.domain.dto.DestinatarioCorreoDTO;
 import gob.osinergmin.sibad.domain.dto.EmpresaAcreditadaDTO;
 import gob.osinergmin.sibad.domain.dto.EquipoCertificadoDTO;
 import gob.osinergmin.sibad.domain.dto.EquipoComponenteDTO;
-import gob.osinergmin.sibad.domain.dto.PersonaJuridicaDTO;
-import gob.osinergmin.sibad.domain.dto.SedePersonalAutorizadoDTO;
 import gob.osinergmin.sibad.domain.dto.TrazAlcanceAcredDTO;
 import gob.osinergmin.sibad.filter.AlcanceAcreditacionFilter;
+import gob.osinergmin.sibad.filter.DestinatarioCorreoFilter;
 import gob.osinergmin.sibad.filter.EmpresaAcreditadaFilter;
 import gob.osinergmin.sibad.filter.EquipoCertificadoFilter;
 import gob.osinergmin.sibad.filter.EquipoComponenteFilter;
-import gob.osinergmin.sibad.filter.PersonaJuridicaFilter;
-import gob.osinergmin.sibad.filter.SedePersonalAutorizadoFilter;
 import gob.osinergmin.sibad.domain.dto.UsuarioDTO;
 import gob.osinergmin.sibad.util.Constantes;
 import gob.osinergmin.sibad.util.ConstantesWeb;
 
 import java.net.Inet4Address;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -50,6 +43,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,6 +67,14 @@ public class InactivarProcesosController {
 	private TrazAlcanceAcredService trazAlcanceAcredService;
 	@Inject
 	private EquipoCertificadoService equipoCertificadoService;
+	@Inject
+	private CorreoService correoService;
+	@Inject
+	private DestinatarioCorreoService destinatarioCorreoService;
+	@Inject
+	private MaestroColumnaTipoService maestroColumnaTipoService;
+	@Inject
+	private OrganismoAcreditadorService orgAcreditadorService;
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public String inicio(Model model, HttpSession session, HttpServletRequest request){
@@ -251,6 +255,118 @@ public class InactivarProcesosController {
 	        return retorno;
 			
 		}
+		//----------------------- VALIDAR ORGANISMO ACREDITADOR QUE INGRESO --------------------------------
+		
+		@RequestMapping(value="datosOrganismoAcreditador",method=RequestMethod.POST)
+	    public @ResponseBody Map<String,Object> datosOrganismoAcreditador(OrganismoAcreditadorFilter filtro){
+	        LOG.info("procesando buscar Organismo Acreditador");
+	        Map<String,Object> retorno=new HashMap<String,Object>();
+	        try{
+	            List<OrganismoAcreditadorDTO> listado;
+	            listado= orgAcreditadorService.listarOrganismoAcreditador(filtro);
+	            retorno.put("filas", listado);
+	        }catch(Exception ex){
+	            LOG.error("",ex);
+	        }
+	        return retorno;
+	    }
+		
+		//-------------------------FIN VALIDAR ORGANISMO ACREDITADOR QUE INGRESO ------------------------------------
+		
+		//-------------------------- CARGAR COMBOS TIPOS -----------------------------
+		@RequestMapping(value="/cargarComboTipo",method=RequestMethod.POST)
+	    public @ResponseBody Map<String,Object> cargarComboTipo(MaestroColumnaTipoFilter filtro){
+	        LOG.info("procesando cargarComboTipo");
+	        Map<String,Object> retorno=new HashMap<String,Object>();
+	        try{
+	            List<MaestroColumnaTipoDTO> listado;
+	            listado= maestroColumnaTipoService.listarMaestroColumnaTipo(filtro);
+	            retorno.put("filas", listado);
+	        }catch(Exception ex){
+	            LOG.error("",ex);
+	        }
+	        return retorno;
+	    }
+		//------------------------ FIN CARGAR COMBOS TIPOS --------------------------------
+		
+		//-------------------------- ENCONTRAR EMPRESA ACREDITADA -----------------------------
+		@RequestMapping(value="/traerDatosEmpresa",method=RequestMethod.POST)
+	    public @ResponseBody Map<String,Object> traerDatosEmpresa(EmpresaAcreditadaFilter filtro){
+	        LOG.info("procesando traerDatosEmpresa");
+	        Map<String,Object> retorno=new HashMap<String,Object>();
+	        try{
+	            List<EmpresaAcreditadaDTO> listado;
+	            listado= empAcredService.listarEmpAcred(filtro);
+	            retorno.put("filas", listado);
+	        }catch(Exception ex){
+	            LOG.error("",ex);
+	        }
+	        return retorno;
+	    }
+	   //------------------------ FIN ENCONTRAR EMPRESA ACREDITADA -----------------------------
+		
+		//-------------------------- ENCONTRAR PLANTILLA DE CORREO -----------------------------
+		@RequestMapping(value="/traerPlantillaMsj",method=RequestMethod.POST)
+	    public @ResponseBody Map<String,Object> traerPlantillaMsj(DestinatarioCorreoFilter filtro){
+	        LOG.info("procesando traerPlantillaMsj");
+	        Map<String,Object> retorno=new HashMap<String,Object>();
+	        try{
+	            List<CorreoDTO> listado;
+	            listado= correoService.listarCorreo(filtro);
+	            retorno.put("filas", listado);
+	        }catch(Exception ex){
+	            LOG.error("",ex);
+	        }
+	        return retorno;
+	    }
+		//------------------------ FIN ENCONTRAR PLANTILLA DE CORREO -----------------------------
+			
+	   //-------------------------- ENCONTRAR PLANTILLA DE CORREO + PERSONAL DESTINATARIO -----------------------------
+			@RequestMapping(value="/traerPlantillaPersonal",method=RequestMethod.POST)
+		    public @ResponseBody Map<String,Object> traerPlantillaPersonal(DestinatarioCorreoFilter filtro){
+		        LOG.info("procesando traerPlantillaPersonal");
+		        Map<String,Object> retorno=new HashMap<String,Object>();
+		        try{
+		            List<DestinatarioCorreoDTO> listado;
+		            listado= destinatarioCorreoService.listarDestinatarioCorreo(filtro);
+		            retorno.put("filas", listado);
+		        }catch(Exception ex){
+		            LOG.error("",ex);
+		        }
+		        return retorno;
+		    }
+	   //------------------------ FIN ENCONTRAR PLANTILLA DE CORREO + PERSONAL DESTINATARIO -----------------------------
+	     
+	   //--------------------------
+			
+		@Autowired
+		private JavaMailSender mailSenderObj;
+		
+		@RequestMapping(value = "/sendEmail", method = RequestMethod.GET)
+		public @ResponseBody Map<String,Object> sendEmailToClient(final @RequestParam String destino, final String mensaje, final String asunto, HttpServletRequest request) {
+			
+			Map<String,Object> retorno = new HashMap<String,Object>();
+	
+			mailSenderObj.send(new MimeMessagePreparator() {
+				public void prepare(MimeMessage mimeMessage) throws Exception {
+					
+					//mimeMessage.setHeader ("Content-Type", "text/html"); 
+	
+					MimeMessageHelper mimeMsgHelperObj = new MimeMessageHelper(mimeMessage, true, "UTF-8");				
+					mimeMsgHelperObj.setTo(destino);
+					mimeMsgHelperObj.setFrom("asenjochristian@gmail.com");				
+					mimeMsgHelperObj.setText(mensaje);
+					mimeMsgHelperObj.setSubject(asunto);
+				}
+			});
+			System.out.println("\nMensaje de Confirmacion.... Llego con exito!\n");
+			
+			retorno.put(ConstantesWeb.VV_RESULTADO, ConstantesWeb.VV_EXITO);
+			
+			return  retorno;	
+		}
+		
+		//-----------------------------
 		
 }
 

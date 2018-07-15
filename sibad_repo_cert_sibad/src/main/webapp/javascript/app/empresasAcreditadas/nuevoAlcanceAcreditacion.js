@@ -204,114 +204,38 @@ function initInicioNuevoAlcanceAcreditacion(){
 	 	   var arrayCadena = cadena.split("%");
 	 	   
 	 	   var nombreDocumento = arrayCadena[0];
-	 	   var archivoAdjunto = arrayCadena[1];
-	 	   
-		    $.ajax({
-		        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/buscarDocumentoAdjunto",
-		        type:'post',
-		        async:false,
-		        data:{
-		        	idDocumentoAdjunto:$('#txtAdjuntarArchivo').val()
-		        },
-		        beforeSend:muestraLoading,
-		        success:function(data){
-		        	
-		            ocultaLoading();
-		            $.each(data.filas, function( index, value ) {
+	 	   var archivoAdjunto = arrayCadena[1];        	
+
+		   console.log(archivoAdjunto)
+
+           var blob = b64toBlob(archivoAdjunto, 'application/pdf');
 		            	
-		            	var blob = new Blob([value.archivoAdjunto], {type: 'application/pdf'});
+		   //var blob = new Blob([value.archivoAdjunto], {type: 'application/pdf'});
 		     	 	   
-		      	 	  //creamos un FileReader para leer el Blob
-		      	 	  var reader = new FileReader();
-		      	 	  //Definimos la función que manejará el archivo
-		      	 	  //una vez haya terminado de leerlo
-		      	 	  reader.onload = function (event) {
-		      	 	    //Usaremos un link para iniciar la descarga 
-		      	 	    var save = document.createElement('a');
-		      	 	    save.href = event.target.result;
-		      	 	    save.target = '_blank';
-		      	 	    //Truco: así le damos el nombre al archivo 
-		      	 	    save.download = value.nombreDocumento;
-		      	 	    var clicEvent = new MouseEvent('click', {
-		      	 	      'view': window,
-		      	 	      'bubbles': true,
-		      	 	      'cancelable': true
-		      	 	    });
-		      	 	    //Simulamos un clic del usuario
-		      	 	    //no es necesario agregar el link al DOM.
-		      	 	    save.dispatchEvent(clicEvent);
-		      	 	    //Y liberamos recursos...
-		      	 	    (window.URL || window.webkitURL).revokeObjectURL(save.href);
-		      	 	  };
+		   //creamos un FileReader para leer el Blob
+		   var reader = new FileReader();
+		   //Definimos la función que manejará el archivo
+		   //una vez haya terminado de leerlo
+		   reader.onload = function (event) {
+			   //Usaremos un link para iniciar la descarga 
+			   var save = document.createElement('a');
+			   save.href = event.target.result;
+			   save.target = '_blank';
+			   //Truco: así le damos el nombre al archivo 
+			   save.download = nombreDocumento;
+			   var clicEvent = new MouseEvent('click', {
+			   	'view': window,
+			    'bubbles': true,
+			    'cancelable': true
+			   });
+			      	 	    //Simulamos un clic del usuario
+			      	 	    //no es necesario agregar el link al DOM.
+			   save.dispatchEvent(clicEvent);
+			      	 	    //Y liberamos recursos...
+			   (window.URL || window.webkitURL).revokeObjectURL(save.href);
+		   };
 		      	 	  //Leemos el blob y esperamos a que dispare el evento "load"
-		      	 	  reader.readAsDataURL(blob);
-		            });
-		            
-		        },
-		        error:errorAjax
-		    });
-		    
-		    //------ otro caso...
-		    
-		    /*var a = document.createElement("a");
-	 	    document.body.appendChild(a);
-	 	    a.style = "display: none";
-	 	    
- 	        var blob = new File([value.archivoAdjunto], value.nombreDocumento);
- 	    	//var blob = new Blob([archivoAdjunto], {type: 'application/pdf'});
- 	        url = window.URL.createObjectURL(blob);
- 	        a.href = url;
- 	        a.download = blob.name;
- 	        //a.download =nombreDocumento;
- 	        a.click();
- 	        window.URL.revokeObjectURL(url);*/
-	 	   
-		    //------------
-		    
-	 	   /*var blob = new Blob([archivoAdjunto], {type: 'application/pdf'});
-	 	   
-	 	  //creamos un FileReader para leer el Blob
-	 	  var reader = new FileReader();
-	 	  //Definimos la función que manejará el archivo
-	 	  //una vez haya terminado de leerlo
-	 	  reader.onload = function (event) {
-	 	    //Usaremos un link para iniciar la descarga 
-	 	    var save = document.createElement('a');
-	 	    save.href = event.target.result;
-	 	    save.target = '_blank';
-	 	    //Truco: así le damos el nombre al archivo 
-	 	    save.download = nombreDocumento;
-	 	    var clicEvent = new MouseEvent('click', {
-	 	      'view': window,
-	 	      'bubbles': true,
-	 	      'cancelable': true
-	 	    });
-	 	    //Simulamos un clic del usuario
-	 	    //no es necesario agregar el link al DOM.
-	 	    save.dispatchEvent(clicEvent);
-	 	    //Y liberamos recursos...
-	 	    (window.URL || window.webkitURL).revokeObjectURL(save.href);
-	 	  };
-	 	  //Leemos el blob y esperamos a que dispare el evento "load"
-	 	  reader.readAsDataURL(blob);*/
-		    
-		    
-		    /*var xhr = new XMLHttpRequest();
-		                xhr.open('GET', baseURL + '/file', true);
-		                xhr.responseType = 'blob';
-
-		                xhr.onload = function(e) {
-		                  if (this.status == 200) {
-		                    var blob = new Blob([this.response], {type: 'application/pdf'});
-		                    var link = document.createElement('a');
-		                    link.href = window.URL.createObjectURL(blob);
-		                    link.download = value.nombreDocumento;
-		                    link.click();       
-		                  }
-		                };
-
-		                xhr.send();*/
-	 	   
+		   reader.readAsDataURL(blob);	 	   
 });
 	
 	//#txtAdjuntarAlcance
@@ -323,51 +247,34 @@ function initInicioNuevoAlcanceAcreditacion(){
 	 	   
 	 	   var nombreDocumento = arrayCadena[0];
 	 	   var archivoAdjunto = arrayCadena[1];
-	 	   
-		    $.ajax({
-		        url:baseURL + "pages/mantenimientoEmpresasAcreditadas/buscarDocumentoAdjunto",
-		        type:'post',
-		        async:false,
-		        data:{
-		        	idDocumentoAdjunto:$('#txtAdjuntarAlcance').val()
-		        },
-		        beforeSend:muestraLoading,
-		        success:function(data){
-		        	
-		            ocultaLoading();
-		            $.each(data.filas, function( index, value ) {
-		            	
-		            	var blob = new Blob([value.archivoAdjunto], {type: 'application/pdf'});
+		   
+		   var blob = b64toBlob(archivoAdjunto, 'application/pdf');		            	
+		   //var blob = new Blob([value.archivoAdjunto], {type: 'application/pdf'});
 		     	 	   
 		      	 	  //creamos un FileReader para leer el Blob
-		      	 	  var reader = new FileReader();
+		   var reader = new FileReader();
 		      	 	  //Definimos la función que manejará el archivo
 		      	 	  //una vez haya terminado de leerlo
-		      	 	  reader.onload = function (event) {
+		   reader.onload = function (event) {
 		      	 	    //Usaremos un link para iniciar la descarga 
-		      	 	    var save = document.createElement('a');
-		      	 	    save.href = event.target.result;
-		      	 	    save.target = '_blank';
+		   	var save = document.createElement('a');
+		    save.href = event.target.result;
+		    save.target = '_blank';
 		      	 	    //Truco: así le damos el nombre al archivo 
-		      	 	    save.download = value.nombreDocumento;
-		      	 	    var clicEvent = new MouseEvent('click', {
-		      	 	      'view': window,
-		      	 	      'bubbles': true,
-		      	 	      'cancelable': true
-		      	 	    });
+		    save.download = nombreDocumento;
+		    var clicEvent = new MouseEvent('click', {
+		      	'view': window,
+		      	'bubbles': true,
+		      	'cancelable': true
+		    });
 		      	 	    //Simulamos un clic del usuario
 		      	 	    //no es necesario agregar el link al DOM.
-		      	 	    save.dispatchEvent(clicEvent);
+		    save.dispatchEvent(clicEvent);
 		      	 	    //Y liberamos recursos...
-		      	 	    (window.URL || window.webkitURL).revokeObjectURL(save.href);
-		      	 	  };
+		    (window.URL || window.webkitURL).revokeObjectURL(save.href);
+		   };
 		      	 	  //Leemos el blob y esperamos a que dispare el evento "load"
-		      	 	  reader.readAsDataURL(blob);
-		            });
-		            
-		        },
-		        error:errorAjax
-		    });
+		    reader.readAsDataURL(blob);
 	 	   
 });
 	
@@ -585,6 +492,30 @@ function initInicioNuevoAlcanceAcreditacion(){
 		$("#gridContenedorDocAA1").removeAttr('style');
     });
     
+}
+
+function b64toBlob(b64Data, contentType, sliceSize) {
+  contentType = contentType || '';
+  sliceSize = sliceSize || 512;
+
+  var byteCharacters = atob(b64Data);
+  var byteArrays = [];
+
+  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+    var byteNumbers = new Array(slice.length);
+    for (var i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    var byteArray = new Uint8Array(byteNumbers);
+
+    byteArrays.push(byteArray);
+  }
+    
+  var blob = new Blob(byteArrays, {type: contentType});
+  return blob;
 }
 
 function desactivarBotonesSIE(){
@@ -1989,12 +1920,15 @@ function listarDocumentoAdjuntoAA(flg_load) {
     jQuery.extend($.fn.fmatter, {
     	LinkURL: function(cellvalue, options, rowdata) {
 			
-    		//var arch = rowdata.archivoAdjunto;
-    		
+    		var blob = b64toBlob(rowdata.archivoAdjunto, 'application/pdf');	
     		//var blob = new Blob([arch], {type: 'application/octet-binary'});
-    		//var url = URL.createObjectURL(blob);
+    		var url = URL.createObjectURL(blob);
+
+    		//http://docs.google.com/viewer?url=nombre_archivo.extension
     		
-    		return "<a class='MostrarDoc' id='"+rowdata.idDocumentoAdjunto+"' style='cursor: pointer;text-decoration:none;' ><u>"+rowdata.nombreDocumento+"</u></a>";
+    		return "<a class='MostrarDoc' id='"+ rowdata.nombreDocumento +"%"+rowdata.archivoAdjunto+"' style='cursor: pointer;text-decoration:none;' ><u>"+rowdata.nombreDocumento+"</u></a>";
+
+			return "<a href='http://docs.google.com/viewer?url="+url+"' title='Mostrar Archivo' target='_blank'>"+rowdata.nombreDocumento+"</a>";
     		
     		//  http://docs.google.com/viewer?url=nombre_archivo.extension
 			//return "<a href='http://docs.google.com/viewer?url="+url+"' title='Mostrar Archivo' target='_blank'>"+rowdata.nombreDocumento+"</a>";
@@ -2085,16 +2019,19 @@ function listarDocumentoAlcanceAA(flg_load) {
     jQuery.extend($.fn.fmatter, {
     	LinkURL2: function(cellvalue, options, rowdata) {
 			
-    		//var arch = rowdata.archivoAdjunto;
+    		var arch = rowdata.archivoAdjunto;
     		
+
+		    //var blob = b64toBlob(rowdata.archivoAdjunto, 'application/pdf');	
     		//var blob = new Blob([arch], {type: 'application/octet-binary'});
     		//var url = URL.createObjectURL(blob);
+
+    		//http://docs.google.com/viewer?url=nombre_archivo.extension
+			//return "<a href='http://docs.google.com/viewer?url="+url+"' title='Mostrar Archivo' target='_blank'>"+rowdata.nombreDocumento+"</a>";
+			
     		
     		return "<a class='MostrarDocAlc' id='"+ rowdata.nombreDocumento +"%"+rowdata.archivoAdjunto+"' style='cursor: pointer;text-decoration:none;' ><u>"+rowdata.nombreDocumento+"</u></a>";
     		
-    		//  http://docs.google.com/viewer?url=nombre_archivo.extension
-			//return "<a href='http://docs.google.com/viewer?url="+url+"' title='Mostrar Archivo' target='_blank'>"+rowdata.nombreDocumento+"</a>";
-			
     	}
     });
     

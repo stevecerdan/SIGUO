@@ -33,6 +33,7 @@
                 <prop key="mail.smtp.starttls.enable">true</prop>
             </props>
         </property>
+        
     </bean>
     
     <!-- Send Email Exception Resolver i.e. In Case Of Exception The Controller Will Navigate To 'error.jsp' & Will Display The Exception Message -->

@@ -251,8 +251,10 @@ function initInicio(){
   	  
   	  var nombreDocumento = arrayCadena[0];
   	  var archivoAdjunto = arrayCadena[1];
-   	   
-   	  var blob = new Blob([archivoAdjunto], {type: 'application/pdf'});
+	
+	  console.log(archivoAdjunto);   	   
+   	  //var blob = new Blob([archivoAdjunto], {type: 'application/pdf'});
+      var blob = b64toBlob(archivoAdjunto, 'application/pdf');
    	   
    	  //creamos un FileReader para leer el Blob
    	  var reader = new FileReader();
@@ -494,14 +496,7 @@ function initInicio(){
 };
 
 function validarFechaHora(){
-	
 
-		
-
-		
-		
-
-	   
 	
 }
 
@@ -1202,11 +1197,13 @@ function registrarDoc(){
               
         	  var idDocumentoAux  = data.idDocumento;
               var nombreDocumento = data.nombreDocumento;
+              var archivoAdjunto = data.archivoAdjunto;
 
           	  var objeto = {};
 
               objeto['idResultadoDocumento'] = idDocumentoAux;
               objeto['nombreDocumento'] = nombreDocumento ;
+              objeto['archivoAdjunto'] = archivoAdjunto ;
 
               dataDocumentA.push(objeto);
               arrayIdDocumentA.push(idDocumentoAux);   
@@ -1962,6 +1959,30 @@ function listarDocumentosLocal(flg_load) {
     });
 }
 
+function b64toBlob(b64Data, contentType, sliceSize) {
+  contentType = contentType || '';
+  sliceSize = sliceSize || 512;
+
+  var byteCharacters = atob(b64Data);
+  var byteArrays = [];
+
+  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+    var byteNumbers = new Array(slice.length);
+    for (var i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    var byteArray = new Uint8Array(byteNumbers);
+
+    byteArrays.push(byteArray);
+  }
+    
+  var blob = new Blob(byteArrays, {type: contentType});
+  return blob;
+}
+
 function registrarResultadoPersonaNaturalRV(idResultadoRevision){
     
 	$.each(arrayIdPersonaN, function(index,value){
@@ -2010,11 +2031,13 @@ function  llenarArrayTbDocumentos(IdResultadoRevision){
 
 			  var idDocumentoAux  = value.idDocumentoAdjunto;
               var nombreDocumento = value.nombreDocumento;
+              var archivoAdjunto = value.archivoAdjunto;
 
           	  var objeto = {};
 
               objeto['idResultadoDocumento'] = idDocumentoAux;
               objeto['nombreDocumento'] = nombreDocumento ;
+              objeto['archivoAdjunto'] = archivoAdjunto ;
 
               dataDocumentA.push(objeto);
               //arrayIdDocumentA.push(idDocumentoAux); 
@@ -2077,4 +2100,3 @@ function  llenarArrayTbPersonaNatural(IdResultadoRevision){
     });        
 
  }
-

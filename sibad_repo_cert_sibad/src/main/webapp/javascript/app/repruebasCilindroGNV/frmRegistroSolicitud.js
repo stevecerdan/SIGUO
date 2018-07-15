@@ -1,4 +1,4 @@
-       var listaModulos = {};
+    var listaModulos = {};
     var listaCilindros = {};
     var listaIds = [];
     var objectRow = {};
@@ -7,8 +7,15 @@
     var NroSolicitudUnidadSupervisa = "";
     var codOsinergminAux =  "";
     var idUnidSupAux = "";
-
-
+    //----
+    var correo = "";
+    var nombreEmp = "";
+    var nroModulo = "";
+   	var nroCilindro = "";
+   	var Tprueba = "";
+    var destinoOsinergmin  = "";
+	var cuerpoPlantilla = "";
+	var asuntoPlantilla = "";
 
     $(function() {
     	initInicioSolicitud(); 
@@ -40,6 +47,98 @@
             }
         });
     }
+    
+   function BuscarPlantillaDestinatario(){
+	   
+	   $.ajax({
+	        url:baseURL + "pages/repruebasCilindroGNV/traerPlantillaPersonal",
+	        type:'post',
+	        async:false,
+	        data:{
+	       	 idCorreo : '20',
+	       	 idPersonal : '156'
+	        },
+	        beforeSend:muestraLoading,
+	        success:function(data){
+	        	
+	            ocultaLoading();
+	            
+	            $.each(data.filas, function( index, value ) {
+	            	//Correo de Usuario Osinergmin
+	            	//destinoOsinergmin  = value.correoElectronico;
+	                destinoOsinergmin  = "asenjochristian@gmail.com";
+	            	//Cuerpo de Mensaje Plantilla
+	                cuerpoPlantilla = value.mensaje
+	            	//Asunto de Mensaje Plantilla
+	            	asuntoPlantilla = value.asunto;
+	            });
+	            
+	        },
+	        error:errorAjax
+	    });
+	   
+	    //destinoOsinergmin  = "asenjochristian@gmail.com"
+		//cuerpoPlantilla = "Buen dia estimado.\nRepresentante de la empresa {nombre_empresa}\n\nSe informa que fue confirmado la solicitud de {tipo_prueba}, Nro {nro_solicitud} para el Cilindro Nro {nro_cilindro} del Modulo Nro {nro_modulo}.\nPor favor proceder con la atencion de la solicitud asignada.\n\nFecha Programada : {fecha_solicitud}\n\nSaludos cordiales,\nNueva Plataforma de Supervision.";
+		//asuntoPlantilla = "CONFIRMACION DE TIPO DE PRUEBA - SOLICITUD NRO. {nro_solicitud}";
+   }
+    
+   function EnviarCorreoRepruebaGNV(correo, nombreEmp, Tprueba, NroSolicitudUnidadSupervisa, fechaSol, nroModulo, nroCilindro){
+    	
+	    BuscarPlantillaDestinatario();
+	    
+	    var destinatario = destinoOsinergmin;
+	    
+		//var CMP = cuerpoPlantilla.split('-');
+		//var mensajeFinal = CMP[0] +nombreEmp+ CMP[1] +Tprueba+ CMP[2] +NroSolicitudUnidadSupervisa+ CMP[3] +nroCilindro+ CMP[4] +nroModulo+ CMP[5] +convertDateFormat(fechaSol)+ CMP[6];	
+		
+		var asuntoFinal = asuntoPlantilla.replace(/{nro_solicitud}/g, NroSolicitudUnidadSupervisa);
+		
+		var mensajeFinal = cuerpoPlantilla.replace(/<br>/g, '\n').
+		   								   replace(/{nombre_empresa}/g, nombreEmp).
+										   replace(/{tipo_prueba}/g, Tprueba).
+										   replace(/{nro_solicitud}/g, NroSolicitudUnidadSupervisa).
+										   replace(/{nro_cilindro}/g, nroCilindro).
+										   replace(/{nro_modulo}/g, nroModulo).
+										   replace(/{fecha_solicitud}/g, convertDateFormat(fechaSol));
+		
+		$.ajax({
+		    url: baseURL + "pages/repruebasCilindroGNV/sendEmail",
+		    type: "get",
+		    async: false,
+		    data:{
+			   destino : correo,
+			   mensaje : mensajeFinal,
+			   asunto : asuntoFinal
+		    },
+		    beforeSend:muestraLoading,
+		    success: function (data) {
+		    	ocultaLoading();
+		    	alert("SE LE ENVIARÁ UNA NOTIFICACION A LA EMPRESA PARA CONFIRMAR SU SOLICITUD");
+		    },
+		 	error:errorAjax
+		});
+		EnviarNotificacionDestinatarioGNV(destinatario, mensajeFinal, asuntoFinal);
+    }
+   
+   function EnviarNotificacionDestinatarioGNV(destinatario,mensajeDest,asuntoDest){
+		
+		$.ajax({
+		    url: baseURL + "pages/repruebasCilindroGNV/sendEmail",
+		    type: "get",
+		    async: false,
+		    data:{
+			   destino : destinatario,
+			   mensaje : mensajeDest,
+			   asunto : asuntoDest
+		    },
+		    beforeSend:muestraLoading,
+		    success: function (data) {
+		    	ocultaLoading();
+		    	alert("NOTIFICACION LLEGO A DESTINATARIO CON EXITO");
+		    },
+		 	error:errorAjax
+		});
+   }
 
     function convertDateFormat(string) {
         var info = string.split('/');
@@ -115,11 +214,74 @@
                         }
                     },
                     error:errorAjax
-                }); 
+                });
+                //-- ENVIAR NOTIFICACION --
+                /*
+                traerDatosEmpresaAcreditadaRGNV($("#cmbAsignado").val());
+            	//alert("Empresa: "+ nombreEmp + " correo: " +correo);
+            	BuscarSolicitudGNV("1526");
+            	var fechaSol=convertDateFormat( $("#txtFecha").val() );
+            	//alert("Prueba: "+Tprueba+" Modulo Nro: "+nroModulo+" Cilindro. Nro: "+nroCilindro);
+            	//asenjochristian@gmail.com
+            	EnviarCorreoRepruebaGNV("asenjochristian@gmail.com", nombreEmp, Tprueba, NroSolicitudUnidadSupervisa, fechaSol, nroModulo, nroCilindro);
+                */
+                //-------------------------
             }); 
             ConfirmDialog();
         }   
     }
+    
+//----- TRAER DATOS DE EMPRESA ACREDITADA ----------
+function traerDatosEmpresaAcreditadaRGNV(idEmpresaAcreditada) {
+
+    $.ajax({
+        url:baseURL + "pages/repruebasCilindroGNV/traerDatosEmpresa",
+        type:'post',
+            async:false,
+            data:{
+           	 idEmpresaAcreditada : idEmpresaAcreditada
+            },
+            beforeSend:muestraLoading,
+            success:function(data){
+            	
+            ocultaLoading();
+            
+            $.each(data.filas, function( index, value ) {
+            	correo = value.email;
+            	nombreEmp = value.razonSocial;
+            });
+            
+        },
+        error:errorAjax
+    });
+}
+    
+//----- BUSCAR ULTIMA SOLICITUD DE PRUEBA DE HERMETICIDAD ----------
+function BuscarSolicitudGNV(IdTipoPrueba) {
+
+    $.ajax({
+        url:baseURL + "pages/repruebasCilindroGNV/encontrarSolicitudUltimaEmpresa",
+        type:'post',
+        async:false,
+        data:{
+            idTipoPrueba :IdTipoPrueba,
+            idUnidSupervTanque :'0',
+            idUnidSupervModulo :$('#idUnidSupervisada').val()
+        },
+        beforeSend:muestraLoading,
+        success:function(data){
+        	
+            ocultaLoading();
+            
+            $.each(data.filas, function( index, value ) {
+           	nroModulo = value.modulo;
+           	nroCilindro = value.cilindro;
+           	Tprueba = value.tipoPrueba;
+           });
+        },
+        error:errorAjax
+    });
+}
 
 function ConfirmDialog(){
     $('<div id="nuevo"></div>').appendTo('body')

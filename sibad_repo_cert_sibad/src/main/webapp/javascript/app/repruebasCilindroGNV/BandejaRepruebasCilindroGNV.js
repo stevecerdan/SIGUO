@@ -98,6 +98,18 @@ function initInicioEmpresasAcreditadas(){
     	$(".button-ok").css({display: "block"});
     });
     
+    $("#cmbTipoBusqueda").change(function(){
+        if  ( $("#cmbTipoBusqueda").val() !== "" && $("#cmbTipoBusqueda").val() !== undefined){
+            $("select#cmbTipoEstado").prop('selectedIndex', 0); 
+        }
+    });
+
+    $("#cmbTipoEstado").change(function(){
+        if  ( $("#cmbTipoEstado").val() !== "" && $("#cmbTipoEstado").val() !== undefined){
+            $("select#cmbTipoBusqueda").prop('selectedIndex', 0); 
+        }
+    });
+
     $('body').on('click', '.ConsultarE',function(){
     	abrirFrmReprueba(0);	
     	
@@ -288,7 +300,7 @@ function listarRepruebas(flg_load,idunidadSupervisadaAux) {
         postData: {
         	
         	idUnidSupervModulo: idunidadSupervisadaAux,
-        	    numeroReprueba: buscaNumeroRep,
+   nroSolicitudUnidadSupervisa: buscaNumeroRep,
              empresaAcreditada: buscaNombreEmp,
                         estado: buscaEstado
         },

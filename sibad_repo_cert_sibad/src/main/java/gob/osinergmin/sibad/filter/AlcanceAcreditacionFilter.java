@@ -18,6 +18,7 @@ public class AlcanceAcreditacionFilter extends BasePaginatorFilter{
     private Long idEmpresaAcreditada;
     private Date fechaVencimiento;
     private String estado;
+    private String estadoAccion;
     
 	public Long getIdAlcanceAcreditacion() {
 		return idAlcanceAcreditacion;
@@ -42,6 +43,12 @@ public class AlcanceAcreditacionFilter extends BasePaginatorFilter{
 	}
 	public void setFechaVencimiento(Date fechaVencimiento) {
 		this.fechaVencimiento = fechaVencimiento;
+	}
+	public String getEstadoAccion() {
+		return estadoAccion;
+	}
+	public void setEstadoAccion(String estadoAccion) {
+		this.estadoAccion = estadoAccion;
 	}
 	
 	

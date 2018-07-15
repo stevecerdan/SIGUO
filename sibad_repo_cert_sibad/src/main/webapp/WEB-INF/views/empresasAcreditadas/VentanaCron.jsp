@@ -32,6 +32,9 @@
 		                        <div class="filaForm">
 		                            <span class="ui-panel-title" style="margin-left:10px;font-size:13px;color: #008cd9;" id="MensajeFinalCron"></span>
 		                        </div>
+		                        <div class="filaForm">
+		                            <span class="ui-panel-title" style="margin-left:10px;font-size:13px;color: #008cd9;" id="MensajeNotificacion"></span>
+		                        </div>
 		                        
 		                        <div class="filaForm" style="margin-top:20px;">
 		                            <span class="ui-panel-title" style="margin-left:10px;font-size:13px;color: #008cd9;" id="MensajeCron1">PROCESANDO CRON ... </span>

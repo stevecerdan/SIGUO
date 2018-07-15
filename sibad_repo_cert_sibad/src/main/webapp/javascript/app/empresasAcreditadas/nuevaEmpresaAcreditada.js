@@ -1189,14 +1189,25 @@ function validarEmpresaAcreditada() {
 	        success:function(data){
 	        	
 	            ocultaLoading();
-	            $.each(data.filas, function( index, value ) {
-	            	$("#idEmpresaAcreditada").val(value.idEmpresaAcreditada);
-	            	$("#txtRegistro").val(value.registro);
-	            	//$("#txtRegistro").removeAttr('disabled');
-	            	//$("#txtRegistro").attr('disabled','disabled');
-	            	//estadoProceso = value.estado;
-	            	//alert(estadoProceso);
-	            });
+	            
+	            if(data.filas!="[object Object]"){
+                	
+	            	$("#MensajeEA").show();
+		            $('#MensajeEA').html("GUARDE LOS DATOS DE ESTA EMPRESA, ASÍ PODRÁ INICIAR UN PROCESO DE ACREDITACIÓN");
+		            desactivarBotonProceso();
+		            $('#seccionTipoPrueba').hide();
+		            activarBotonGuardar();
+        			
+                }else{
+	            
+		            $.each(data.filas, function( index, value ) {
+		            	$("#idEmpresaAcreditada").val(value.idEmpresaAcreditada);
+		            	$("#txtRegistro").val(value.registro);
+		            	//$("#txtRegistro").removeAttr('disabled');
+		            	//$("#txtRegistro").attr('disabled','disabled');
+		            	//estadoProceso = value.estado;
+		            	//alert(estadoProceso);
+		            });
 	            
 	            $.ajax({
 	                url:baseURL + "pages/mantenimientoEmpresasAcreditadas/cargarFechaUA",
@@ -1215,7 +1226,7 @@ function validarEmpresaAcreditada() {
 	                    if(data.filas!="[object Object]"){
 	                    	
 	                    	$("#MensajeEA").show();
-        		            $('#MensajeEA').html("ESTA EMPRESA YA PUEDE INICIAR UN PROCESO DE ACREDITACION");
+        		            $('#MensajeEA').html("ESTA EMPRESA YA PUEDE INICIAR UN PROCESO DE ACREDITACIÓN");
         		            activarBotonProceso();
 	            			
 	                    }else{
@@ -1230,11 +1241,11 @@ function validarEmpresaAcreditada() {
 	                    	$("#txtRegistro").attr('disabled','disabled');
 	                    	if(letraAccion == "R" || letraAccion == "S" || letraAccion == "H"){
 	        		            $("#MensajeEA").show();
-	        		            $('#MensajeEA').html("ESTA EMPRESA CUENTA CON UN PROCESO DE ACREDITACION VIGENTE");
+	        		            $('#MensajeEA').html("ESTA EMPRESA CUENTA CON UN PROCESO DE ACREDITACIÓN VIGENTE");
 	        		            desactivarBotonProceso();
 	                    	}else{
 	                    		$("#MensajeEA").show();
-	        		            $('#MensajeEA').html("ESTA EMPRESA YA PUEDE INICIAR UN PROCESO DE ACREDITACION");
+	        		            $('#MensajeEA').html("ESTA EMPRESA YA PUEDE INICIAR UN PROCESO DE ACREDITACIÓN");
 	        		            activarBotonProceso();
 	                    	}
 	                    desactivarBotonGuardar();
@@ -1247,6 +1258,7 @@ function validarEmpresaAcreditada() {
 	                },
 	                error:errorAjax
 	            });
+	          }
 	        },
 	        error:errorAjax
 	    });

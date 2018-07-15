@@ -34,10 +34,10 @@ $(function() {
 
   $( "#txtFechaInforme" ).attr( "readonly" , "readonly" );
   $( "#txtFechaInicio" ).attr( "readonly" , "readonly" );
-    $( "#txtFechaFin" ).attr( "readonly" , "readonly" );
-    $( "#txtFechaEmision" ).attr( "readonly" , "readonly" );
-    $( "#txtFechaProxReprueba" ).attr( "readonly" , "readonly" );
-    $( "#txtFechaProxReprueba" ).prop( "disabled", true );
+  $( "#txtFechaFin" ).attr( "readonly" , "readonly" );
+  $( "#txtFechaEmision" ).attr( "readonly" , "readonly" );
+  $( "#txtFechaProxReprueba" ).attr( "readonly" , "readonly" );
+  $( "#txtFechaProxReprueba" ).prop( "disabled", true );
   
   fechaActual();
   initInicio();
@@ -170,12 +170,12 @@ function initInicio(){
         ffecha.setFullYear(ffecha.getFullYear() + suma);
         ffecha.setDate(ffecha.getDate() + suma);
         var valor = formattedDate(ffecha).split("/");
-            var dia =  valor[0];
+        var dia =  valor[0];
         var mes =  valor[1];
         var anio =  valor[2];
 
-      $("#txtFechaProxReprueba").val( dia + '/' + mes + '/' + anio );
-        $( "#txtFechaProxReprueba" ).datepicker( "option", "maxDate", dia + '/' + mes + '/' + anio ); 
+      $("#txtFechaProxReprueba").val( d + '/' + mes + '/' + anio );
+      $( "#txtFechaProxReprueba" ).datepicker( "option", "maxDate", dia + '/' + mes + '/' + anio ); 
     //  $("#txtFechaProxReprueba").datepicker({
     //    minDate: 0 ,
     //    maxDate: new Date(selectedDate),
@@ -237,10 +237,9 @@ function initInicio(){
     });
     
     $('#btnGuardarRegistroReprueba').click(function(){
-        
       camposQueFaltanRegistrar();
     });
-    
+
     //DescargarDocGNV
     $('body').on('click', '.DescargarDocGNV',function(){
     
@@ -250,8 +249,11 @@ function initInicio(){
         
         var nombreDocumento = arrayCadena[0];
         var archivoAdjunto = arrayCadena[1];
-         
-        var blob = new Blob([archivoAdjunto], {type: 'application/pdf'});
+
+
+        console.log(archivoAdjunto)
+
+        var blob = b64toBlob(archivoAdjunto, 'application/pdf');
          
         //creamos un FileReader para leer el Blob
         var reader = new FileReader();
@@ -281,118 +283,98 @@ function initInicio(){
    
     $('#btnFinalizarRegistroReprueba').click(function(){
       
-      estadoSolicitud =  "F";
+        estadoSolicitud =  "F";
         idResultadoPR   =  $("#idResultadoPR").val();
         estadoRegistro  =  $("#estadoRegistro").val();
         
-        var txtFechaInicio = $("#txtFechaInicio").val();
-       
-         if(txtFechaInicio.length <= 0) {
-           
-           var addhtml2 = 'Ingrese una fecha de inicio.';
-           $("#dialog-message-content").html(addhtml2);
-           $("#dialog-message").dialog("open");
+
+      if ($("#cmbResultReprueba").val() == 'A'){
+              var txtFechaInicio = $("#txtFechaInicio").val();
              
-          return false;
-         }
-         
-      var txtFechaFin =$("#txtFechaFin").val();
-          
-         if(txtFechaFin.length <= 0) {
+               if(txtFechaInicio.length <= 0) {
+                 
+                 var addhtml2 = 'Ingrese una fecha de inicio.';
+                 $("#dialog-message-content").html(addhtml2);
+                 $("#dialog-message").dialog("open");
+                   
+                return false;
+               }
             
-            var addhtml2 = 'Ingrese una fecha de fin.';
-          $("#dialog-message-content").html(addhtml2);
-          $("#dialog-message").dialog("open");
+            var txtCodCertificado = $('#txtCodCertificado').val();
+            
+               if(txtCodCertificado.length <= 0) {
+                
+                 var addhtml2 = 'Ingrese Número de Certificado de Inspección.';
+                 $("#dialog-message-content").html(addhtml2);
+                 $("#dialog-message").dialog("open");
+                 
+                     return false;
+               }
+            
+            var txtFechaEmision = $('#txtFechaEmision').val();
            
-          return false;
-          }
-         
-      var txtHoraInicioH = $("#txtHoraInicioH").val();      
-        
-         if(txtHoraInicioH.length <= 0) {
-          
-           var addhtml2 = 'Ingrese una hora de inicio.';
-           $("#dialog-message-content").html(addhtml2);
-           $("#dialog-message").dialog("open");
-           
+             if(txtFechaEmision.length <= 0) {
+                
+                var addhtml2 = 'Ingrese una fecha de emisión.';
+              $("#dialog-message-content").html(addhtml2);
+              $("#dialog-message").dialog("open");
+               
               return false;
-         }
-         
-      var txtHoraFinH = $("#txtHoraFinH").val();      
-        
-         if(txtHoraFinH.length <= 0) {
+               } 
+                  
+            var cmbResultReprueba = $('#cmbResultReprueba').val();
           
-           var addhtml2 = 'Ingrese una hora de fin.';
-           $("#dialog-message-content").html(addhtml2);
-           $("#dialog-message").dialog("open");
-           
-               return false;
-         } 
-      
-      var txtCodCertificado = $('#txtCodCertificado').val();
-      
-         if(txtCodCertificado.length <= 0) {
-          
-           var addhtml2 = 'Ingrese Número de Certificado de Inspección.';
-           $("#dialog-message-content").html(addhtml2);
-           $("#dialog-message").dialog("open");
-           
-               return false;
-         }
-      
-      var txtFechaEmision = $('#txtFechaEmision').val();
-     
-       if(txtFechaEmision.length <= 0) {
-          
-          var addhtml2 = 'Ingrese una fecha de emisión.';
-        $("#dialog-message-content").html(addhtml2);
-        $("#dialog-message").dialog("open");
-         
-        return false;
-         } 
+                if(cmbResultReprueba.length <= 0) {
+                
+                var addhtml2 = 'Seleccione un resultado prueba.';
+              $("#dialog-message-content").html(addhtml2);
+              $("#dialog-message").dialog("open");
+               
+              return false;
+                }
+                
+            var cmbInspector = $('#cmbInspector').val();
             
-      var cmbResultReprueba = $('#cmbResultReprueba').val();
-    
-          if(cmbResultReprueba.length <= 0) {
-          
-          var addhtml2 = 'Seleccione un resultado prueba.';
-        $("#dialog-message-content").html(addhtml2);
-        $("#dialog-message").dialog("open");
-         
-        return false;
+                if(cmbInspector.length <= 0) {
+                
+                var addhtml2 = 'Seleccione un Inspector .';
+              $("#dialog-message-content").html(addhtml2);
+              $("#dialog-message").dialog("open");
+               
+              return false;
+                } 
+            
+            var txtFechaProxReprueba = $('#txtFechaProxReprueba').val();
+            
+                if(txtFechaProxReprueba.length <= 0) {
+                
+                var addhtml2 = 'Ingrese una fecha próxima de prueba.';
+              $("#dialog-message-content").html(addhtml2);
+              $("#dialog-message").dialog("open");
+               
+              return false;
+                } 
+              
+             if (dataDocumentAdj.length <= 0) {
+            
+              var addhtml2 = 'Falta agregar documento .';
+            $("#dialog-message-content").html(addhtml2);
+            $("#dialog-message").dialog("open");
+           
+                  return false;
+            }  
+        }else{
+          if ($("#cmbResultReprueba").val() == 'C'){
+            if( $("#txtFechaInforme").val() == "" || $("#txtFechaInforme").val() == undefined || 
+                $("#txtNumeroInforme").val() == "" || $("#txtNumeroInforme").val() == undefined){
+                var fechaIError = '<span style="padding-left: 10px;">Ingresar fecha y numero de informe correctamente.</span><br>';  
+                $("#dialog-message-content").html(fechaIError);
+                $("#dialog-message").dialog("open");  
+                return false;   
+            }
+
           }
-          
-      var cmbInspector = $('#cmbInspector').val();
-      
-          if(cmbInspector.length <= 0) {
-          
-          var addhtml2 = 'Seleccione un Inspector .';
-        $("#dialog-message-content").html(addhtml2);
-        $("#dialog-message").dialog("open");
-         
-        return false;
-          } 
-      
-      var txtFechaProxReprueba = $('#txtFechaProxReprueba').val();
-      
-          if(txtFechaProxReprueba.length <= 0) {
-          
-          var addhtml2 = 'Ingrese una fecha próxima de prueba.';
-        $("#dialog-message-content").html(addhtml2);
-        $("#dialog-message").dialog("open");
-         
-        return false;
-          } 
-        
-       if (dataDocumentAdj.length <= 0) {
-      
-        var addhtml2 = 'Falta agregar documento .';
-      $("#dialog-message-content").html(addhtml2);
-      $("#dialog-message").dialog("open");
-     
-            return false;
-      }
-      
+        }    
 
         if(estadoRegistro == "EN_REGISTRO"){
           
@@ -482,8 +464,7 @@ function formatFecha(fecha){
 function formatoFecha(fecha){
   
   var info = fecha.split('/');
-  
-    return info[1] + '/' + info[0] + '/' + info[2];
+  return info[1] + '/' + info[0] + '/' + info[2];
     
 }
 
@@ -498,7 +479,6 @@ function registrarReprueba(){
     confirm.open("¿Desea guardar el registro?","registrarResultadoPR('" + estadoSolicitud +"','"+ idResultadoPR +"')");
     
    } else if(estadoRegistro == "NUEVO_REGISTRO"){
-    
     confirm.open("¿Desea guardar el registro?","registrarResultadoPR('" + estadoSolicitud +"','"+ idResultadoPR +"')");
    }
 }
@@ -591,24 +571,35 @@ if (encontrado == 1) {
   var addhtml2 = "Faltan campos obligatorios por llenar:"+"<br><br>"+ fechaInicio + CodCertificado + FechaEmision + ResultReprueba + Inspector + FechaProxReprueba + documento;
     
      $("#dialog-message-content_registroRV").html(addhtml2);       
-     $("#dialog-message_registroRV").dialog("open"); 
+     $("#dialog-message_registroRV").dialog("open");
   
    return false;
 
  } else {
     if (encontrado == 2){
-      var addhtml2 = fechaInforme+"<br>";
-    
-      $("#dialog-message-content_registroRV").html(addhtml2);      
-      $("#dialog-message_registroRV").dialog("open"); 
-      $("#dialog-message_registroRV").dialog({
-        title:'FALTAN CAMPOS OBLIGATORIOS POR LLENAR',
-        buttons: {
-            Aceptar: function () {              
-                $(this).dialog("close");
-            },
-        },
-      });  
+      var addhtml2 = fechaInforme+"<br>"; 
+
+      $('<div id="nuevo"></div>').appendTo('body')
+      .html('<div id="aqui"> </div>')
+      .dialog({
+          modal: true, title: 'FALTAN CAMPOS OBLIGATORIOS POR LLENAR', zIndex: 10000, autoOpen: true,
+          width: 350, resizable: false,
+          buttons: {
+              Aceptar: function () {              
+                  $(this).dialog("close");
+              },
+          },
+          close: function (event, ui) {
+              $(this).remove();
+              $(this).dialog("close");
+          }
+      });
+
+      var tex = "";
+      tex = '<h6>'+ addhtml2;
+      tex = tex + '</h6>';
+      $("#aqui").append(tex);
+
       return false;
     }else  
       registrarReprueba();
@@ -1029,6 +1020,30 @@ function registrarResultadoPruebaPersonal(idResultadoPruebaPersonal) {
       });
 }
 
+function b64toBlob(b64Data, contentType, sliceSize) {
+  contentType = contentType || '';
+  sliceSize = sliceSize || 512;
+
+  var byteCharacters = atob(b64Data);
+  var byteArrays = [];
+
+  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+    var byteNumbers = new Array(slice.length);
+    for (var i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    var byteArray = new Uint8Array(byteNumbers);
+
+    byteArrays.push(byteArray);
+  }
+    
+  var blob = new Blob(byteArrays, {type: contentType});
+  return blob;
+}
+
 function registrarDoc(){
     
     var form = $('#fileUploadForm')[0];
@@ -1053,7 +1068,7 @@ function registrarDoc(){
             $("#btnAgregarDoc").attr('disabled','disabled');
               
                 idResultadoPD = "";
-           idDocumentoAdjunto = data.idDocumento;
+                idDocumentoAdjunto = data.idDocumento;
                 nombreDocumento = data.nombreDocumento;
 
               var objeto = {};
@@ -1122,6 +1137,8 @@ function  llenarArrayTbDocumentos(idResultadoPruebaReprueba){
                       idResultadoPR = value.idResultadoPruebaReprueba;
                idDocumentoAdjunto = value.idDocumentoAdjunto;
                     nombreDocumento = value.nombreDocumento;
+                    archivoAdjunto = value.archivoAdjunto
+
 
                   var objeto = {};
                   
@@ -1129,6 +1146,9 @@ function  llenarArrayTbDocumentos(idResultadoPruebaReprueba){
                   objeto['idResultadoPruebaReprueba'] = idResultadoPR;
                   objeto['idDocumentoAdjunto'] = idDocumentoAdjunto;
                   objeto['nombreDocumento'] = nombreDocumento ;
+                  objeto['archivoAdjunto'] = archivoAdjunto ;
+
+                  console.log(archivoAdjunto);
 
                   dataDocumentAdj.push(objeto);
                   listarDocumentosLocal(0);
@@ -1339,7 +1359,7 @@ function listarDocumentosLocal(flg_load) {
     
     jQuery.extend($.fn.fmatter, {
       ArchivoLDE: function(cellvalue, options, rowdata) {
-        
+        console.log(rowdata.archivoAdjunto);
         return "<img src=\"" + baseURL + "/../images/file_doc.png\" class='DescargarDocGNV' id='"+ rowdata.nombreDocumento +"%"+ rowdata.archivoAdjunto +"' style=\"cursor: pointer;\" title=\"Descargar\"/>"
             
         }

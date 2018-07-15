@@ -18,6 +18,7 @@ var idDocumentoAdjunto  =  "";
           var fechaFin  =  "";
            var horaFin  =  "";
   var estadoResultadoC  =  "";
+  var archivoAdjuntoM	=  "";
   var estadoResultadoT  =  "";
     var numCertificado  =  "";
         var numInforme  =  "";
@@ -220,7 +221,9 @@ function initInicioResultadoPruebaHermeticidad(){
 	  var nombreDocumento = arrayCadena[0];
 	  var archivoAdjunto = arrayCadena[1];
  	   
- 	  var blob = new Blob([archivoAdjunto], {type: 'application/pdf'});
+ 	  console.log(archivoAdjunto);
+ 	  //var blob = new Blob([archivoAdjunto], {type: 'application/pdf'});
+      var blob = b64toBlob(archivoAdjunto, 'application/pdf');
  	   
  	  //creamos un FileReader para leer el Blob
  	  var reader = new FileReader();
@@ -500,6 +503,30 @@ function initInicioResultadoPruebaHermeticidad(){
 	        confirm.open("¿Ud est&aacute; seguro de Eliminar?","EliminarInspectorXResultado('" + idResultadoPruebaPersonal + "','" + idSedePersonalAutorizado + "')");
 	 });
  }
+
+function b64toBlob(b64Data, contentType, sliceSize) {
+  contentType = contentType || '';
+  sliceSize = sliceSize || 512;
+
+  var byteCharacters = atob(b64Data);
+  var byteArrays = [];
+
+  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+    var byteNumbers = new Array(slice.length);
+    for (var i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    var byteArray = new Uint8Array(byteNumbers);
+
+    byteArrays.push(byteArray);
+  }
+    
+  var blob = new Blob(byteArrays, {type: contentType});
+  return blob;
+}
 
 function fechaActual(){
 	
@@ -1015,8 +1042,7 @@ function eliminarDocumentoAdjunto(idDocumentoAdjunto){
 	        success:function(data){
 	            ocultaLoading();
 	            if(data.resultado=="0"){
-
-	            	listarDocumentosLocal(0);(0);
+	            	listarDocumentosLocal(0);
 	                
 	            }else{
 	              
@@ -1187,6 +1213,7 @@ function  llenarArrayTbDocumentos(idResultadoPruebaReprueba){
                       idResultadoPR = value.idResultadoPruebaReprueba;
             	 idDocumentoAdjunto = value.idDocumentoAdjunto;
                     nombreDocumento = value.nombreDocumento;
+                    archivoAdjuntoM = value.archivoAdjunto;
 
               	  var objeto = {};
               	  
@@ -1194,6 +1221,7 @@ function  llenarArrayTbDocumentos(idResultadoPruebaReprueba){
               	  objeto['idResultadoPruebaReprueba'] = idResultadoPR;
                   objeto['idDocumentoAdjunto'] = idDocumentoAdjunto;
                   objeto['nombreDocumento'] = nombreDocumento ;
+                  objeto['archivoAdjunto'] = archivoAdjuntoM ;
 
                   dataDocumentAdj.push(objeto);
                   listarDocumentosLocal(0);
@@ -2521,6 +2549,7 @@ function  cargarArrayConsultarDocumentos(){
                  idResultadoPruebaReprueba = value.idResultadoPruebaReprueba;
             	 idDocumentoAdjunto = value.idDocumentoAdjunto;
                  nombreDocumento = value.nombreDocumento;
+                 archivoAdjuntoM = value.archivoAdjunto;
 
               	 var objeto = {};
               	 
@@ -2528,6 +2557,7 @@ function  cargarArrayConsultarDocumentos(){
               	 objeto['idResultadoPruebaReprueba'] = idResultadoPruebaReprueba;
                  objeto['idDocumentoAdjunto'] = idDocumentoAdjunto;
                  objeto['nombreDocumento'] = nombreDocumento ;
+                 objeto['archivoAdjunto'] = archivoAdjuntoM ;
 
                  dataDocumentAdj.push(objeto);
                  listarDocumentosLocal();

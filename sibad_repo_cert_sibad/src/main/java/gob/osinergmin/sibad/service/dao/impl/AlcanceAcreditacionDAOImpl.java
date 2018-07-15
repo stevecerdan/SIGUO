@@ -40,45 +40,56 @@ public class AlcanceAcreditacionDAOImpl implements AlcanceAcreditacionDAO{
 	private Query getFindQuery(AlcanceAcreditacionFilter filtro) {
         Query query=null;
         try{
-            if(filtro.getEstado()!=null){
-            	query = crud.getEm().createNamedQuery("PghAlcanceAcreditacion.findByAlcanceVigente");
+            if(filtro.getEstadoAccion()!=null){
+            	query = crud.getEm().createNamedQuery("PghAlcanceAcreditacion.findByFechIguales");
             }else{
-            	if(filtro.getIdAlcanceAcreditacion()!=null) {
-            		query = crud.getEm().createNamedQuery("PghAlcanceAcreditacion.findByIdAlcanceAcreditacion");
-            	}else {
-	            	if(filtro.getIdEmpresaAcreditada()!=null){
-	            		query = crud.getEm().createNamedQuery("PghAlcanceAcreditacion.findByPrimerAlcance");
-	        		}else {
-	        			query = crud.getEm().createNamedQuery("PghAlcanceAcreditacion.findByFechaV");
-	        		}
-            	}
+            	if(filtro.getEstado()!=null){
+                	query = crud.getEm().createNamedQuery("PghAlcanceAcreditacion.findByAlcanceVigente");
+                }else{
+                	if(filtro.getIdAlcanceAcreditacion()!=null) {
+                		query = crud.getEm().createNamedQuery("PghAlcanceAcreditacion.findByIdAlcanceAcreditacion");
+                	}else {
+    	            	if(filtro.getIdEmpresaAcreditada()!=null){
+    	            		query = crud.getEm().createNamedQuery("PghAlcanceAcreditacion.findByPrimerAlcance");
+    	        		}else {
+    	        			query = crud.getEm().createNamedQuery("PghAlcanceAcreditacion.findByFechaV");
+    	        		}
+                	}
+                }
             }
             
-           if(filtro.getEstado()==null){
+           if(filtro.getEstadoAccion()==null){
         	   
-        	   if(filtro.getIdAlcanceAcreditacion()==null){
-        		   
-	        	   if(filtro.getIdEmpresaAcreditada()==null){
-	        		   
-	        		   	if(filtro.getFechaVencimiento()!=null){
-	            		   query.setParameter("fechaVencimiento",filtro.getFechaVencimiento());
-	                    }else{
-	                    	query.setParameter("fechaVencimiento","");
-	                    }
-	        		   	
-	                }else{
-	                	query.setParameter("idEmpresaAcreditada",filtro.getIdEmpresaAcreditada());
-	                }
-	        	   
-        	   }else {
-        		   
-        		   query.setParameter("idAlcanceAcreditacion",filtro.getIdAlcanceAcreditacion());
-        	   }
+        	   if(filtro.getEstado()==null){
+            	   
+            	   if(filtro.getIdAlcanceAcreditacion()==null){
+            		   
+    	        	   if(filtro.getIdEmpresaAcreditada()==null){
+    	        		   
+    	        		   	if(filtro.getFechaVencimiento()!=null){
+    	            		   query.setParameter("fechaVencimiento",filtro.getFechaVencimiento());
+    	                    }else{
+    	                    	query.setParameter("fechaVencimiento","");
+    	                    }
+    	        		   	
+    	                }else{
+    	                	query.setParameter("idEmpresaAcreditada",filtro.getIdEmpresaAcreditada());
+    	                }
+    	        	   
+            	   }else {
+            		   
+            		   query.setParameter("idAlcanceAcreditacion",filtro.getIdAlcanceAcreditacion());
+            	   }
+            	   
+                }else{
+                	query.setParameter("estado",filtro.getEstado());
+         		   query.setParameter("idEmpresaAcreditada",filtro.getIdEmpresaAcreditada());
+                    query.setParameter("idAlcanceAcreditacion",filtro.getIdAlcanceAcreditacion());
+                }
         	   
             }else{
-            	query.setParameter("estado",filtro.getEstado());
-     		   query.setParameter("idEmpresaAcreditada",filtro.getIdEmpresaAcreditada());
-                query.setParameter("idAlcanceAcreditacion",filtro.getIdAlcanceAcreditacion());
+            	query.setParameter("estadoAccion",filtro.getEstadoAccion());
+            	query.setParameter("fechaVencimiento",filtro.getFechaVencimiento());
             }
             //query.setParameter("idPersonal",filtro.getIdPersonal());
         }catch(Exception e){
